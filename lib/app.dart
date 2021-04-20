@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:h_order_reception/appRouter.dart';
+import 'package:h_order_reception/components/StatusBar.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/constants/routeNames.dart';
 import 'package:h_order_reception/store/navigationStore.dart';
@@ -167,7 +168,7 @@ class AppState extends State<App> with WidgetsBindingObserver {
         resetSetMain();
       },
       child: MaterialApp(
-        title: 'H Order',
+        title: 'H Order Reception',
         themeMode: _themeMode,
         theme: _lightTheme(),
         darkTheme: _darkTheme(),
@@ -176,7 +177,7 @@ class AppState extends State<App> with WidgetsBindingObserver {
         initialRoute: RouteNames.Splash,
         builder: (context, child) => Column(
           children: [
-            // StatusBar(),
+            StatusBar(),
             Expanded(child: child),
           ],
         ),
