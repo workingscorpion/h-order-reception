@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/routeNames.dart';
 import 'package:h_order_reception/pages/homePage.dart';
 import 'package:h_order_reception/pages/lockPage.dart';
+import 'package:h_order_reception/pages/login.dart';
 import 'package:h_order_reception/pages/splashPage.dart';
 import 'package:h_order_reception/store/navigationStore.dart';
 
@@ -18,6 +19,12 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (BuildContext context) => LockPage(),
+        );
+
+      case RouteNames.Login:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (BuildContext context) => LoginPage(),
         );
 
       case RouteNames.Home:
@@ -43,6 +50,11 @@ class AppRouter {
   static toHomePage() {
     return Navigator.of(context)
         .pushNamedAndRemoveUntil(RouteNames.Home, (Route route) => false);
+  }
+
+  static toLoginPage() {
+    return Navigator.of(context)
+        .pushNamedAndRemoveUntil(RouteNames.Login, (Route route) => false);
   }
 
   static toLockPage() {

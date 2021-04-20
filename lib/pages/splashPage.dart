@@ -51,6 +51,7 @@ class _SplashPageState extends State<SplashPage> {
     } finally {
       if (!timer.isActive) {
         await autoLogin();
+
         // _userInfoStore.isInitialized = true;
       }
     }
@@ -65,7 +66,9 @@ class _SplashPageState extends State<SplashPage> {
 
       // await _userInfoStore.login(id: id);
 
-      await loadInfo();
+      // FIXME
+      AppRouter.toLoginPage();
+      // await loadInfo();
     } catch (ex) {
       // AppRouter.toLoginPage();
     }
@@ -75,7 +78,7 @@ class _SplashPageState extends State<SplashPage> {
     try {
       // await _hotelInfoStore.loadHotels();
       // await _hotelInfoStore.selectHotel(_hotelInfoStore.hotelList.first);
-      AppRouter.toHomePage();
+      // AppRouter.toHomePage();
     } catch (ex) {
       // AppRouter.toHotelSelectPage();
     }
