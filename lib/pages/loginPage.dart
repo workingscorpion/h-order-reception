@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
-import 'package:h_order_reception/utils/snackBarHelper.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -10,14 +11,14 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SnackBarHelper {
+class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
 
   FocusNode _idFocusNode;
   FocusNode _passwordFocusNode;
 
-  TextEditingController _idController;
-  TextEditingController _passwordController;
+  TextEditingController _idController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +27,16 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.3,
+                vertical: MediaQuery.of(context).size.height * 0.2,
+              ),
               child: Column(
                 children: [
                   _logo(),
                   _idField(),
                   _passwordField(),
+                  _loginButton(),
                 ],
               ),
             ),
@@ -39,12 +45,16 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
   }
 
   _logo() => Container(
+      height: 200,
+      width: 200,
+      margin: EdgeInsets.only(bottom: 100),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
         child: SvgPicture.asset(
           'assets/logo.svg',
-          color: _accentColor(),
-          height: 53,
+          fit: BoxFit.fill,
         ),
-      );
+      ));
 
   _idField() => Container(
         height: 48,
@@ -62,7 +72,7 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
           },
         ),
         margin: EdgeInsets.only(
-          bottom: 10,
+          bottom: 20,
         ),
       );
 
@@ -82,7 +92,7 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
           },
         ),
         margin: EdgeInsets.only(
-          bottom: 10,
+          bottom: 20,
         ),
       );
 
@@ -91,7 +101,7 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
         prefixIcon: _prefixIcon(assetName),
         contentPadding: EdgeInsets.symmetric(horizontal: 12),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: _primaryColor(),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             color: _accentColor(),
@@ -120,13 +130,13 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
   _loginButton() => Container(
         child: FlatButton(
           height: 48,
-          color: Colors.blue,
+          color: _accentColor(),
           child: _loading
               ? Spin()
               : Text(
                   '로그인',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: _primaryColor(),
                     fontSize: 18,
                   ),
                 ),
@@ -141,20 +151,25 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
 
   _login() async {
     if ((_idController.text?.isEmpty ?? true)) {
-      showSnackBar('아이디를 입력해주세요.');
+      showToast('아이디를 입력해주세요.');
       return;
     }
 
     if (_passwordController.text?.isEmpty ?? true) {
-      showSnackBar('비밀번호를 입력해주세요.');
+      showToast('비밀번호를 입력해주세요.');
       return;
     }
 
-    setState(() {
-      _loading = true;
-    });
+    _loading = true;
+    setState(() {});
 
     try {
+      if (_idController.text == 'djdj159' &&
+          _passwordController.text == '123123qq!') {
+        AppRouter.toHomePage();
+      } else {
+        throw Error();
+      }
       // await UserInfoStore.instance.login(
       //   id: _idController.text,
       //   password: _passwordController.text,
@@ -162,6 +177,8 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
 
       // await _loadHotels();
     } catch (ex) {
+      showToast('인증정보가 맞지 않습니다.');
+
       // if (ex.type == DioErrorType.RESPONSE) {
       //   final response = ex.response as Response;
 
@@ -171,12 +188,21 @@ class _LoginPageState extends State<LoginPage> with SnackBarHelper {
       // } else {
       //   showSnackBar('로그인에 실패하였습니다. 네트워크 상태를 확인해주세요.');
       // }
+      //
     } finally {
-      setState(() {
-        _loading = false;
-      });
+      _loading = false;
+      setState(() {});
     }
   }
+
+  showToast(String message) async => await Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Theme.of(context).accentColor.withOpacity(0.66),
+        textColor: Theme.of(context).textTheme.bodyText1.color,
+        fontSize: 17,
+      );
 
   Color _primaryColor() => Theme.of(context).primaryColor;
 

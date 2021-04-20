@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/routeNames.dart';
 import 'package:h_order_reception/pages/homePage.dart';
 import 'package:h_order_reception/pages/lockPage.dart';
-import 'package:h_order_reception/pages/login.dart';
+import 'package:h_order_reception/pages/loginPage.dart';
 import 'package:h_order_reception/pages/splashPage.dart';
 import 'package:h_order_reception/store/navigationStore.dart';
 

@@ -60,6 +60,7 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/icons/auth/
     - assets/icons/statusbar/
     - assets/icons/home/
     - assets/sample/
