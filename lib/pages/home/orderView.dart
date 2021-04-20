@@ -11,6 +11,7 @@ class _OrderViewState extends State<OrderView> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.all(30),
       child: Text('1'),
     );
   }
