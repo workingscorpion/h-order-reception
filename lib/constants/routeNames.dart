@@ -3,4 +3,6 @@ class RouteNames {
   static const String Lock = '/lock';
 
   static const String Home = '/';
+
+  static const String Login = '/login';
 }

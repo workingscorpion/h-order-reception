@@ -98,7 +98,7 @@ class _Logo extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       alignment: Alignment.center,
-      child: SvgPicture.asset('assets/icons/logo.svg'),
+      child: SvgPicture.asset('assets/logo.svg'),
     );
   }
 }

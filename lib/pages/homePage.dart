@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/appRouter.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -15,8 +16,12 @@ class _HomePageState extends State<HomePage> {
         return false;
       },
       child: Scaffold(
-        body: Container(
-          child: Text('home'),
+        // body: Container(
+        //   child: Text('home'),
+        // ),
+        body: RaisedButton(
+          onPressed: () => {AppRouter.toLockPage()},
+          child: Text('123'),
         ),
       ),
     );
