@@ -11,10 +11,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {},
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
         body: Container(
-          child: Text('3454'),
+          child: Text('home'),
         ),
       ),
     );
