@@ -20,25 +20,28 @@ class _OrderViewState extends State<OrderView> {
     OrderModel(
       objectId: '1',
       status: 0,
-      applyTime: DateTime.now().subtract(Duration(minutes: 20)),
-      roomNumber: '12',
-      shopName: ' 던킨 도넛',
+      applyTime: DateTime.now().subtract(Duration(hours: 3)),
+      roomNumber: '1208',
+      shopName: '던킨 도넛',
+      address: '마곡럭스나인오피스텔 L동',
       menus: [],
     ),
     OrderModel(
       objectId: '2',
       status: 0,
-      applyTime: DateTime.now().subtract(Duration(minutes: 20)),
-      roomNumber: '12',
-      shopName: ' 던킨 도넛',
+      applyTime: DateTime.now().subtract(Duration(hours: 2)),
+      roomNumber: '1208',
+      shopName: '고샵',
+      address: '마곡럭스나인오피스텔 L동',
       menus: [],
     ),
     OrderModel(
       objectId: '3',
       status: 0,
       applyTime: DateTime.now().subtract(Duration(minutes: 20)),
-      roomNumber: '12',
-      shopName: ' 던킨 도넛',
+      roomNumber: '1208',
+      shopName: '웨스트도어',
+      address: '마곡럭스나인오피스텔 L동',
       menus: [],
     ),
   ];
@@ -47,14 +50,14 @@ class _OrderViewState extends State<OrderView> {
     MenuModel(
       boundaryId: '11',
       count: 1,
-      name: 'test1',
+      name: '아메리카노',
       objectId: '111',
       price: 1000,
     ),
     MenuModel(
       boundaryId: '11',
       count: 2,
-      name: 'test2',
+      name: '에스프레소',
       objectId: '222',
       price: 3500,
     ),
@@ -71,6 +74,7 @@ class _OrderViewState extends State<OrderView> {
               applyTime: e.applyTime,
               roomNumber: e.roomNumber,
               shopName: e.shopName,
+              address: e.address,
               menus: menus,
             ))
         .toList();
@@ -87,6 +91,7 @@ class _OrderViewState extends State<OrderView> {
   _item(OrderModel item) => DefaultTextStyle(
         style: Theme.of(context).textTheme.bodyText2,
         child: Container(
+          padding: EdgeInsets.symmetric(vertical: 5),
           height: MediaQuery.of(context).size.height * .18,
           decoration: BoxDecoration(
               border: Border(
@@ -94,17 +99,24 @@ class _OrderViewState extends State<OrderView> {
           )),
           child: Stack(
             children: [
-              Row(
-                children: [
-                  _itemTime(item.applyTime),
-                  _itemInfo(item),
-                  _itemButtons(item.objectId),
-                ],
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    _itemTime(item.applyTime),
+                    _itemInfo(item),
+                    _itemButtons(item.objectId),
+                  ],
+                ),
               ),
               Positioned(
                 top: 0,
-                left: 0,
-                child: Text('${DateFormat("yy/MM/dd").format(item.applyTime)}'),
+                left: 30,
+                child: Text(
+                  '${DateFormat("yy/MM/dd").format(item.applyTime)}',
+                  style:
+                      TextStyle(fontSize: 15, color: CustomColors.subTextBlack),
+                ),
               )
             ],
           ),
@@ -113,17 +125,43 @@ class _OrderViewState extends State<OrderView> {
 
   _itemTime(DateTime time) => Expanded(
         flex: 2,
-        child: Container(child: Text('${DateFormat("hh:mm").format(time)}')),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+          child: Text(
+            '${DateFormat("hh:mm").format(time)}',
+            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          ),
+          alignment: Alignment.topLeft,
+        ),
       );
 
   _itemInfo(OrderModel item) => Expanded(
-        flex: 3,
-        child: Container(),
+        flex: 4,
+        child: DefaultTextStyle(
+          style: Theme.of(context).textTheme.bodyText2.copyWith(height: 1.5),
+          child: Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('[주소] ${item.address} ${item.roomNumber}호'),
+                Text(
+                  '[메뉴${item.menus.length}개] ${NumberFormat().format(getAmount(item.menus))}원',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(getMenus(item.menus)),
+                Text(''),
+              ],
+            ),
+          ),
+        ),
       );
+
   _itemButtons(String orderId) => Expanded(
-        flex: 5,
+        flex: 4,
         child: Container(
-          padding: EdgeInsets.all(10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -133,13 +171,23 @@ class _OrderViewState extends State<OrderView> {
                 child: _itemButton(
                   text: '거절',
                   background: CustomColors.tableInnerBorder,
-                  onTap: () {},
+                  onTap: () {
+                    list = list
+                        .where((element) => element.objectId != orderId)
+                        .toList();
+                    setState(() {});
+                  },
                 ),
               ),
               _itemButton(
                 text: '완료',
                 background: CustomColors.selectedItemColor,
-                onTap: () {},
+                onTap: () {
+                  list = list
+                      .where((element) => element.objectId != orderId)
+                      .toList();
+                  setState(() {});
+                },
               ),
             ],
           ),
@@ -183,5 +231,17 @@ class _OrderViewState extends State<OrderView> {
       default:
         return Colors.red;
     }
+  }
+
+  int getAmount(List<MenuModel> menus) {
+    return menus
+        .map((e) => e.price * e.count)
+        .reduce((value, element) => value + element);
+  }
+
+  String getMenus(List<MenuModel> menus) {
+    return menus
+        .map((e) => e.name + ' ${e.count}개 ')
+        .reduce((value, element) => value + element);
   }
 }

@@ -7,6 +7,7 @@ part 'orderModel.g.dart';
 class OrderModel {
   final String objectId;
   final String roomNumber;
+  final String address;
   final String shopName;
   final DateTime applyTime;
   final int status;
@@ -16,6 +17,7 @@ class OrderModel {
   OrderModel({
     this.objectId,
     this.roomNumber,
+    this.address,
     this.shopName,
     this.applyTime,
     this.status,

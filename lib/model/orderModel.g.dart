@@ -10,6 +10,7 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) {
   return OrderModel(
     objectId: json['objectId'] as String,
     roomNumber: json['roomNumber'] as String,
+    address: json['address'] as String,
     shopName: json['shopName'] as String,
     applyTime: json['applyTime'] == null
         ? null
@@ -27,6 +28,7 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
     <String, dynamic>{
       'objectId': instance.objectId,
       'roomNumber': instance.roomNumber,
+      'address': instance.address,
       'shopName': instance.shopName,
       'applyTime': instance.applyTime?.toIso8601String(),
       'status': instance.status,
