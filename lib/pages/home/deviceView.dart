@@ -118,7 +118,10 @@ class _DeviceViewState extends State<DeviceView> {
                                     ],
                                   ),
                                   Text(
-                                    '${item.battery}',
+                                    '${item.battery}%',
+                                  ),
+                                  Text(
+                                    '${item.isCharging ? "충전 중" : "-"}',
                                   ),
                                   Text(
                                     '${DateFormat('yyyy/MM/dd').format(item.lastLiveTime)}',
