@@ -129,11 +129,13 @@ mixin _$UserInfoStore on UserInfoStoreBase, Store {
     });
   }
 
-  final _$setIdAsyncAction = AsyncAction('UserInfoStoreBase.setId');
+  final _$setLoginInfoAsyncAction =
+      AsyncAction('UserInfoStoreBase.setLoginInfo');
 
   @override
-  Future setId(String value) {
-    return _$setIdAsyncAction.run(() => super.setId(value));
+  Future setLoginInfo(String identity, String token) {
+    return _$setLoginInfoAsyncAction
+        .run(() => super.setLoginInfo(identity, token));
   }
 
   final _$loginAsyncAction = AsyncAction('UserInfoStoreBase.login');

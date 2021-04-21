@@ -4,6 +4,7 @@ import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/http/api/authApi.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/http/types/login/requestLogin.dart';
+import 'package:h_order_reception/http/types/login/responseLogin.dart';
 import 'package:h_order_reception/utils/fcmManager.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:h_order_reception/utils/sharedPreferencesHelper.dart';
@@ -48,14 +49,17 @@ abstract class UserInfoStoreBase with Store {
       Stream<PushNotificationModel>.empty().asBroadcastStream();
 
   @action
-  setId(String value) async {
-    id = value;
-    isLogin = value?.isNotEmpty ?? false;
-
-    if (value != null) {
-      await SharedPreferencesHelper.setUserId(value);
+  setLoginInfo(String identity, String token) async {
+    if (identity != null) {
+      await SharedPreferencesHelper.setUserId(identity);
     } else {
       await SharedPreferencesHelper.removeUserId();
+    }
+
+    if (token != null) {
+      await SharedPreferencesHelper.setJWTToken(token);
+    } else {
+      await SharedPreferencesHelper.removeJWTToken();
     }
   }
 
@@ -73,7 +77,7 @@ abstract class UserInfoStoreBase with Store {
 
       final String token = await SharedPreferencesHelper.getJWTToken();
 
-      await AuthApi.login(
+      var response = await AuthApi.login(
         RequestLogin(
           id: id,
           password: password ?? '',
@@ -81,7 +85,9 @@ abstract class UserInfoStoreBase with Store {
         ),
       );
 
-      setId(id);
+      final user = ResponseLogin.fromJson(response.data);
+
+      setLoginInfo(user.identity, user.token);
     } catch (ex) {
       return Future.error(ex);
     } finally {
@@ -96,21 +102,30 @@ abstract class UserInfoStoreBase with Store {
       child: AlertDialog(
         title: Text('로그아웃 하시겠습니까?'),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              AppRouter.pop();
-            },
-            child: Text('취소'),
+          Container(
+            margin: EdgeInsets.only(right: 10),
+            child: FlatButton(
+              onPressed: () {
+                AppRouter.pop();
+              },
+              child: Text(
+                '취소',
+                style: Theme.of(AppRouter.context).textTheme.bodyText2,
+              ),
+            ),
           ),
           FlatButton(
             onPressed: () async {
               AuthApi.logout(true);
 
-              setId(null);
+              setLoginInfo(null, null);
 
               AppRouter.toLoginPage();
             },
-            child: new Text('로그아웃'),
+            child: new Text(
+              '로그아웃',
+              style: Theme.of(AppRouter.context).textTheme.bodyText2,
+            ),
           ),
         ],
       ),

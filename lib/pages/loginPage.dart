@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 
@@ -170,11 +171,8 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text,
       );
 
-      // await _loadHotels();
-      // AppRouter.toHomePage();
+      AppRouter.toHomePage();
     } catch (ex) {
-      showToast('인증정보가 맞지 않습니다.');
-
       if (ex.type == DioErrorType.RESPONSE) {
         final response = ex.response as Response;
 

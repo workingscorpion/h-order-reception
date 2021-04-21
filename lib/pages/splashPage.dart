@@ -72,7 +72,7 @@ class _SplashPageState extends State<SplashPage> {
       await _userInfoStore.login(id: id);
 
       // FIXME
-      AppRouter.toLoginPage();
+      AppRouter.toHomePage();
       // await loadInfo();
     } catch (ex) {
       AppRouter.toLoginPage();

@@ -30,6 +30,11 @@ class SharedPreferencesHelper {
     return prefs.setString(KEY_FCM_TOKEN, value);
   }
 
+  static Future<bool> removeFCMToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove(KEY_FCM_TOKEN);
+  }
+
   static Future<String> getJWTToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(KEY_JWT_TOKEN);
@@ -40,8 +45,8 @@ class SharedPreferencesHelper {
     return prefs.setString(KEY_JWT_TOKEN, value);
   }
 
-  static Future<bool> removeFCMToken() async {
+  static Future<bool> removeJWTToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.remove(KEY_FCM_TOKEN);
+    return prefs.remove(KEY_JWT_TOKEN);
   }
 }
