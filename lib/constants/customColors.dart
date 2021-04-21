@@ -10,4 +10,5 @@ class CustomColors {
   static const Color tableInnerBorder = Color(0xFF979797);
   static const Color tableOuterBorder = Color(0xFF111111);
   static const Color selectedItemColor = Color(0xfff7b500);
+  static const Color denyColor = Color(0xffe2422a);
 }
