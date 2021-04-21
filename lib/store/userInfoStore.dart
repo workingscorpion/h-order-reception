@@ -105,6 +105,7 @@ abstract class UserInfoStoreBase with Store {
           Container(
             margin: EdgeInsets.only(right: 10),
             child: FlatButton(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               onPressed: () {
                 AppRouter.pop();
               },
@@ -115,6 +116,7 @@ abstract class UserInfoStoreBase with Store {
             ),
           ),
           FlatButton(
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             onPressed: () async {
               AuthApi.logout(true);
 
@@ -122,7 +124,7 @@ abstract class UserInfoStoreBase with Store {
 
               AppRouter.toLoginPage();
             },
-            child: new Text(
+            child: Text(
               '로그아웃',
               style: Theme.of(AppRouter.context).textTheme.bodyText2,
             ),
