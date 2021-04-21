@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/deviceModel.dart';
 import 'package:intl/intl.dart';
 
@@ -57,8 +58,8 @@ class _DeviceViewState extends State<DeviceView> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            _filterButton(callBack: () => _filter(isOff: true), text: 'ALL'),
-            _filterButton(callBack: () => _filter(isOff: false), text: 'OFF'),
+            _filterButton(callBack: () => _filter(isAll: true), text: 'ALL'),
+            _filterButton(callBack: () => _filter(isAll: false), text: 'OFF'),
             Spacer(),
             Container(
               margin: EdgeInsets.only(right: 10),
@@ -70,9 +71,10 @@ class _DeviceViewState extends State<DeviceView> {
         ),
       );
 
-  _filter({bool isOff}) {
+  _filter({bool isAll}) {
     filteredDevices =
-        devices.where((e) => isOff ? e.state == 0 : e.state == 1).toList();
+        devices.where((e) => isAll ? e.state == 0 : e.state == 1).toList();
+    isAll = isAll;
     setState(() {});
   }
 
@@ -95,8 +97,11 @@ class _DeviceViewState extends State<DeviceView> {
             ),
           ),
           borderSide: BorderSide(
-            // color: isAll == true&& text =='ALL'  || ? Theme.of(context).textTheme.bodyText2.color : ,
-            color: Theme.of(context).textTheme.bodyText2.color,
+            color: (isAll == true && text == 'ALL') ||
+                    (isAll == false && text == 'OFF') ||
+                    (text == 'REFRESH')
+                ? Theme.of(context).accentColor
+                : CustomColors.tableInnerBorder,
             style: BorderStyle.solid,
             width: 2,
           ),

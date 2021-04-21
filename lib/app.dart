@@ -1,8 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/StatusBar.dart';
 import 'package:h_order_reception/constants/customColors.dart';
@@ -20,6 +23,12 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> with WidgetsBindingObserver {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  FirebaseAnalytics analytics = FirebaseAnalytics();
+  FirebaseAnalyticsObserver observer;
+
   static const _setMainDuration = Duration(minutes: 5);
 
   Future _future;
@@ -35,6 +44,11 @@ class AppState extends State<App> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     initTheme();
     resetSetMain();
+    initFirebaseAnalytics();
+  }
+
+  initFirebaseAnalytics() {
+    observer = FirebaseAnalyticsObserver(analytics: analytics);
   }
 
   @override

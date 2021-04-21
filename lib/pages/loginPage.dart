@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
+import 'package:h_order_reception/store/userInfoStore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -12,6 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  static const IdKey = 'ID';
+
   bool _loading = false;
 
   FocusNode _idFocusNode;
@@ -167,13 +171,16 @@ class _LoginPageState extends State<LoginPage> {
       if (_idController.text == 'djdj159' &&
           _passwordController.text == '123123qq!') {
         AppRouter.toHomePage();
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString(IdKey, _idController.text);
       } else {
         throw Error();
       }
-      // await UserInfoStore.instance.login(
-      //   id: _idController.text,
-      //   password: _passwordController.text,
-      // );
+
+      await UserInfoStore.instance.login(
+        id: _idController.text,
+        password: _passwordController.text,
+      );
 
       // await _loadHotels();
     } catch (ex) {
