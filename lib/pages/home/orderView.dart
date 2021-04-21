@@ -28,7 +28,7 @@ class _OrderViewState extends State<OrderView> {
     ),
     OrderModel(
       objectId: '2',
-      status: 0,
+      status: 1,
       applyTime: DateTime.now().subtract(Duration(hours: 2)),
       roomNumber: '1208',
       shopName: '고샵',
@@ -37,10 +37,37 @@ class _OrderViewState extends State<OrderView> {
     ),
     OrderModel(
       objectId: '3',
-      status: 0,
+      status: 2,
       applyTime: DateTime.now().subtract(Duration(minutes: 20)),
       roomNumber: '1208',
       shopName: '웨스트도어',
+      address: '마곡럭스나인오피스텔 L동',
+      menus: [],
+    ),
+    OrderModel(
+      objectId: '4',
+      status: 3,
+      applyTime: DateTime.now().subtract(Duration(minutes: 10)),
+      roomNumber: '1208',
+      shopName: '봉보야쥬',
+      address: '마곡럭스나인오피스텔 L동',
+      menus: [],
+    ),
+    OrderModel(
+      objectId: '5',
+      status: 4,
+      applyTime: DateTime.now().subtract(Duration(minutes: 8)),
+      roomNumber: '1208',
+      shopName: '비베러디시',
+      address: '마곡럭스나인오피스텔 L동',
+      menus: [],
+    ),
+    OrderModel(
+      objectId: '6',
+      status: 4,
+      applyTime: DateTime.now().subtract(Duration(minutes: 2)),
+      roomNumber: '1208',
+      shopName: '맛집',
       address: '마곡럭스나인오피스텔 L동',
       menus: [],
     ),
@@ -103,7 +130,7 @@ class _OrderViewState extends State<OrderView> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    _itemTime(item.applyTime),
+                    _itemTime(item),
                     _itemInfo(item),
                     _itemButtons(item.objectId),
                   ],
@@ -123,13 +150,36 @@ class _OrderViewState extends State<OrderView> {
         ),
       );
 
-  _itemTime(DateTime time) => Expanded(
+  _itemTime(OrderModel item) => Expanded(
         flex: 2,
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-          child: Text(
-            '${DateFormat("hh:mm").format(time)}',
-            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+          child: Column(
+            children: [
+              Text(
+                '${DateFormat("hh:mm").format(item.applyTime)}',
+                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              ),
+              Spacer(),
+              FractionallySizedBox(
+                widthFactor: .6,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: _statusColor(item.status),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: Text(
+                    _statusText(item.status),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              )
+            ],
           ),
           alignment: Alignment.topLeft,
         ),
@@ -216,20 +266,37 @@ class _OrderViewState extends State<OrderView> {
         onTap: onTap,
       );
 
-  _statusColor(int status) {
+  Color _statusColor(int status) {
     switch (status) {
       case 0:
-        return Colors.red;
+        return CustomColors.waitAcceptColor;
       case 1:
-        return Colors.yellow;
+        return CustomColors.itemReadyColor;
       case 2:
-        return Colors.green;
+        return CustomColors.deleveryReadColor;
       case 3:
-        return Colors.blue;
+        return CustomColors.deleveringColor;
       case 4:
-        return Colors.grey;
+        return CustomColors.doneColor;
       default:
-        return Colors.red;
+        return CustomColors.waitAcceptColor;
+    }
+  }
+
+  String _statusText(int status) {
+    switch (status) {
+      case 0:
+        return '수락 대기';
+      case 1:
+        return '상품 준비';
+      case 2:
+        return '배달 준비 중';
+      case 3:
+        return '배달 중';
+      case 4:
+        return '완료';
+      default:
+        return '수락 대기';
     }
   }
 
