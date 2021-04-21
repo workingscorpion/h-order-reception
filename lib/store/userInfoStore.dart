@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/http/api/authApi.dart';
@@ -73,14 +71,15 @@ abstract class UserInfoStoreBase with Store {
 
       loading = true;
 
-      final fcmToken = await getFcmToken();
+      final String token = await SharedPreferencesHelper.getJWTToken();
 
-      await AuthApi.login(RequestLogin(
-        id: id,
-        password: password ?? '',
-        deviceId: fcmToken,
-        os: Platform.operatingSystem,
-      ));
+      await AuthApi.login(
+        RequestLogin(
+          id: id,
+          password: password ?? '',
+          token: token ?? '',
+        ),
+      );
 
       setId(id);
     } catch (ex) {

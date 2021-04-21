@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:h_order_reception/appRouter.dart';
+import 'package:h_order_reception/store/userInfoStore.dart';
 
 class SettingView extends StatefulWidget {
   SettingView({Key key}) : super(key: key);
@@ -9,6 +9,8 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingViewState extends State<SettingView> {
+  final UserInfoStore _userInfoStore = UserInfoStore.instance;
+
   String selectedListType = "Grid";
 
   int orderCount = 6;
@@ -25,7 +27,7 @@ class _SettingViewState extends State<SettingView> {
             height: 50,
             child: RaisedButton(
               onPressed: () {
-                AppRouter.toLoginPage();
+                _userInfoStore.logout();
               },
               child: Text(
                 '로그아웃',

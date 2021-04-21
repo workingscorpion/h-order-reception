@@ -1,10 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -14,8 +13,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  static const IdKey = 'ID';
-
   bool _loading = false;
 
   FocusNode _idFocusNode;
@@ -168,34 +165,25 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
 
     try {
-      if (_idController.text == 'djdj159' &&
-          _passwordController.text == '123123qq!') {
-        AppRouter.toHomePage();
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString(IdKey, _idController.text);
-      } else {
-        throw Error();
-      }
-
       await UserInfoStore.instance.login(
         id: _idController.text,
         password: _passwordController.text,
       );
 
       // await _loadHotels();
+      // AppRouter.toHomePage();
     } catch (ex) {
       showToast('인증정보가 맞지 않습니다.');
 
-      // if (ex.type == DioErrorType.RESPONSE) {
-      //   final response = ex.response as Response;
+      if (ex.type == DioErrorType.RESPONSE) {
+        final response = ex.response as Response;
 
-      //   if (response.statusCode == 404) {
-      //     showSnackBar('잘못된 아이디 또는 비밀번호 입니다.');
-      //   }
-      // } else {
-      //   showSnackBar('로그인에 실패하였습니다. 네트워크 상태를 확인해주세요.');
-      // }
-      //
+        if (response.statusCode == 404) {
+          showToast('잘못된 아이디 또는 비밀번호 입니다.');
+        }
+      } else {
+        showToast('로그인에 실패하였습니다. 네트워크 상태를 확인해주세요.');
+      }
     } finally {
       _loading = false;
       setState(() {});

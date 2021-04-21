@@ -5,11 +5,14 @@ part 'requestLogin.g.dart';
 @JsonSerializable()
 class RequestLogin {
   String id;
-  String os;
   String password;
-  String deviceId;
+  String token;
 
-  RequestLogin({this.id, this.os, this.password, this.deviceId});
+  RequestLogin({
+    this.id,
+    this.password,
+    this.token,
+  });
 
   factory RequestLogin.fromJson(Map<String, dynamic> json) =>
       _$RequestLoginFromJson(json);

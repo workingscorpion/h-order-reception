@@ -14,8 +14,10 @@ class RequestCodeType {
 }
 
 class AuthApi {
+  static const String apiPath = 'v1/Auth';
+
   static Future<Response> login(RequestLogin requestLogin) async {
-    return await Client.post('auth/login', json: requestLogin.toJson());
+    return await Client.post('$apiPath/login', json: requestLogin.toJson());
   }
 
   // static Future<String> changePassword(
@@ -30,7 +32,7 @@ class AuthApi {
   // }
 
   static Future<Response> logout(bool isDeleteDeviceId) async {
-    return await Client.get('auth/logout',
+    return await Client.get('$apiPath/logout',
         params: {'isDeleteDeviceId': isDeleteDeviceId});
   }
 

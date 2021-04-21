@@ -5,7 +5,7 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 
 const protocol = kDebugMode ? 'http' : 'https';
-const host = kDebugMode ? 'localhost:5000' : 'localhost:5000';
+const host = kDebugMode ? '192.168.0.11:5000' : 'localhost:5000';
 
 // const baseImageUrl =
 //     'https://rumyr3-test-files.s3.ap-northeast-2.amazonaws.com/';
@@ -25,19 +25,11 @@ class Client {
   }
 
   static get baseUrl {
-    if ((hotelUrl?.length ?? 0) > 0) {
-      return '$protocol://$hotelUrl.$host/api/';
-    } else {
-      return '$protocol://$host/api/';
-    }
+    return '$protocol://$host/api/';
   }
 
   static get signalRUrl {
-    if ((hotelUrl?.length ?? 0) > 0) {
-      return '$protocol://$hotelUrl.$host/notification';
-    } else {
-      return '$protocol://$host/notification';
-    }
+    return '$protocol://$host/notification';
   }
 
   static Future<Response> get(String path,

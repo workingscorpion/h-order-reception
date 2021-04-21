@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:h_order_reception/store/userInfoStore.dart';
+import 'package:h_order_reception/utils/sharedPreferencesHelper.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key}) : super(key: key);
@@ -16,7 +17,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  static const IdKey = 'ID';
+  final UserInfoStore _userInfoStore = UserInfoStore.instance;
+
   bool initialized = false;
 
   @override
@@ -61,23 +63,19 @@ class _SplashPageState extends State<SplashPage> {
 
   autoLogin() async {
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String id = prefs.getString(IdKey);
-      if (id == 'djdj159') {
-        AppRouter.toHomePage();
-      }
+      final String id = await SharedPreferencesHelper.getUserId();
 
       if (id == null) {
         throw Exception();
       }
 
-      // await _userInfoStore.login(id: id);
+      await _userInfoStore.login(id: id);
 
       // FIXME
       AppRouter.toLoginPage();
       // await loadInfo();
     } catch (ex) {
-      // AppRouter.toLoginPage();
+      AppRouter.toLoginPage();
     }
   }
 

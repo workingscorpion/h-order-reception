@@ -89,8 +89,8 @@ class FCMManger {
 
     _firebaseMessaging.configure(
       onLaunch: (Map<String, dynamic> message) async {
-        final data =
-            (Platform.isAndroid ? message['data'] : message) ?? message;
+        // final data =
+        //     (Platform.isAndroid ? message['data'] : message) ?? message;
 
         // final notificationData = NotificationData(
         //   type: data['type'],
@@ -110,8 +110,8 @@ class FCMManger {
           return;
         }
 
-        final data =
-            (Platform.isAndroid ? message['data'] : message) ?? message;
+        // final data =
+        //     (Platform.isAndroid ? message['data'] : message) ?? message;
 
         // final notificationData = NotificationData(
         //   type: data['type'],
@@ -218,7 +218,7 @@ class FCMManger {
     );
 
     final notification = message['notification'] ?? message;
-    final data = (Platform.isAndroid ? message['data'] : message) ?? message;
+    // final data = (Platform.isAndroid ? message['data'] : message) ?? message;
     final title = notification['title'];
     final body = notification['body'];
 
