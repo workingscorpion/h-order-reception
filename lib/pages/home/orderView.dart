@@ -153,7 +153,7 @@ class _OrderViewState extends State<OrderView> {
   _itemTime(OrderModel item) => Expanded(
         flex: 2,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: Column(
             children: [
               Text(
@@ -164,6 +164,7 @@ class _OrderViewState extends State<OrderView> {
               FractionallySizedBox(
                 widthFactor: .6,
                 child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 3),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: _statusColor(item.status),
@@ -174,7 +175,7 @@ class _OrderViewState extends State<OrderView> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 15,
                     ),
                   ),
                 ),
