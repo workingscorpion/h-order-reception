@@ -3,6 +3,7 @@ import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
+import 'package:h_order_reception/utils/orderStatusHelper.dart';
 import 'package:intl/intl.dart';
 
 class OrderView extends StatefulWidget {
@@ -175,11 +176,11 @@ class _OrderViewState extends State<OrderView> {
                   padding: EdgeInsets.symmetric(vertical: 3),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: _statusColor(item.status),
+                    color: OrderStatusHelper.statusColor(item.status),
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: Text(
-                    _statusText(item.status),
+                    OrderStatusHelper.statusText(item.status),
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -274,40 +275,6 @@ class _OrderViewState extends State<OrderView> {
         ),
         onTap: onTap,
       );
-
-  Color _statusColor(int status) {
-    switch (status) {
-      case 0:
-        return CustomColors.waitAcceptColor;
-      case 1:
-        return CustomColors.itemReadyColor;
-      case 2:
-        return CustomColors.deleveryReadColor;
-      case 3:
-        return CustomColors.deleveringColor;
-      case 4:
-        return CustomColors.doneColor;
-      default:
-        return CustomColors.waitAcceptColor;
-    }
-  }
-
-  String _statusText(int status) {
-    switch (status) {
-      case 0:
-        return '수락 대기';
-      case 1:
-        return '상품 준비';
-      case 2:
-        return '배달 준비 중';
-      case 3:
-        return '배달 중';
-      case 4:
-        return '완료';
-      default:
-        return '수락 대기';
-    }
-  }
 
   int getAmount(List<MenuModel> menus) {
     return menus
