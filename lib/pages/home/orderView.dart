@@ -121,7 +121,7 @@ class _OrderViewState extends State<OrderView> {
         style: Theme.of(context).textTheme.bodyText2,
         child: InkWell(
           onTap: () {
-            AppRouter.toOrderPage(orderObjectId: item.objectId);
+            AppRouter.toOrderPage(item.objectId);
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 5),

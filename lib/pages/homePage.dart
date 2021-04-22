@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/pages/home/orderView.dart';
 
@@ -27,6 +28,13 @@ class _HomePageState extends State<HomePage>
       initialIndex: 0,
       length: 3,
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override

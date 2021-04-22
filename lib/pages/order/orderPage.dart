@@ -42,7 +42,7 @@ class _OrderPageState extends State<OrderPage> {
         child: Row(
           children: [
             BackButton(
-              onPressed: AppRouter.pop(),
+              onPressed: () => AppRouter.pop(),
             ),
             Spacer(),
             Text('주문현황'),
