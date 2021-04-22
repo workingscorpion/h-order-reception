@@ -15,12 +15,12 @@ class _OrderPageState extends State<OrderPage> {
   void initState() {
     super.initState();
 
-    _load();
+    // _load();
   }
 
-  _load() async {
-    // TODO: get Data
-  }
+  // _load() async {
+  //   // TODO: get Data
+  // }
 
   @override
   Widget build(BuildContext context) {

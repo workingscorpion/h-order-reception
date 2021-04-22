@@ -65,9 +65,10 @@ class AppRouter {
         .pushNamedAndRemoveUntil(RouteNames.Login, (Route route) => false);
   }
 
-  static toOrderPage(String orderObjectId) {
-    Navigator.of(context, rootNavigator: true)
-        .pushNamed(RouteNames.Order, arguments: orderObjectId);
+  static toOrderPage({String orderObjectId}) {
+    Navigator.of(context)
+        .pushNamed(RouteNames.Order, arguments: orderObjectId ?? '');
+    // Navigator.of(context).pushNamed(RouteNames.Order, arguments: orderObjectId);
   }
 
   static toLockPage() {
