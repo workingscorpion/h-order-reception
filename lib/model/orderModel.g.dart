@@ -21,6 +21,10 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) {
         ?.map((e) =>
             e == null ? null : MenuModel.fromJson(e as Map<String, dynamic>))
         ?.toList(),
+    histories: (json['histories'] as List)
+        ?.map((e) =>
+            e == null ? null : HistoryModel.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
   );
 }
 
@@ -34,4 +38,5 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'status': instance.status,
       'amount': instance.amount,
       'menus': instance.menus,
+      'histories': instance.histories,
     };

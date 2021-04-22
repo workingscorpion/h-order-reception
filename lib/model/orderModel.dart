@@ -1,3 +1,4 @@
+import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -13,6 +14,7 @@ class OrderModel {
   final int status;
   final int amount;
   final List<MenuModel> menus;
+  final List<HistoryModel> histories;
 
   OrderModel({
     this.objectId,
@@ -23,6 +25,7 @@ class OrderModel {
     this.status,
     this.amount,
     this.menus,
+    this.histories,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
