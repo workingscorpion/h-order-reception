@@ -87,51 +87,51 @@ class AppState extends State<App> with WidgetsBindingObserver {
         color: textColor,
       ),
       headline2: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor1,
       ),
       headline3: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: isLightMode ? CustomColors.aWhite : CustomColors.subTextBlack,
       ),
       headline4: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       headline5: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       headline6: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       bodyText1: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: isLightMode ? CustomColors.aWhite : CustomColors.aBlack,
       ),
       bodyText2: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: isLightMode ? CustomColors.aBlack : CustomColors.aWhite,
       ),
       subtitle1: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       subtitle2: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       button: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       caption: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
       overline: TextStyle(
-        fontSize: 20,
+        fontSize: 17,
         color: subTextColor2,
       ),
     );
@@ -157,7 +157,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
         backgroundColor: CustomColors.backgroundLightGrey,
         dialogBackgroundColor: CustomColors.backgroundLightGrey,
         scaffoldBackgroundColor: CustomColors.backgroundLightGrey,
-        splashColor: Colors.transparent,
         textTheme: _textTheme(true),
         primaryTextTheme: _textTheme(true),
         accentTextTheme: _textTheme(true),
@@ -202,7 +201,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
             ),
           ),
           padding: EdgeInsets.zero,
-          splashColor: Colors.transparent,
           buttonColor: CustomColors.aBlack,
         ),
         buttonBarTheme: ButtonBarThemeData(
@@ -250,12 +248,12 @@ class AppState extends State<App> with WidgetsBindingObserver {
           labelPadding: EdgeInsets.symmetric(horizontal: 20),
           labelColor: CustomColors.aWhite,
           labelStyle: TextStyle(
-            fontSize: 20,
+            fontSize: 17,
             color: CustomColors.aBlack,
           ),
           unselectedLabelColor: CustomColors.aWhite,
           unselectedLabelStyle: TextStyle(
-            fontSize: 20,
+            fontSize: 17,
             color: CustomColors.aBlack,
           ),
         ),
@@ -278,7 +276,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
         backgroundColor: CustomColors.backgroundDarkGrey,
         dialogBackgroundColor: CustomColors.backgroundDarkGrey,
         scaffoldBackgroundColor: CustomColors.backgroundDarkGrey,
-        splashColor: Colors.transparent,
         textTheme: _textTheme(false),
         primaryTextTheme: _textTheme(false),
         accentTextTheme: _textTheme(false),
@@ -324,7 +321,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
             ),
           ),
           padding: EdgeInsets.zero,
-          splashColor: Colors.transparent,
         ),
         buttonBarTheme: ButtonBarThemeData(
           buttonPadding: EdgeInsets.zero,
@@ -369,12 +365,12 @@ class AppState extends State<App> with WidgetsBindingObserver {
           labelPadding: EdgeInsets.symmetric(horizontal: 20),
           labelColor: CustomColors.aWhite,
           labelStyle: TextStyle(
-            fontSize: 20,
+            fontSize: 17,
             color: CustomColors.aWhite,
           ),
           unselectedLabelColor: CustomColors.aWhite,
           unselectedLabelStyle: TextStyle(
-            fontSize: 20,
+            fontSize: 17,
             color: CustomColors.aWhite,
           ),
         ),

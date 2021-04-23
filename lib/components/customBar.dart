@@ -1,18 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 
 class CustomBar extends StatefulWidget {
-  CustomBar({this.index, this.callback});
+  CustomBar({
+    this.controller,
+    this.icons,
+  });
 
-  final int index;
-  final IntCallback callback;
+  final TabController controller;
+  final List<IconData> icons;
 
   @override
   _CustomBarState createState() => _CustomBarState();
 }
-
-typedef int IntCallback(int val);
 
 class _CustomBarState extends State<CustomBar> {
   final UserInfoStore _userInfoStore = UserInfoStore.instance;
@@ -30,7 +32,10 @@ class _CustomBarState extends State<CustomBar> {
         Spacer(),
         _logoutButton(),
         Row(
-          children: List.generate(2, (index) => _tabButton(index)),
+          children: List.generate(
+            3,
+            (index) => _tabButton(index),
+          ),
         )
       ]),
     );
@@ -38,46 +43,40 @@ class _CustomBarState extends State<CustomBar> {
 
   _logoutButton() => Container(
         margin: EdgeInsets.only(right: 10),
-        child: RaisedButton(
-          onPressed: () {
-            _userInfoStore.logout();
-          },
-          child: Text(
-            '로그아웃',
-            style: Theme.of(context).textTheme.bodyText1,
+        child: Material(
+          child: InkWell(
+            onTap: () {
+              _userInfoStore.logout();
+            },
+            child: Text(
+              '로그아웃',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
           ),
         ),
       );
 
-  _tabButton(int index) => GestureDetector(
-        onTap: () {
-          widget.callback(index);
-        },
-        child: Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(right: 10),
-          decoration: BoxDecoration(
-            color: widget.index == index
-                ? CustomColors.selectedItemColor
-                : Colors.transparent,
-          ),
-          child: Text(
-            '${_tabText(index)}',
-            style: Theme.of(context).textTheme.bodyText2.copyWith(
-                  fontSize: 30,
-                  color: Theme.of(context).textTheme.bodyText2.color,
-                ),
+  _tabButton(int index) => Container(
+        margin: EdgeInsets.only(right: 10),
+        child: Material(
+          color: widget.controller.index == index
+              ? CustomColors.selectedItemColor
+              : Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              widget.controller.animateTo(index);
+            },
+            child: Container(
+              padding: EdgeInsets.all(12),
+              alignment: Alignment.center,
+              child: Icon(
+                widget.icons[index],
+                color: widget.controller.index == index
+                    ? Colors.white
+                    : CustomColors.selectedItemColor,
+              ),
+            ),
           ),
         ),
       );
-
-  _tabText(int index) {
-    switch (index) {
-      case 0:
-        return '접수';
-
-      case 1:
-        return '완료';
-    }
-  }
 }

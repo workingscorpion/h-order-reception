@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/components/customBar.dart';
 import 'package:h_order_reception/pages/history/historyView.dart';
@@ -14,7 +15,11 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  List<String> _tabList = ['Apply', 'Device', 'Setting'];
+  final icons = [
+    CupertinoIcons.home,
+    CupertinoIcons.time,
+    CupertinoIcons.gear,
+  ];
 
   @override
   void initState() {
@@ -23,13 +28,16 @@ class _HomePageState extends State<HomePage>
     _tabController = TabController(
       vsync: this,
       initialIndex: 0,
-      length: 2,
+      length: icons.length,
     );
+
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _tabController.dispose();
     super.dispose();
   }
@@ -42,11 +50,8 @@ class _HomePageState extends State<HomePage>
           child: Column(
             children: [
               CustomBar(
-                index: _tabController.index,
-                callback: (int index) {
-                  _tabController.index = index;
-                  setState(() {});
-                },
+                controller: _tabController,
+                icons: icons,
               ),
               _views(),
             ],
@@ -56,14 +61,6 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  _tabs() => Container(
-        color: Theme.of(context).accentColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: List.generate(_tabList.length, (index) => Text('index')),
-        ),
-      );
-
   _views() => Expanded(
         child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
@@ -71,6 +68,7 @@ class _HomePageState extends State<HomePage>
           children: [
             OrderView(),
             HistoryView(),
+            Container(),
           ],
         ),
       );

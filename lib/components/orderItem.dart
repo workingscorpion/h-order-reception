@@ -5,9 +5,11 @@ import 'package:h_order_reception/utils/orderStatusHelper.dart';
 import 'package:intl/intl.dart';
 
 class OrderItem extends StatefulWidget {
-  OrderItem({this.item});
-
   final OrderModel item;
+
+  OrderItem({
+    this.item,
+  });
 
   @override
   _OrderItemState createState() => _OrderItemState();
@@ -24,12 +26,11 @@ class _OrderItemState extends State<OrderItem> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(4),
         ),
         child: Column(
           children: [
             _itemHeader(),
-            _row(),
             _menu(),
             _itemFooter(),
           ],
@@ -39,44 +40,62 @@ class _OrderItemState extends State<OrderItem> {
   }
 
   _itemHeader() => Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
-            border: Border(
-          bottom: BorderSide(
-            color: CustomColors.tableInnerBorder,
-            width: 1,
+          border: Border(
+            bottom: BorderSide(
+              width: .5,
+              color: Colors.black26,
+            ),
           ),
-        )),
-        child: Row(
+        ),
+        child: Column(
           children: [
-            Column(
-              children: [
-                Text('딜리버리'),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: OrderStatusHelper.statusColor[widget.item.status],
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Text(
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              color: OrderStatusHelper.statusColor[widget.item.status],
+              child: Row(
+                children: [
+                  Text(
                     OrderStatusHelper.statusText[widget.item.status],
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 12,
                     ),
                   ),
-                ),
-              ],
+                  Spacer(),
+                  Text(
+                    '${widget.item.address}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('${widget.item.address}'),
-                Text('${widget.item.roomNumber}호'),
-              ],
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              child: Row(
+                children: [
+                  Text(
+                    '딜리버리',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
+                  ),
+                  Spacer(),
+                  Text(
+                    '${widget.item.roomNumber}호',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -84,8 +103,13 @@ class _OrderItemState extends State<OrderItem> {
 
   _menu() => Expanded(
         child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          children: List.generate(20, (index) => Text('메뉴리스트')),
+          padding: EdgeInsets.all(10),
+          children: List.generate(
+            20,
+            (index) => Container(
+              child: Text('메뉴리스트'),
+            ),
+          ),
         ),
       );
 
@@ -152,27 +176,15 @@ class _OrderItemState extends State<OrderItem> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                child: _itemButton(
-                  text: '거절',
-                  background: CustomColors.tableInnerBorder,
-                  onTap: () {
-                    // list = list
-                    //     .where((element) => element.objectId != orderId)
-                    //     .toList();
-                    // setState(() {});
-                  },
-                ),
+              _itemButton(
+                onTap: () {},
+                text: '거절',
+                background: CustomColors.tableInnerBorder,
               ),
               _itemButton(
+                onTap: () {},
                 text: '완료',
                 background: CustomColors.selectedItemColor,
-                onTap: () {
-                  // list = list
-                  //     .where((element) => element.objectId != orderId)
-                  //     .toList();
-                  // setState(() {});
-                },
               ),
             ],
           ),
@@ -180,27 +192,27 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _itemButton({
+    GestureTapCallback onTap,
     String text,
     Color background,
-    Function onTap,
   }) =>
       Expanded(
-        child: InkWell(
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-              color: background,
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                  ),
+        child: Material(
+          color: background,
+          child: InkWell(
+            onTap: onTap,
+            child: Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
-          onTap: onTap,
         ),
       );
 
