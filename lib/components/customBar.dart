@@ -20,6 +20,7 @@ class _CustomBarState extends State<CustomBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
           border: Border(
         bottom: BorderSide(color: CustomColors.tableOuterBorder, width: 1),
