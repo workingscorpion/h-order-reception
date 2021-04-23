@@ -9,7 +9,7 @@ part of 'client.dart';
 class _Client implements Client {
   _Client(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.0.104:5000';
+    baseUrl ??= 'http://192.168.0.104:5000/api';
   }
 
   final Dio _dio;

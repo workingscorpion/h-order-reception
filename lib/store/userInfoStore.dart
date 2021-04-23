@@ -80,9 +80,8 @@ abstract class UserInfoStoreBase with Store {
         token: token ?? '',
       ));
 
-      final user = ResponseLogin.fromJson(response.data);
-
-      setLoginInfo(user.identity, user.token);
+      // final user = ResponseLogin.fromJson(response.data);
+      // setLoginInfo(user.identity, user.token);
     } catch (ex) {
       return Future.error(ex);
     } finally {

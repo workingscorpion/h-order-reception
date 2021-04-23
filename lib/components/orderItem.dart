@@ -21,21 +21,10 @@ class _OrderItemState extends State<OrderItem> {
       child: Container(
         margin: EdgeInsets.only(right: 10),
         width: MediaQuery.of(context).size.width * .25,
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
-          border: Border.all(
-            color: CustomColors.tableOuterBorder,
-            width: 1,
-          ),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 0,
-              blurRadius: 3,
-              offset: Offset(0, 3), // changes position of shadow
-            ),
-          ],
         ),
         child: Column(
           children: [
@@ -175,9 +164,6 @@ class _OrderItemState extends State<OrderItem> {
                   },
                 ),
               ),
-              Container(
-                width: 20,
-              ),
               _itemButton(
                 text: '완료',
                 background: CustomColors.selectedItemColor,
@@ -193,13 +179,17 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _itemButton({String text, Color background, Function onTap}) => Expanded(
+  _itemButton({
+    String text,
+    Color background,
+    Function onTap,
+  }) =>
+      Expanded(
         child: InkWell(
           child: Container(
             height: 50,
             decoration: BoxDecoration(
               color: background,
-              borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
             child: Text(

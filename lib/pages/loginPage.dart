@@ -16,9 +16,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
 
-  FocusNode _idFocusNode;
-  FocusNode _passwordFocusNode;
-
   TextEditingController _idController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -62,16 +59,13 @@ class _LoginPageState extends State<LoginPage> {
         height: 48,
         child: TextField(
           keyboardType: TextInputType.emailAddress,
-          focusNode: _idFocusNode,
           style: TextStyle(fontSize: 18, color: _accentColor()),
           decoration: _fieldDecoration(
             assetName: 'assets/icons/auth/id.svg',
             hint: '아이디',
           ),
           controller: _idController,
-          onEditingComplete: () {
-            FocusScope.of(context).requestFocus(_passwordFocusNode);
-          },
+          textInputAction: TextInputAction.next,
         ),
         margin: EdgeInsets.only(
           bottom: 20,
@@ -83,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
         child: TextField(
           obscureText: true,
           keyboardType: TextInputType.text,
-          focusNode: _passwordFocusNode,
+          style: TextStyle(fontSize: 18, color: _accentColor()),
           controller: _passwordController,
           decoration: _fieldDecoration(
             assetName: 'assets/icons/auth/password.svg',
