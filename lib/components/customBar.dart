@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/store/userInfoStore.dart';
 
 class CustomBar extends StatefulWidget {
   CustomBar({
@@ -17,63 +16,49 @@ class CustomBar extends StatefulWidget {
 }
 
 class _CustomBarState extends State<CustomBar> {
-  final UserInfoStore _userInfoStore = UserInfoStore.instance;
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(
-          border: Border(
-        bottom: BorderSide(color: CustomColors.tableOuterBorder, width: 1),
-      )),
-      child: Row(children: [
-        Text('봉보야쥬'),
-        Spacer(),
-        _logoutButton(),
-        Row(
-          children: List.generate(
-            3,
-            (index) => _tabButton(index),
-          ),
-        )
-      ]),
+    return Material(
+      color: CustomColors.tableOuterBorder,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            Text(
+              '봉보야쥬',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            Spacer(),
+            Row(
+              children: List.generate(
+                widget.controller.length,
+                (index) => _tabButton(index),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  _logoutButton() => Container(
-        margin: EdgeInsets.only(right: 10),
-        child: Material(
-          child: InkWell(
-            onTap: () {
-              _userInfoStore.logout();
-            },
-            child: Text(
-              '로그아웃',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ),
-        ),
-      );
-
   _tabButton(int index) => Container(
-        margin: EdgeInsets.only(right: 10),
-        child: Material(
-          color: widget.controller.index == index
-              ? CustomColors.selectedItemColor
-              : Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              widget.controller.animateTo(index);
-            },
+        margin: EdgeInsets.only(left: 12),
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            widget.controller.animateTo(index);
+          },
+          icon: InkWell(
             child: Container(
               padding: EdgeInsets.all(12),
               alignment: Alignment.center,
               child: Icon(
                 widget.icons[index],
                 color: widget.controller.index == index
-                    ? Colors.white
-                    : CustomColors.selectedItemColor,
+                    ? CustomColors.selectedItemColor
+                    : Colors.white,
               ),
             ),
           ),
