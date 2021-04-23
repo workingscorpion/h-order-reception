@@ -4,7 +4,7 @@ class RouteNames {
 
   static const String Home = '/';
 
-  static const String Order = '/order';
+  static const String History = '/history';
 
   static const String Login = '/login';
 }

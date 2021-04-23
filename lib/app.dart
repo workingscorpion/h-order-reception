@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:h_order_reception/appRouter.dart';
-import 'package:h_order_reception/components/StatusBar.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/constants/routeNames.dart';
 import 'package:h_order_reception/store/navigationStore.dart';

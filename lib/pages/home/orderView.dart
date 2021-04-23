@@ -120,41 +120,35 @@ class _OrderViewState extends State<OrderView> {
 
   _item(OrderModel item) => DefaultTextStyle(
         style: Theme.of(context).textTheme.bodyText2,
-        child: InkWell(
-          onTap: () {
-            AppRouter.toOrderPage(item.objectId);
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            height: MediaQuery.of(context).size.height * .18,
-            decoration: BoxDecoration(
-                border: Border(
-              bottom:
-                  BorderSide(color: CustomColors.tableInnerBorder, width: 1),
-            )),
-            child: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      _itemTime(item),
-                      _itemInfo(item),
-                      _itemButtons(item.objectId),
-                    ],
-                  ),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 5),
+          height: MediaQuery.of(context).size.height * .18,
+          decoration: BoxDecoration(
+              border: Border(
+            bottom: BorderSide(color: CustomColors.tableInnerBorder, width: 1),
+          )),
+          child: Stack(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    _itemTime(item),
+                    _itemInfo(item),
+                    _itemButtons(item.objectId),
+                  ],
                 ),
-                Positioned(
-                  top: 0,
-                  left: 30,
-                  child: Text(
-                    '${DateFormat("yy/MM/dd").format(item.applyTime)}',
-                    style: TextStyle(
-                        fontSize: 15, color: CustomColors.subTextBlack),
-                  ),
-                )
-              ],
-            ),
+              ),
+              Positioned(
+                top: 0,
+                left: 30,
+                child: Text(
+                  '${DateFormat("yy/MM/dd").format(item.applyTime)}',
+                  style:
+                      TextStyle(fontSize: 15, color: CustomColors.subTextBlack),
+                ),
+              )
+            ],
           ),
         ),
       );

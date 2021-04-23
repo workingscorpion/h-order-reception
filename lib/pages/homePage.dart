@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/components/customBar.dart';
+import 'package:h_order_reception/pages/history/historyView.dart';
 import 'package:h_order_reception/pages/home/orderView.dart';
-
-import 'home/deviceView.dart';
-import 'home/settingView.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -26,7 +23,7 @@ class _HomePageState extends State<HomePage>
     _tabController = TabController(
       vsync: this,
       initialIndex: 0,
-      length: 3,
+      length: 2,
     );
   }
 
@@ -39,68 +36,39 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Scaffold(
-          body: Container(
-        child: Row(
+    return Scaffold(
+      body: Container(
+        child: Column(
           children: [
-            _tabs(),
+            CustomBar(
+              index: _tabController.index,
+              callback: (int index) {
+                _tabController.index = index;
+                setState(() {});
+              },
+            ),
             _views(),
           ],
         ),
-      )),
+      ),
     );
   }
 
-  _tabButton(int index) => GestureDetector(
-        onTap: () {
-          _tabController.animateTo(index);
-          setState(() {});
-        },
-        child: Container(
-          alignment: Alignment.center,
-          height: 100,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: CustomColors.tableInnerBorder),
-            ),
-            color: _tabController.index == index
-                ? CustomColors.selectedItemColor
-                : Theme.of(context).accentColor,
-          ),
-          child: Text(
-            '${_tabList[index]}',
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  fontSize: 30,
-                  color: Theme.of(context).textTheme.bodyText1.color,
-                ),
-          ),
-        ),
-      );
-
-  _tabs() => Expanded(
-        child: Container(
-          color: Theme.of(context).accentColor,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children:
-                List.generate(_tabList.length, (index) => _tabButton(index)),
-          ),
+  _tabs() => Container(
+        color: Theme.of(context).accentColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: List.generate(_tabList.length, (index) => Text('index')),
         ),
       );
 
   _views() => Expanded(
-        flex: 5,
         child: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           controller: _tabController,
           children: [
             OrderView(),
-            DeviceView(),
-            SettingView(),
+            HistoryView(),
           ],
         ),
       );
