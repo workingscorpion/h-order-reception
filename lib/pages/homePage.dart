@@ -37,18 +37,20 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Column(
-          children: [
-            CustomBar(
-              index: _tabController.index,
-              callback: (int index) {
-                _tabController.index = index;
-                setState(() {});
-              },
-            ),
-            _views(),
-          ],
+      body: SafeArea(
+        child: Container(
+          child: Column(
+            children: [
+              CustomBar(
+                index: _tabController.index,
+                callback: (int index) {
+                  _tabController.index = index;
+                  setState(() {});
+                },
+              ),
+              _views(),
+            ],
+          ),
         ),
       ),
     );

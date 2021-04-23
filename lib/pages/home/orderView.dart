@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:h_order_reception/appRouter.dart';
-import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/components/orderItem.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
-import 'package:intl/intl.dart';
 
 class OrderView extends StatefulWidget {
   OrderView({Key key}) : super(key: key);
@@ -112,163 +109,18 @@ class _OrderViewState extends State<OrderView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: ListView(
-            padding: EdgeInsets.zero,
-            children:
-                List.generate(list.length, (index) => _item(list[index]))));
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
+        children: List.generate(
+          list.length,
+          (index) => OrderItem(
+            item: list[index],
+          ),
+        ),
+      ),
+    );
   }
-
-  _item(OrderModel item) => DefaultTextStyle(
-        style: Theme.of(context).textTheme.bodyText2,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          height: MediaQuery.of(context).size.height * .18,
-          decoration: BoxDecoration(
-              border: Border(
-            bottom: BorderSide(color: CustomColors.tableInnerBorder, width: 1),
-          )),
-          child: Stack(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    _itemTime(item),
-                    _itemInfo(item),
-                    _itemButtons(item.objectId),
-                  ],
-                ),
-              ),
-              Positioned(
-                top: 0,
-                left: 30,
-                child: Text(
-                  '${DateFormat("yy/MM/dd").format(item.applyTime)}',
-                  style:
-                      TextStyle(fontSize: 15, color: CustomColors.subTextBlack),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-
-  _itemTime(OrderModel item) => Expanded(
-        flex: 2,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Column(
-            children: [
-              Text(
-                '${DateFormat("hh:mm").format(item.applyTime)}',
-                style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-              ),
-              Spacer(),
-              FractionallySizedBox(
-                widthFactor: .6,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 3),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: OrderStatusHelper.statusColor(item.status),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Text(
-                    OrderStatusHelper.statusText(item.status),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
-          alignment: Alignment.topLeft,
-        ),
-      );
-
-  _itemInfo(OrderModel item) => Expanded(
-        flex: 4,
-        child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.bodyText2.copyWith(height: 1.5),
-          child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('[주소] ${item.address} ${item.roomNumber}호'),
-                Text(
-                  '[메뉴${item.menus.length}개] ${NumberFormat().format(getAmount(item.menus))}원',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                Text(getMenus(item.menus)),
-                Text(''),
-              ],
-            ),
-          ),
-        ),
-      );
-
-  _itemButtons(String orderId) => Expanded(
-        flex: 4,
-        child: Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                margin: EdgeInsets.only(right: 30),
-                child: _itemButton(
-                  text: '거절',
-                  background: CustomColors.tableInnerBorder,
-                  onTap: () {
-                    list = list
-                        .where((element) => element.objectId != orderId)
-                        .toList();
-                    setState(() {});
-                  },
-                ),
-              ),
-              _itemButton(
-                text: '완료',
-                background: CustomColors.selectedItemColor,
-                onTap: () {
-                  list = list
-                      .where((element) => element.objectId != orderId)
-                      .toList();
-                  setState(() {});
-                },
-              ),
-            ],
-          ),
-        ),
-      );
-
-  _itemButton({String text, Color background, Function onTap}) =>
-      GestureDetector(
-        child: AspectRatio(
-          aspectRatio: 4 / 5,
-          child: Container(
-            decoration: BoxDecoration(
-              color: background,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                  ),
-            ),
-          ),
-        ),
-        onTap: onTap,
-      );
 
   int getAmount(List<MenuModel> menus) {
     return menus
