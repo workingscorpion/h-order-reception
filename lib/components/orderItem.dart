@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/orderModel.dart';
@@ -24,8 +26,27 @@ class _OrderItemState extends State<OrderItem> {
 
   get quantity {
     return [...widget.item.menus]
-        .map((e) => e.name + ' ${e.count}개 ')
+        .map((e) => e.count)
         .reduce((value, element) => value + element);
+  }
+
+  Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    timer =
+        Timer.periodic(Duration(milliseconds: (1000 / 30).floor()), (timer) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+
+    super.dispose();
   }
 
   @override
@@ -169,8 +190,52 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
+  _timer() {
+    final duration = DateTime.now().difference(widget.item.applyTime);
+    final seconds = duration.inSeconds;
+    final h = (seconds / 3600).floor();
+    final hh = h < 10 ? '0$h' : '$h';
+
+    final m = (seconds % 3600 / 60).floor();
+    final mm = m < 10 ? '0$m' : '$m';
+
+    final s = (seconds % 60).floor();
+    final ss = s < 10 ? '0$s' : '$s';
+
+    final text = "$hh:$mm:$ss";
+
+    return Container(
+      padding: EdgeInsets.only(
+        bottom: 6,
+        left: 12,
+        right: 12,
+      ),
+      child: Row(
+        children: [
+          Text(
+            '$text',
+            style: TextStyle(
+              fontSize: 15,
+            ),
+          ),
+          Spacer(),
+          Text(
+            '${NumberFormat().format(quantity)}개',
+            style: TextStyle(
+              fontSize: 15,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   _summary() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: EdgeInsets.only(
+          top: 6,
+          left: 12,
+          right: 12,
+        ),
         child: Row(
           children: [
             Text(
@@ -194,6 +259,7 @@ class _OrderItemState extends State<OrderItem> {
         child: Column(
           children: [
             _summary(),
+            _timer(),
             _buttons(),
           ],
         ),
