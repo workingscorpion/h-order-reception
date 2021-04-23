@@ -95,20 +95,18 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _menu() => Expanded(
-          child: Column(
-        children: [
-          _row(),
-          ListView(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            children: List.generate(
-                widget.item.menus.length, (index) => Text('메뉴리스트')),
-            // children: List.generate(widget.item.menus.length, (index) => _row([])),
-          ),
-          // Text('메뉴리스트')
-        ],
-      ));
+        child: Column(
+          children: [
+            _row(),
+            ListView(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              children: List.generate(20, (index) => Text('메뉴리스트')),
+            ),
+          ],
+        ),
+      );
 
   _row({List data}) => Container(
         padding: EdgeInsets.symmetric(horizontal: 10),

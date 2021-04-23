@@ -114,21 +114,6 @@ mixin _$UserInfoStore on UserInfoStoreBase, Store {
     });
   }
 
-  final _$streamAtom = Atom(name: 'UserInfoStoreBase.stream');
-
-  @override
-  Stream<PushNotificationModel> get stream {
-    _$streamAtom.reportRead();
-    return super.stream;
-  }
-
-  @override
-  set stream(Stream<PushNotificationModel> value) {
-    _$streamAtom.reportWrite(value, super.stream, () {
-      super.stream = value;
-    });
-  }
-
   final _$setLoginInfoAsyncAction =
       AsyncAction('UserInfoStoreBase.setLoginInfo');
 
@@ -169,8 +154,7 @@ loading: ${loading},
 isLogin: ${isLogin},
 isInitialized: ${isInitialized},
 hubConnection: ${hubConnection},
-isConnected: ${isConnected},
-stream: ${stream}
+isConnected: ${isConnected}
     ''';
   }
 }

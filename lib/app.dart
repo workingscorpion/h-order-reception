@@ -28,11 +28,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
   FirebaseAnalytics analytics = FirebaseAnalytics();
   FirebaseAnalyticsObserver observer;
 
-  static const _setMainDuration = Duration(minutes: 5);
-
-  Future _future;
-  StreamSubscription _setMainSubscription;
-
   ThemeMode _themeMode = ThemeMode.light;
   Brightness _brightness = Brightness.light;
 
@@ -41,7 +36,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initTheme();
-    resetSetMain();
     initFirebaseAnalytics();
   }
 
@@ -51,7 +45,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -142,35 +135,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
         color: subTextColor2,
       ),
     );
-  }
-
-  disposeSetMain() {
-    _setMainSubscription?.cancel();
-    _setMainSubscription = null;
-
-    _future?.timeout(Duration.zero, onTimeout: () async {});
-    _future = null;
-  }
-
-  resetSetMain() {
-    disposeSetMain();
-
-    _future = Future.delayed(_setMainDuration, () {});
-    _setMainSubscription = _future.asStream().listen((event) {
-      toLockPage();
-    });
-  }
-
-  toLockPage() {
-    disposeSetMain();
-    AppRouter.toLockPage();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.inactive) {
-      toLockPage();
-    }
   }
 
   @override

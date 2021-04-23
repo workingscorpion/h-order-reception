@@ -1,106 +1,18 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/foundation.dart';
+import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
+import 'package:retrofit/retrofit.dart';
 
-const protocol = kDebugMode ? 'http' : 'https';
-const host = kDebugMode ? '192.168.0.11:5000' : 'localhost:5000';
+part 'client.g.dart';
 
-// const baseImageUrl =
-//     'https://rumyr3-test-files.s3.ap-northeast-2.amazonaws.com/';
+@RestApi(baseUrl: "http://192.168.0.104:5000")
+abstract class Client {
+  factory Client.create() => _Client(Dio());
 
-class Client {
-  static CookieJar cookieJar = CookieJar();
-  static String hotelUrl = '';
+  @POST("/v1/auth/login")
+  Future login(
+    @Body() RequestLoginModel location,
+  );
 
-  static Dio client() {
-    Dio dio = Dio(BaseOptions(
-      contentType: ContentType.json.toString(),
-    ));
-
-    dio.interceptors.add(CookieManager(cookieJar));
-
-    return dio;
-  }
-
-  static get baseUrl {
-    return '$protocol://$host/api/';
-  }
-
-  static get signalRUrl {
-    return '$protocol://$host/notification';
-  }
-
-  static Future<Response> get(String path,
-      {Map<String, dynamic> params}) async {
-    try {
-      return await client().get(
-        '$baseUrl$path',
-        queryParameters: params,
-      );
-    } on DioError catch (error) {
-      throw _error(error);
-    }
-  }
-
-  static Future<Response> post(String path, {Map<String, dynamic> json}) async {
-    try {
-      return await client().post(
-        '$baseUrl$path',
-        data: json,
-      );
-    } on DioError catch (error) {
-      throw _error(error);
-    }
-  }
-
-  static Future<Response> postFormData(String path, FormData formData) async {
-    try {
-      return await client().post(
-        '$baseUrl$path',
-        data: formData,
-      );
-    } on DioError catch (error) {
-      throw _error(error);
-    }
-  }
-
-  static Future<Response> put(String path, {Map<String, dynamic> json}) async {
-    try {
-      return await client().put(
-        '$baseUrl$path',
-        data: json,
-      );
-    } on DioError catch (error) {
-      throw _error(error);
-    }
-  }
-
-  static Future<Response> putFormData(String path, FormData formData) async {
-    try {
-      return await client().put(
-        '$baseUrl$path',
-        data: formData,
-      );
-    } on DioError catch (error) {
-      throw _error(error);
-    }
-  }
-
-  static Future<Response> delete(String path,
-      {Map<String, dynamic> json}) async {
-    try {
-      return await client().delete(
-        '$baseUrl$path',
-        data: json,
-      );
-    } on DioError catch (error) {
-      throw _error(error);
-    }
-  }
-
-  static _error(DioError error) {
-    return error;
-  }
+  @POST("/v1/auth/logout")
+  Future logout();
 }

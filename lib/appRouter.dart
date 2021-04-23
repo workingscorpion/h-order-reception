@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/routeNames.dart';
 import 'package:h_order_reception/pages/history/historyPage.dart';
 import 'package:h_order_reception/pages/homePage.dart';
-import 'package:h_order_reception/pages/lockPage.dart';
 import 'package:h_order_reception/pages/loginPage.dart';
 import 'package:h_order_reception/pages/splashPage.dart';
 import 'package:h_order_reception/store/navigationStore.dart';
@@ -14,12 +13,6 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (BuildContext context) => SplashPage(),
-        );
-
-      case RouteNames.Lock:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (BuildContext context) => LockPage(),
         );
 
       case RouteNames.Login:
@@ -68,12 +61,5 @@ class AppRouter {
   static toHistoryPage(String orderObjectId) {
     Navigator.of(context)
         .pushNamed(RouteNames.History, arguments: orderObjectId);
-  }
-
-  static toLockPage() {
-    return Navigator.of(context).pushNamedAndRemoveUntil(
-      RouteNames.Lock,
-      (route) => route.settings.name != RouteNames.Lock,
-    );
   }
 }

@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
-import 'package:h_order_reception/http/api/authApi.dart';
 import 'package:h_order_reception/http/client.dart';
-import 'package:h_order_reception/http/types/login/requestLogin.dart';
+import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
 import 'package:h_order_reception/http/types/login/responseLogin.dart';
 import 'package:h_order_reception/utils/fcmManager.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:h_order_reception/utils/sharedPreferencesHelper.dart';
 import 'package:mobx/mobx.dart';
 import 'package:signalr_core/signalr_core.dart';
-import 'package:http/http.dart' hide Client;
-import 'package:http/io_client.dart';
 
 part 'userInfoStore.g.dart';
 
@@ -44,9 +41,9 @@ abstract class UserInfoStoreBase with Store {
   @observable
   bool isConnected = false;
 
-  @observable
-  Stream<PushNotificationModel> stream =
-      Stream<PushNotificationModel>.empty().asBroadcastStream();
+  // @observable
+  // Stream<PushNotificationModel> stream =
+  //     Stream<PushNotificationModel>.empty().asBroadcastStream();
 
   @action
   setLoginInfo(String identity, String token) async {
@@ -77,13 +74,11 @@ abstract class UserInfoStoreBase with Store {
 
       final String token = await SharedPreferencesHelper.getJWTToken();
 
-      var response = await AuthApi.login(
-        RequestLogin(
-          id: id,
-          password: password ?? '',
-          token: token ?? '',
-        ),
-      );
+      final response = await Client.create().login(RequestLoginModel(
+        id: id,
+        password: password ?? '',
+        token: token ?? '',
+      ));
 
       final user = ResponseLogin.fromJson(response.data);
 
@@ -118,7 +113,7 @@ abstract class UserInfoStoreBase with Store {
           FlatButton(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             onPressed: () async {
-              AuthApi.logout(true);
+              Client.create().logout();
 
               setLoginInfo(null, null);
 
@@ -143,29 +138,31 @@ abstract class UserInfoStoreBase with Store {
   }
 }
 
-class PushNotificationModel {
-  final int type;
-  final String hotelUrl;
-  final String hotelObjectId;
-  final String targetObjectId;
-  final dynamic data;
+// class RequestLoginModel {}
 
-  PushNotificationModel({
-    this.type,
-    this.hotelUrl,
-    this.hotelObjectId,
-    this.targetObjectId,
-    this.data,
-  });
-}
+// class PushNotificationModel {
+//   final int type;
+//   final String hotelUrl;
+//   final String hotelObjectId;
+//   final String targetObjectId;
+//   final dynamic data;
 
-class SignalRClient extends IOClient {
-  @override
-  Future<IOStreamedResponse> send(BaseRequest request) async {
-    final list = Client.cookieJar.loadForRequest(request.url);
-    final cookie = list.map((e) => '${e.name}=${e.value};').join(' ');
-    request.headers['Cookie'] = cookie;
+//   PushNotificationModel({
+//     this.type,
+//     this.hotelUrl,
+//     this.hotelObjectId,
+//     this.targetObjectId,
+//     this.data,
+//   });
+// }
 
-    return super.send(request);
-  }
-}
+// class SignalRClient extends IOClient {
+//   @override
+//   Future<IOStreamedResponse> send(BaseRequest request) async {
+//     final list = Client.cookieJar.loadForRequest(request.url);
+//     final cookie = list.map((e) => '${e.name}=${e.value};').join(' ');
+//     request.headers['Cookie'] = cookie;
+
+//     return super.send(request);
+//   }
+// }

@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'requestLogin.dart';
+part of 'requestLoginModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RequestLogin _$RequestLoginFromJson(Map<String, dynamic> json) {
-  return RequestLogin(
+RequestLoginModel _$RequestLoginModelFromJson(Map<String, dynamic> json) {
+  return RequestLoginModel(
     id: json['id'] as String,
     password: json['password'] as String,
     token: json['token'] as String,
   );
 }
 
-Map<String, dynamic> _$RequestLoginToJson(RequestLogin instance) =>
+Map<String, dynamic> _$RequestLoginModelToJson(RequestLoginModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'password': instance.password,
