@@ -110,8 +110,10 @@ class _OrderViewState extends State<OrderView> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView(
+        shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.zero,
+        padding: EdgeInsets.all(10),
         children: List.generate(
           list.length,
           (index) => OrderItem(

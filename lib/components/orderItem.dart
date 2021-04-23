@@ -20,11 +20,23 @@ class _OrderItemState extends State<OrderItem> {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.bodyText2,
       child: Container(
+        margin: EdgeInsets.only(right: 10),
         width: MediaQuery.of(context).size.width * .25,
         decoration: BoxDecoration(
-          border: Border(
-            right: BorderSide(color: CustomColors.tableInnerBorder, width: 1),
+          color: Theme.of(context).backgroundColor,
+          border: Border.all(
+            color: CustomColors.tableOuterBorder,
+            width: 1,
           ),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 0,
+              blurRadius: 3,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
         ),
         child: Column(
           children: [
@@ -39,7 +51,7 @@ class _OrderItemState extends State<OrderItem> {
   }
 
   _itemHeader() => Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         decoration: BoxDecoration(
             border: Border(
           bottom: BorderSide(
@@ -82,9 +94,49 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _menu() => Container(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-        child: Text('123'),
+  _menu() => Expanded(
+          child: Column(
+        children: [
+          _row(),
+          ListView(
+            shrinkWrap: true,
+            physics: ClampingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            children: List.generate(
+                widget.item.menus.length, (index) => Text('메뉴리스트')),
+            // children: List.generate(widget.item.menus.length, (index) => _row([])),
+          ),
+          // Text('메뉴리스트')
+        ],
+      ));
+
+  _row({List data}) => Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+            border: Border(
+          bottom: data != null
+              ? BorderSide.none
+              : BorderSide(color: CustomColors.tableInnerBorder, width: 1),
+        )),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Text(data != null ? data[0] : '메뉴'),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(data != null ? data[1] : '개수'),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.centerRight,
+                child: Text(data != null ? data[2] : '가격'),
+              ),
+            ),
+          ],
+        ),
       );
 
   _itemFooter() => Container(
@@ -112,15 +164,30 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _itemButtons() => IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              // margin: EdgeInsets.only(right: 30),
-              child: _itemButton(
-                text: '거절',
-                background: CustomColors.tableInnerBorder,
+        child: Container(
+          // padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: _itemButton(
+                  text: '거절',
+                  background: CustomColors.tableInnerBorder,
+                  onTap: () {
+                    // list = list
+                    //     .where((element) => element.objectId != orderId)
+                    //     .toList();
+                    // setState(() {});
+                  },
+                ),
+              ),
+              Container(
+                width: 20,
+              ),
+              _itemButton(
+                text: '완료',
+                background: CustomColors.selectedItemColor,
                 onTap: () {
                   // list = list
                   //     .where((element) => element.objectId != orderId)
@@ -128,38 +195,30 @@ class _OrderItemState extends State<OrderItem> {
                   // setState(() {});
                 },
               ),
-            ),
-            _itemButton(
-              text: '완료',
-              background: CustomColors.selectedItemColor,
-              onTap: () {
-                // list = list
-                //     .where((element) => element.objectId != orderId)
-                //     .toList();
-                // setState(() {});
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       );
 
-  _itemButton({String text, Color background, Function onTap}) =>
-      InkWell(
-        child: Container(
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(5),
+  _itemButton({String text, Color background, Function onTap}) => Expanded(
+        child: InkWell(
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.bodyText1.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
+            ),
           ),
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-          ),
+          onTap: onTap,
         ),
-        onTap: onTap,
       );
 
   int getAmount() {
