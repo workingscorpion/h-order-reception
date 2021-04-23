@@ -16,12 +16,24 @@ class OrderItem extends StatefulWidget {
 }
 
 class _OrderItemState extends State<OrderItem> {
+  get amount {
+    return [...widget.item.menus]
+        .map((e) => e.price * e.count)
+        .reduce((value, element) => value + element);
+  }
+
+  get quantity {
+    return [...widget.item.menus]
+        .map((e) => e.name + ' ${e.count}개 ')
+        .reduce((value, element) => value + element);
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.bodyText2,
       child: Container(
-        margin: EdgeInsets.only(right: 10),
+        margin: EdgeInsets.only(right: 12),
         width: MediaQuery.of(context).size.width * .25,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -30,28 +42,20 @@ class _OrderItemState extends State<OrderItem> {
         ),
         child: Column(
           children: [
-            _itemHeader(),
+            _header(),
             _menu(),
-            _itemFooter(),
+            _footer(),
           ],
         ),
       ),
     );
   }
 
-  _itemHeader() => Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              width: .5,
-              color: Colors.black26,
-            ),
-          ),
-        ),
+  _header() => Container(
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               color: OrderStatusHelper.statusColor[widget.item.status],
               child: Row(
                 children: [
@@ -74,7 +78,7 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               child: Row(
                 children: [
                   Text(
@@ -102,12 +106,32 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _menu() => Expanded(
-        child: ListView(
-          padding: EdgeInsets.all(10),
-          children: List.generate(
-            20,
-            (index) => Container(
-              child: Text('메뉴리스트'),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                width: .5,
+                color: Colors.black26,
+              ),
+              bottom: BorderSide(
+                width: .5,
+                color: Colors.black26,
+              ),
+            ),
+          ),
+          child: ListView(
+            padding: EdgeInsets.all(10),
+            children: List.generate(
+              20,
+              (index) => Container(
+                child: Row(
+                  children: [
+                    Text('메뉴리스트'),
+                    Spacer(),
+                    Text('1개'),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -145,53 +169,61 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _itemFooter() => Container(
-        child: Column(
+  _summary() => Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: Row(
           children: [
-            Container(
-              color: Colors.grey,
-              child: Row(
-                children: [
-                  Text(
-                    '${DateFormat("yy/MM/dd").format(widget.item.applyTime)}',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                  Spacer(),
-                  Text(
-                    '${NumberFormat().format(getAmount())}원',
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                ],
+            Text(
+              '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
+              style: TextStyle(
+                fontSize: 15,
               ),
             ),
-            _itemButtons(),
+            Spacer(),
+            Text(
+              '${NumberFormat().format(amount)}원',
+              style: TextStyle(
+                fontSize: 15,
+              ),
+            ),
           ],
         ),
       );
 
-  _itemButtons() => IntrinsicHeight(
+  _footer() => Container(
+        child: Column(
+          children: [
+            _summary(),
+            _buttons(),
+          ],
+        ),
+      );
+
+  _buttons() => IntrinsicHeight(
         child: Container(
-          // padding: EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _itemButton(
+              _button(
                 onTap: () {},
                 text: '거절',
                 background: CustomColors.tableInnerBorder,
               ),
-              _itemButton(
+              _button(
                 onTap: () {},
-                text: '완료',
-                background: CustomColors.selectedItemColor,
+                text: OrderStatusHelper.statusText[(widget.item.status + 1) %
+                    OrderStatusHelper.statusColor.length],
+                background: OrderStatusHelper.statusColor[
+                    (widget.item.status + 1) %
+                        OrderStatusHelper.statusColor.length],
               ),
             ],
           ),
         ),
       );
 
-  _itemButton({
+  _button({
     GestureTapCallback onTap,
     String text,
     Color background,
@@ -202,12 +234,12 @@ class _OrderItemState extends State<OrderItem> {
           child: InkWell(
             onTap: onTap,
             child: Container(
-              height: 50,
+              height: 40,
               alignment: Alignment.center,
               child: Text(
                 text,
                 style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 15,
                   color: Colors.white,
                 ),
               ),
@@ -215,16 +247,4 @@ class _OrderItemState extends State<OrderItem> {
           ),
         ),
       );
-
-  int getAmount() {
-    return [...widget.item.menus]
-        .map((e) => e.price * e.count)
-        .reduce((value, element) => value + element);
-  }
-
-  String getMenus() {
-    return [...widget.item.menus]
-        .map((e) => e.name + ' ${e.count}개 ')
-        .reduce((value, element) => value + element);
-  }
 }

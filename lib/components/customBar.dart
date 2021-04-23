@@ -19,7 +19,7 @@ class _CustomBarState extends State<CustomBar> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: CustomColors.tableOuterBorder,
+      color: Colors.blueGrey[800],
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12),
         child: Row(
