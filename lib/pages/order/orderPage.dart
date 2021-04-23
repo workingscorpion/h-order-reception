@@ -282,6 +282,62 @@ class _OrderPageState extends State<OrderPage> {
 
   _menu() => _item(
         title: '메뉴 정보',
-        contents: Container(),
+        // contents: Column(
+        //   children: [
+        //     _row(),
+        //     _menuBody(),
+        //     Spacer(),
+        //     _menuFooter(),
+        //   ],
+        // ),
+      );
+
+  _menuBody() => Container(
+        child: Column(
+          children: List.generate(
+            order.menus.length,
+            (index) => _row(texts: [
+              order.menus[index].name,
+              order.menus[index].count,
+              order.menus[index].price,
+            ]),
+          ),
+        ),
+      );
+
+  _menuFooter() => Container();
+
+  _row({List texts}) => Container(
+        margin: EdgeInsets.only(bottom: 5),
+        decoration: BoxDecoration(
+            border: Border(
+          bottom: texts != null
+              ? BorderSide.none
+              : BorderSide(color: CustomColors.tableInnerBorder, width: 1),
+        )),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Text(texts != null ? texts[0] : '메뉴'),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: Alignment.center,
+                child: Text(texts != null ? texts[1].toString() : '개수'),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.centerRight,
+                child: Text(texts != null
+                    ? '${NumberFormat().format(texts[2])}원'
+                    : '가격'),
+              ),
+            ),
+          ],
+        ),
       );
 }
