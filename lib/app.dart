@@ -40,7 +40,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIOverlays([]);
     WidgetsBinding.instance.addObserver(this);
     initTheme();
     resetSetMain();
@@ -177,25 +176,14 @@ class AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onPanDown: (event) {
-        resetSetMain();
-      },
-      child: MaterialApp(
-        title: 'H Order Reception',
-        themeMode: _themeMode,
-        theme: _lightTheme(),
-        darkTheme: _darkTheme(),
-        navigatorKey: NavigationStore.instance.navigatorKey,
-        onGenerateRoute: AppRouter.generateRoute,
-        initialRoute: RouteNames.Splash,
-        builder: (context, child) => Column(
-          children: [
-            StatusBar(),
-            Expanded(child: child),
-          ],
-        ),
-      ),
+    return MaterialApp(
+      title: 'H Order Reception',
+      themeMode: _themeMode,
+      theme: _lightTheme(),
+      darkTheme: _darkTheme(),
+      navigatorKey: NavigationStore.instance.navigatorKey,
+      onGenerateRoute: AppRouter.generateRoute,
+      initialRoute: RouteNames.Splash,
     );
   }
 
