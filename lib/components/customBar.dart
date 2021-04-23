@@ -75,6 +75,7 @@ class _CustomBarState extends State<CustomBar> {
     switch (index) {
       case 0:
         return '접수';
+
       case 1:
         return '완료';
     }

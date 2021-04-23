@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
 import 'package:h_order_reception/utils/orderStatusHelper.dart';
 import 'package:intl/intl.dart';
@@ -41,8 +40,8 @@ class _OrderItemState extends State<OrderItem> {
         child: Column(
           children: [
             _itemHeader(),
+            _row(),
             _menu(),
-            Spacer(),
             _itemFooter(),
           ],
         ),
@@ -68,11 +67,11 @@ class _OrderItemState extends State<OrderItem> {
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: OrderStatusHelper.statusColor(widget.item.status),
+                    color: OrderStatusHelper.statusColor[widget.item.status],
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: Text(
-                    OrderStatusHelper.statusText(widget.item.status),
+                    OrderStatusHelper.statusText[widget.item.status],
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -95,20 +94,16 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _menu() => Expanded(
-        child: Column(
-          children: [
-            _row(),
-            ListView(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              children: List.generate(20, (index) => Text('메뉴리스트')),
-            ),
-          ],
+        child: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          children: List.generate(20, (index) => Text('메뉴리스트')),
         ),
       );
 
-  _row({List data}) => Container(
+  _row({
+    List data,
+  }) =>
+      Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
             border: Border(
