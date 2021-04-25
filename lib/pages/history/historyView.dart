@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
@@ -262,8 +263,12 @@ class _HistoryViewState extends State<HistoryView> {
         child: ListView(
           children: List.generate(
             _selectedHistories.length,
-            (index) => _row(
-              item: _selectedHistories.toList()[index],
+            (index) => InkWell(
+              onTap: () =>
+                  AppRouter.toHistoryPage(_selectedHistories[index].objectId),
+              child: _row(
+                item: _selectedHistories.toList()[index],
+              ),
             ),
           ),
         ),
