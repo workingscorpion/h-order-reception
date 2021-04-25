@@ -43,6 +43,7 @@ dependencies:
   carousel_slider: ^3.0.0
   drag_and_drop_gridview: ^1.0.8
   timeline_tile: ^1.0.0
+  date_picker_timeline: ^1.2.1
 
   device_info: ^1.0.0
   package_info: ^0.4.3+4
