@@ -3,12 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
 import 'package:h_order_reception/utils/orderStatusHelper.dart';
 import 'package:intl/intl.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class OrderItem extends StatefulWidget {
   final OrderModel item;
@@ -112,7 +112,9 @@ class _OrderItemState extends State<OrderItem> {
   _front() => Column(
         children: [
           _header(),
-          _menu(),
+          Menu(
+            menu: widget.item.menus,
+          ),
           _footer(),
         ],
       );
@@ -123,8 +125,8 @@ class _OrderItemState extends State<OrderItem> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(),
-              child: ListView(
-                children: _timelines(),
+              child: Timeline(
+                histories: widget.item.histories,
               ),
             ),
             Positioned(
@@ -141,43 +143,6 @@ class _OrderItemState extends State<OrderItem> {
               ),
             )
           ],
-        ),
-      );
-
-  _timelines() => List.generate(widget.item.histories.length,
-      (index) => _timeline(widget.item.histories[index], index));
-
-  Widget _timeline(HistoryModel item, int index) => TimelineTile(
-        axis: TimelineAxis.vertical,
-        alignment: TimelineAlign.manual,
-        lineXY: 0.1,
-        indicatorStyle: IndicatorStyle(
-          indicator: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: OrderStatusHelper.statusColor[item.status],
-              shape: BoxShape.circle,
-            ),
-            child: Wrap(
-              children: [
-                Text(
-                  '${widget.item.histories.length - (index)}',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          color: Colors.grey,
-        ),
-        isFirst: index <= 0 ? true : false,
-        isLast: widget.item.histories.length <= index + 1 ? true : false,
-        endChild: Container(
-          padding: EdgeInsets.only(left: 10),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "${DateFormat('yyyy-MM-dd HH:mm:ss').format(item.updatedDate)}\n'${item.updaterName}'님이 '${OrderStatusHelper.statusText[item.status]}'로 수정",
-            style: TextStyle(color: Colors.black),
-          ),
         ),
       );
 
@@ -243,38 +208,6 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
           ],
-        ),
-      );
-
-  _menu() => Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-              bottom: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-            ),
-          ),
-          child: ListView(
-            padding: EdgeInsets.all(10),
-            children: List.generate(
-              20,
-              (index) => Container(
-                child: Row(
-                  children: [
-                    Text('메뉴리스트'),
-                    Spacer(),
-                    Text('1개'),
-                  ],
-                ),
-              ),
-            ),
-          ),
         ),
       );
 
