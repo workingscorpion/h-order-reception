@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/components/customBar.dart';
 import 'package:h_order_reception/pages/history/historyView.dart';
 import 'package:h_order_reception/pages/home/orderView.dart';
+import 'package:h_order_reception/pages/home/setttingView.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -68,7 +69,7 @@ class _HomePageState extends State<HomePage>
           children: [
             OrderView(),
             HistoryView(),
-            Container(),
+            SettingView(),
           ],
         ),
       );
