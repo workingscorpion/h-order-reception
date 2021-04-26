@@ -445,11 +445,11 @@ class _HistoryViewState extends State<HistoryView> {
                 padding: EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: CustomColors.textBlack),
+                  border: Border.all(color: CustomColors.doneColor),
                 ),
                 child: Icon(
                   CupertinoIcons.chevron_left,
-                  size: 18,
+                  size: 15,
                 ),
               ),
               Container(
@@ -482,11 +482,11 @@ class _HistoryViewState extends State<HistoryView> {
                 padding: EdgeInsets.all(3),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: CustomColors.textBlack),
+                  border: Border.all(color: CustomColors.doneColor),
                 ),
                 child: Icon(
                   CupertinoIcons.chevron_right,
-                  size: 18,
+                  size: 15,
                 ),
               ),
             ],

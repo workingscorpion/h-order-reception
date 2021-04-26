@@ -258,18 +258,28 @@ class _HistoryPageState extends State<HistoryPage> {
       );
 
   _header() => Container(
-        height: 40,
+        height: 50,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: Icon(CupertinoIcons.chevron_left),
-              onPressed: () => AppRouter.pop(),
+            GestureDetector(
+              onTap: () => AppRouter.pop(),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: CustomColors.doneColor),
+                ),
+                child: Icon(
+                  CupertinoIcons.chevron_left,
+                  size: 15,
+                ),
+              ),
             ),
-            Spacer(),
             Text(
               '주문현황',
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             Spacer(),
           ],
