@@ -419,10 +419,12 @@ class _HistoryViewState extends State<HistoryView> {
           initialSelectedDate: _selectedValue,
           selectionColor: CustomColors.tableInnerBorder.withOpacity(.5),
           selectedTextColor: CustomColors.aBlack,
+          monthTextStyle: TextStyle(fontSize: 0, color: Colors.transparent),
           controller: _controller,
           locale: 'ko',
           height: 95,
-          dayTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          dateTextStyle: TextStyle(fontSize: 22),
+          dayTextStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
           onDateChange: (DateTime date) {
             _selectedValue = DateTime(_selectedYear.year, date.month, date.day);
             setState(() {});
