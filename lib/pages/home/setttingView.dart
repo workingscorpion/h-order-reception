@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 
@@ -17,6 +16,7 @@ class _SettingViewState extends State<SettingView> {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             padding: EdgeInsets.all(10),
