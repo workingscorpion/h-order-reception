@@ -28,6 +28,10 @@ class _HistoryViewState extends State<HistoryView> {
 
   List<int> _flex = [2, 2, 2, 1, 2, 1];
 
+  bool isOpended = false;
+
+  List<int> _selectedFilter = List<int>();
+
   @override
   void initState() {
     _selectToday();
@@ -204,9 +208,9 @@ class _HistoryViewState extends State<HistoryView> {
       ),
     ];
 
-    _selectedHistories =
-        _histories.where((element) => _compare(element.applyTime)).toList();
-    _historySort();
+    _selectedFilter.addAll([0, 1, 2, 3, 4]);
+
+    _filterHistories();
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -230,11 +234,17 @@ class _HistoryViewState extends State<HistoryView> {
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
-    _selectedHistories =
-        _histories.where((element) => _compare(element.applyTime)).toList();
-    _historySort();
+    _filterHistories();
 
     setState(() {});
+  }
+
+  _filterHistories() {
+    _selectedHistories = _histories
+        .where((element) => _compare(element.applyTime))
+        .where((element) => _selectedFilter.contains(element.status))
+        .toList();
+    _historySort();
   }
 
   _selectToday() {
@@ -247,13 +257,18 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _yearPicker(context),
-          _datePicker(),
-          _row(),
-          _rows(),
+      child: Stack(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _yearPicker(context),
+              _datePicker(),
+              _row(),
+              _rows(),
+            ],
+          ),
+          _floatings(),
         ],
       ),
     );
@@ -452,5 +467,80 @@ class _HistoryViewState extends State<HistoryView> {
 
   _pickerItem(int index) => Center(
         child: Text('${DateTime.now().year - index}'),
+      );
+
+  _floatings() => Positioned(
+        bottom: 20,
+        right: 20,
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: isOpended == true
+                ? [
+                    _floatingMenus(),
+                    _floating(),
+                  ]
+                : [
+                    _floating(),
+                  ],
+          ),
+        ),
+      );
+
+  _floatingMenus() => Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: List.generate(5, (index) => _floatingMenu(index)));
+
+  _floatingMenu(int index) => InkWell(
+        onTap: () {
+          _selectedFilter.contains(index)
+              ? _selectedFilter.remove(index)
+              : _selectedFilter.add(index);
+          _filterHistories();
+          setState(() {});
+        },
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          decoration: BoxDecoration(
+            color: _selectedFilter.contains(index)
+                ? OrderStatusHelper.statusColor[index]
+                : CustomColors.tableInnerBorder,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            OrderStatusHelper.statusText[index],
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+
+  _floating() => InkWell(
+        onTap: () {
+          isOpended = !isOpended;
+          setState(() {});
+        },
+        child: Container(
+          height: 70,
+          width: 70,
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: CustomColors.tableInnerBorder,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 0,
+                  blurRadius: 3,
+                  offset: Offset(0, 3),
+                ),
+              ]),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
       );
 }
