@@ -37,7 +37,7 @@ class _OrderItemState extends State<OrderItem> {
     super.initState();
 
     timer =
-        Timer.periodic(Duration(milliseconds: (1000 / 30).floor()), (timer) {
+        Timer.periodic(Duration(milliseconds: (1000 / 10).floor()), (timer) {
       setState(() {});
     });
   }
