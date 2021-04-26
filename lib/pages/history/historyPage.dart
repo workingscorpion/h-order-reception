@@ -149,14 +149,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 3,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
+                  boxShadow: _shadow(),
                 ),
                 child: Column(
                   children: List.generate(4, (index) => _infoItem(index)),
@@ -170,14 +163,7 @@ class _HistoryPageState extends State<HistoryPage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0,
-                    blurRadius: 3,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
+                boxShadow: _shadow(),
               ),
               child: Container(
                 decoration: BoxDecoration(
@@ -212,14 +198,7 @@ class _HistoryPageState extends State<HistoryPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
+            boxShadow: _shadow(),
           ),
           child: Column(
             children: [
@@ -261,14 +240,7 @@ class _HistoryPageState extends State<HistoryPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
+            boxShadow: _shadow(),
           ),
           child: Timeline(histories: order.histories),
         ),
@@ -323,4 +295,13 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
       );
+
+  _shadow() => [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 0,
+          blurRadius: 3,
+          offset: Offset(0, 3),
+        ),
+      ];
 }
