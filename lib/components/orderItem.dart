@@ -37,7 +37,6 @@ class _OrderItemState extends State<OrderItem> {
   Timer timer;
 
   bool _displayFront;
-  bool _flipXAxis;
 
   @override
   void initState() {
@@ -46,7 +45,6 @@ class _OrderItemState extends State<OrderItem> {
       setState(() {});
     });
     _displayFront = true;
-    _flipXAxis = true;
     setState(() {});
   }
 
@@ -98,10 +96,7 @@ class _OrderItemState extends State<OrderItem> {
         final value =
             isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
         return Transform(
-          // TODO: x 고정
-          transform: _flipXAxis
-              ? (Matrix4.rotationY(value)..setEntry(3, 0, tilt))
-              : (Matrix4.rotationX(value)..setEntry(3, 1, tilt)),
+          transform: (Matrix4.rotationY(value)..setEntry(3, 0, tilt)),
           child: widget,
           alignment: Alignment.center,
         );
