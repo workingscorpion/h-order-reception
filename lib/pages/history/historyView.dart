@@ -370,7 +370,7 @@ class _HistoryViewState extends State<HistoryView> {
             child: Text(
               OrderStatusHelper.statusText[item.status],
               style: TextStyle(
-                color: Colors.black,
+                color: item.status == 4 ? Colors.black : Colors.white,
               ),
             ),
           ),
