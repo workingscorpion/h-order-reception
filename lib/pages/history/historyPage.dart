@@ -109,6 +109,7 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           child: Column(
@@ -121,11 +122,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _info(),
+                      _history(),
                       Container(width: 20),
                       _menu(),
                       Container(width: 20),
-                      _history(),
+                      _info(),
                     ],
                   ),
                 ),
@@ -145,36 +146,28 @@ class _HistoryPageState extends State<HistoryPage> {
             Expanded(
               flex: 3,
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
-                  boxShadow: _shadow(),
+                  border: Border.all(color: CustomColors.doneColor, width: 1),
                 ),
                 child: Column(
                   children: List.generate(4, (index) => _infoItem(index)),
                 ),
               ),
             ),
-            Container(height: 20),
+            Container(height: 10),
             Container(
-              height: 100,
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                boxShadow: _shadow(),
+                color: CustomColors.denyColor,
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: CustomColors.denyColor,
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  order.status == 0 ? '거절' : '취소',
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
+              alignment: Alignment.center,
+              child: Text(
+                order.status == 0 ? '거절' : '취소',
+                style: TextStyle(fontSize: 17, color: Colors.white),
               ),
             ),
           ],
@@ -182,12 +175,22 @@ class _HistoryPageState extends State<HistoryPage> {
       );
 
   _infoItem(int index) => Container(
+        padding: EdgeInsets.symmetric(vertical: 5),
         margin: EdgeInsets.only(bottom: 10),
         child: Row(
           children: [
-            Text(_infoTitles[index]),
+            Text(
+              _infoTitles[index],
+              style: TextStyle(fontSize: 17),
+            ),
             Spacer(),
-            Text(_infoData[index]),
+            Text(
+              _infoData[index],
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       );
@@ -195,10 +198,11 @@ class _HistoryPageState extends State<HistoryPage> {
   _menu() => Expanded(
         flex: 4,
         child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: _shadow(),
+            border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
           child: Column(
             children: [
@@ -206,7 +210,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 menu: order.menus,
                 existPrice: true,
               ),
-              _amount(),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: _amount(),
+              ),
             ],
           ),
         ),
@@ -214,10 +221,14 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _amount() => Container(
         height: 50,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: CustomColors.doneColor, width: 1),
+          ),
+        ),
         child: DefaultTextStyle(
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 22,
             color: CustomColors.aBlack,
           ),
           child: Row(
@@ -240,7 +251,7 @@ class _HistoryPageState extends State<HistoryPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: _shadow(),
+            border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
           child: Timeline(histories: order.histories),
         ),
@@ -295,13 +306,4 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
       );
-
-  _shadow() => [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.5),
-          spreadRadius: 0,
-          blurRadius: 3,
-          offset: Offset(0, 3),
-        ),
-      ];
 }
