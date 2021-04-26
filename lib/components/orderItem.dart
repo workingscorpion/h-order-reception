@@ -70,7 +70,8 @@ class _OrderItemState extends State<OrderItem> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: CustomColors.doneColor, width: 1),
         ),
         child: AnimatedSwitcher(
           duration: Duration(milliseconds: 300),
