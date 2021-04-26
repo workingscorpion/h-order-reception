@@ -70,7 +70,7 @@ class _OrderItemState extends State<OrderItem> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: AnimatedSwitcher(
           duration: Duration(milliseconds: 300),
@@ -143,38 +143,39 @@ class _OrderItemState extends State<OrderItem> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               color: OrderStatusHelper.statusColor[widget.item.status],
               child: Row(
                 children: [
                   Text(
-                    OrderStatusHelper.statusText[widget.item.status],
+                    '딜리버리',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
                     ),
                   ),
                   Spacer(),
                   Text(
-                    '${widget.item.address}',
+                    OrderStatusHelper.statusText[widget.item.status],
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
                     ),
                   ),
                 ],
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
                   Text(
-                    '딜리버리',
+                    '${widget.item.address}',
                     style: TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontSize: 15,
                     ),
                   ),
                   Spacer(),
@@ -297,7 +298,7 @@ class _OrderItemState extends State<OrderItem> {
               _button(
                 onTap: () {},
                 text: '거절',
-                background: CustomColors.tableInnerBorder,
+                background: CustomColors.denyColor,
               ),
               _button(
                 onTap: () {},
