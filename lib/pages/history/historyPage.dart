@@ -259,7 +259,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _statuses() => Container(
         child: Row(
-          children: List.generate(4, (index) => _status(index)),
+          children: List.generate(5, (index) => _status(index)),
         ),
       );
 
