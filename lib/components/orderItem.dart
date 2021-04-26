@@ -65,6 +65,7 @@ class _OrderItemState extends State<OrderItem> {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.bodyText2,
       child: Container(
+        // padding: EdgeInsets.only(right: 20),
         margin: EdgeInsets.only(right: 12),
         width: MediaQuery.of(context).size.width * .25,
         clipBehavior: Clip.antiAlias,
@@ -137,7 +138,7 @@ class _OrderItemState extends State<OrderItem> {
           border: Border(
             bottom: BorderSide(
               width: .5,
-              color: Colors.black26,
+              color: CustomColors.doneColor,
             ),
           ),
         ),
@@ -244,7 +245,7 @@ class _OrderItemState extends State<OrderItem> {
           border: Border(
             bottom: BorderSide(
               width: 1,
-              color: Colors.black26,
+              color: CustomColors.doneColor,
             ),
           ),
         ),
@@ -286,7 +287,7 @@ class _OrderItemState extends State<OrderItem> {
           border: Border(
             top: BorderSide(
               width: 1,
-              color: Colors.black26,
+              color: CustomColors.doneColor,
             ),
           ),
         ),
@@ -314,9 +315,7 @@ class _OrderItemState extends State<OrderItem> {
                 onTap: () {},
                 text: OrderStatusHelper.statusText[(widget.item.status + 1) %
                     OrderStatusHelper.statusColor.length],
-                background: OrderStatusHelper.statusColor[
-                    (widget.item.status + 1) %
-                        OrderStatusHelper.statusColor.length],
+                flex: 2,
               ),
             ],
           ),
@@ -327,22 +326,27 @@ class _OrderItemState extends State<OrderItem> {
     GestureTapCallback onTap,
     String text,
     Color background,
+    int flex,
   }) =>
       Expanded(
+        flex: flex != null ? flex : 1,
         child: Material(
-          color: background,
+          color: background != null ? background : Colors.white,
           child: InkWell(
             onTap: onTap,
             child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: CustomColors.doneColor, width: 1),
+                ),
+              ),
               height: 50,
               alignment: Alignment.center,
               child: Text(
                 text,
                 style: TextStyle(
                   fontSize: 17,
-                  color: background == CustomColors.doneColor
-                      ? Colors.black
-                      : Colors.white,
+                  color: background != null ? Colors.white : Colors.black,
                   fontWeight: FontWeight.w500,
                 ),
               ),
