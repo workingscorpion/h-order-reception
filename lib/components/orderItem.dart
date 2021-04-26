@@ -144,7 +144,7 @@ class _OrderItemState extends State<OrderItem> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
               color: OrderStatusHelper.statusColor[widget.item.status],
               child: Row(
                 children: [
@@ -169,7 +169,7 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
               child: Row(
                 children: [
                   Text(
@@ -222,50 +222,55 @@ class _OrderItemState extends State<OrderItem> {
     final text = "$hh:$mm:$ss";
 
     return Container(
-      padding: EdgeInsets.only(
-        bottom: 6,
-        left: 12,
-        right: 12,
-      ),
-      child: Row(
-        children: [
-          Text(
-            '$text',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-          Spacer(),
-          Text(
-            '${NumberFormat().format(quantity)}개',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-        ],
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      alignment: Alignment.center,
+      child: Text(
+        '$text',
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
   _summary() => Container(
-        padding: EdgeInsets.only(
-          top: 6,
-          left: 12,
-          right: 12,
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              width: 1,
+              color: Colors.black26,
+            ),
+          ),
         ),
         child: Row(
           children: [
-            Text(
-              '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
-              style: TextStyle(
-                fontSize: 15,
+            Expanded(
+              flex: 2,
+              child: Text(
+                '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
             ),
-            Spacer(),
-            Text(
-              '${NumberFormat().format(amount)}원',
-              style: TextStyle(
-                fontSize: 15,
+            Expanded(
+              child: Text(
+                '${NumberFormat().format(amount)}원',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                textAlign: TextAlign.end,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Text(
+                '${NumberFormat().format(quantity)}개',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
             ),
           ],
@@ -276,7 +281,7 @@ class _OrderItemState extends State<OrderItem> {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              width: .5,
+              width: 1,
               color: Colors.black26,
             ),
           ),
@@ -325,13 +330,14 @@ class _OrderItemState extends State<OrderItem> {
           child: InkWell(
             onTap: onTap,
             child: Container(
-              height: 40,
+              height: 50,
               alignment: Alignment.center,
               child: Text(
                 text,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 17,
                   color: Colors.white,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
