@@ -257,6 +257,7 @@ class _HistoryViewState extends State<HistoryView> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       child: Stack(
         children: [
           Column(
@@ -433,7 +434,7 @@ class _HistoryViewState extends State<HistoryView> {
   _monthPicker() => Container(
         padding: EdgeInsets.symmetric(
           horizontal: 20,
-          vertical: 5,
+          vertical: 8,
         ),
         alignment: Alignment.centerLeft,
         child: Container(
