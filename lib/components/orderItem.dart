@@ -114,34 +114,30 @@ class _OrderItemState extends State<OrderItem> {
         ],
       );
 
-  _back() => Container(
-        padding: EdgeInsets.all(10),
-        child: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(),
+  _back() => Column(
+        children: [
+          _header(),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(10),
               child: Timeline(
                 histories: widget.item.histories,
               ),
             ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                constraints: BoxConstraints(maxWidth: 20),
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  CupertinoIcons.info_circle,
-                  size: 20,
-                ),
-                onPressed: () => flipItem(),
-              ),
-            )
-          ],
-        ),
+          ),
+          _footer(),
+        ],
       );
 
   _header() => Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              width: .5,
+              color: Colors.black26,
+            ),
+          ),
+        ),
         child: Column(
           children: [
             Container(
@@ -156,6 +152,7 @@ class _OrderItemState extends State<OrderItem> {
                       fontSize: 12,
                     ),
                   ),
+                  Spacer(),
                   Text(
                     '${widget.item.address}',
                     style: TextStyle(
@@ -272,6 +269,14 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _footer() => Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              width: .5,
+              color: Colors.black26,
+            ),
+          ),
+        ),
         child: Column(
           children: [
             _summary(),

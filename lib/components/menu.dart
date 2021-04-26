@@ -18,18 +18,6 @@ class Menu extends StatelessWidget {
           color: CustomColors.aBlack,
         ),
         child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-              bottom: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-            ),
-          ),
           child: ListView(
             padding: EdgeInsets.all(10),
             children: List.generate(
