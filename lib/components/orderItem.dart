@@ -336,7 +336,9 @@ class _OrderItemState extends State<OrderItem> {
                 text,
                 style: TextStyle(
                   fontSize: 17,
-                  color: Colors.white,
+                  color: background == CustomColors.doneColor
+                      ? Colors.black
+                      : Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
