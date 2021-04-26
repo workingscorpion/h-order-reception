@@ -74,7 +74,7 @@ class _OrderItemState extends State<OrderItem> {
           border: Border.all(color: CustomColors.doneColor, width: 1),
         ),
         child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 500),
           transitionBuilder: _transitionBuilder,
           layoutBuilder: (widget, list) => Stack(children: [widget, ...list]),
           child: _displayFront == true ? _front() : _back(),
@@ -240,7 +240,7 @@ class _OrderItemState extends State<OrderItem> {
   }
 
   _summary() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
@@ -310,10 +310,11 @@ class _OrderItemState extends State<OrderItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _button(
-                  onTap: () {},
-                  text: widget.item.status == 0 ? '거절' : '취소',
-                  background: CustomColors.denyColor,
-                  color: Colors.white),
+                onTap: () {},
+                text: widget.item.status == 0 ? '거절' : '취소',
+                background: CustomColors.denyColor,
+                color: Colors.white,
+              ),
               _button(
                 onTap: () {},
                 text: OrderStatusHelper.statusText[(widget.item.status + 1) %
@@ -341,11 +342,14 @@ class _OrderItemState extends State<OrderItem> {
           child: InkWell(
             onTap: onTap,
             child: Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: CustomColors.doneColor, width: 1),
-                ),
-              ),
+              decoration: background == CustomColors.denyColor
+                  ? BoxDecoration()
+                  : BoxDecoration(
+                      border: Border(
+                        top:
+                            BorderSide(color: CustomColors.doneColor, width: 1),
+                      ),
+                    ),
               height: 50,
               alignment: Alignment.center,
               child: Text(

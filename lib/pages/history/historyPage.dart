@@ -123,9 +123,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       _history(),
-                      Container(width: 20),
+                      Container(width: 15),
                       _menu(),
-                      Container(width: 20),
+                      Container(width: 15),
                       _info(),
                     ],
                   ),
@@ -159,6 +159,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
             Container(height: 10),
             Container(
+              height: 50,
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
@@ -287,6 +288,7 @@ class _HistoryPageState extends State<HistoryPage> {
       );
 
   _statuses() => Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: List.generate(5, (index) => _status(index)),
         ),
@@ -300,7 +302,7 @@ class _HistoryPageState extends State<HistoryPage> {
           },
           child: Container(
             height: 50,
-            margin: EdgeInsets.symmetric(horizontal: 10),
+            margin: index != 4 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
               color: index == order.status
                   ? OrderStatusHelper.statusColor[index]
@@ -311,7 +313,9 @@ class _HistoryPageState extends State<HistoryPage> {
             child: Text(
               OrderStatusHelper.statusText[index],
               style: TextStyle(
-                color: index == order.status ? Colors.white : Colors.black,
+                color: index == order.status && order.status != 4
+                    ? Colors.white
+                    : Colors.black,
                 fontSize: 17,
                 fontWeight: FontWeight.w500,
               ),

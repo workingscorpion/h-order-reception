@@ -201,7 +201,9 @@ class _OrderViewState extends State<OrderView> {
           setState(() {});
         },
         child: Container(
+          width: 120,
           margin: EdgeInsets.only(bottom: 10),
+          alignment: Alignment.center,
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           decoration: BoxDecoration(
             color: _selectedFilter.contains(index)

@@ -432,10 +432,7 @@ class _HistoryViewState extends State<HistoryView> {
       );
 
   _monthPicker() => Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 8,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
         alignment: Alignment.centerLeft,
         child: Container(
           child: Row(
@@ -525,8 +522,10 @@ class _HistoryViewState extends State<HistoryView> {
           setState(() {});
         },
         child: Container(
+          width: 120,
           margin: EdgeInsets.only(bottom: 10),
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: _selectedFilter.contains(index)
                 ? OrderStatusHelper.statusColor[index]
