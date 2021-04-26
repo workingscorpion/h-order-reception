@@ -31,6 +31,7 @@ class _CustomBarState extends State<CustomBar> {
               '봉보야쥬',
               style: TextStyle(
                 color: Colors.white,
+                fontSize: 20,
               ),
             ),
             Spacer(),
