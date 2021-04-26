@@ -308,7 +308,7 @@ class _OrderItemState extends State<OrderItem> {
             children: [
               _button(
                 onTap: () {},
-                text: '거절',
+                text: widget.item.status == 0 ? '거절' : '취소',
                 background: CustomColors.denyColor,
               ),
               _button(
