@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/orderModel.dart';
 import 'package:h_order_reception/utils/orderStatusHelper.dart';
@@ -32,14 +36,18 @@ class _OrderItemState extends State<OrderItem> {
 
   Timer timer;
 
+  bool _displayFront;
+  bool _flipXAxis;
+
   @override
   void initState() {
-    super.initState();
-
     timer =
         Timer.periodic(Duration(milliseconds: (1000 / 10).floor()), (timer) {
       setState(() {});
     });
+    _displayFront = true;
+    _flipXAxis = true;
+    setState(() {});
   }
 
   @override
@@ -47,6 +55,11 @@ class _OrderItemState extends State<OrderItem> {
     timer.cancel();
 
     super.dispose();
+  }
+
+  void flipItem() {
+    _displayFront = !_displayFront;
+    setState(() {});
   }
 
   @override
@@ -61,16 +74,77 @@ class _OrderItemState extends State<OrderItem> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: Column(
-          children: [
-            _header(),
-            _menu(),
-            _footer(),
-          ],
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          transitionBuilder: _transitionBuilder,
+          layoutBuilder: (widget, list) => Stack(children: [widget, ...list]),
+          child: _displayFront == true ? _front() : _back(),
+          switchInCurve: Curves.easeInBack,
+          switchOutCurve: Curves.easeInBack.flipped,
         ),
       ),
     );
   }
+
+  Widget _transitionBuilder(Widget widget, Animation<double> animation) {
+    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
+    return AnimatedBuilder(
+      animation: rotateAnim,
+      child: widget,
+      builder: (context, widget) {
+        final isUnder = (ValueKey(_displayFront) != widget.key);
+        var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
+        tilt *= isUnder ? -1.0 : 1.0;
+        final value =
+            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
+        return Transform(
+          // TODO: x 고정
+          transform: _flipXAxis
+              ? (Matrix4.rotationY(value)..setEntry(3, 0, tilt))
+              : (Matrix4.rotationX(value)..setEntry(3, 1, tilt)),
+          child: widget,
+          alignment: Alignment.center,
+        );
+      },
+    );
+  }
+
+  _front() => Column(
+        children: [
+          _header(),
+          Menu(
+            menu: widget.item.menus,
+          ),
+          _footer(),
+        ],
+      );
+
+  _back() => Container(
+        padding: EdgeInsets.all(10),
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(),
+              child: Timeline(
+                histories: widget.item.histories,
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: IconButton(
+                constraints: BoxConstraints(maxWidth: 20),
+                padding: EdgeInsets.zero,
+                icon: Icon(
+                  CupertinoIcons.info_circle,
+                  size: 20,
+                ),
+                onPressed: () => flipItem(),
+              ),
+            )
+          ],
+        ),
+      );
 
   _header() => Container(
         child: Column(
@@ -87,7 +161,6 @@ class _OrderItemState extends State<OrderItem> {
                       fontSize: 12,
                     ),
                   ),
-                  Spacer(),
                   Text(
                     '${widget.item.address}',
                     style: TextStyle(
@@ -111,79 +184,27 @@ class _OrderItemState extends State<OrderItem> {
                     ),
                   ),
                   Spacer(),
-                  Text(
-                    '${widget.item.roomNumber}호',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                  Container(
+                    margin: EdgeInsets.only(right: 5),
+                    child: Text(
+                      '${widget.item.roomNumber}호',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
                     ),
                   ),
+                  IconButton(
+                    constraints: BoxConstraints(maxWidth: 20),
+                    padding: EdgeInsets.zero,
+                    icon: Icon(
+                      CupertinoIcons.info_circle,
+                      size: 20,
+                    ),
+                    onPressed: () => flipItem(),
+                  ),
                 ],
-              ),
-            ),
-          ],
-        ),
-      );
-
-  _menu() => Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-              bottom: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-            ),
-          ),
-          child: ListView(
-            padding: EdgeInsets.all(10),
-            children: List.generate(
-              20,
-              (index) => Container(
-                child: Row(
-                  children: [
-                    Text('메뉴리스트'),
-                    Spacer(),
-                    Text('1개'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-  _row({
-    List data,
-  }) =>
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-            border: Border(
-          bottom: data != null
-              ? BorderSide.none
-              : BorderSide(color: CustomColors.tableInnerBorder, width: 1),
-        )),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 4,
-              child: Text(data != null ? data[0] : '메뉴'),
-            ),
-            Expanded(
-              flex: 1,
-              child: Text(data != null ? data[1] : '개수'),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                alignment: Alignment.centerRight,
-                child: Text(data != null ? data[2] : '가격'),
               ),
             ),
           ],

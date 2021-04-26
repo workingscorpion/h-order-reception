@@ -11,7 +11,7 @@ class OrderModel {
   final String address;
   final String shopName;
   final DateTime applyTime;
-  final int status;
+  int status;
   final int amount;
   final List<MenuModel> menus;
   final List<HistoryModel> histories;

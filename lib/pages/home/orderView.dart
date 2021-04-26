@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/components/orderItem.dart';
+import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
 
@@ -14,6 +15,8 @@ class _OrderViewState extends State<OrderView> {
   List<MenuModel> menus;
 
   List<OrderModel> orders;
+
+  List<HistoryModel> histories;
 
   @override
   void initState() {
@@ -36,6 +39,44 @@ class _OrderViewState extends State<OrderView> {
       ),
     ];
 
+    histories = [
+      HistoryModel(
+        objectId: '55555',
+        orderObjectId: '1',
+        status: 4,
+        updatedDate: DateTime.now().subtract(Duration(minutes: 5)),
+        updaterName: '준기',
+      ),
+      HistoryModel(
+        objectId: '44444',
+        orderObjectId: '1',
+        status: 3,
+        updatedDate: DateTime.now().subtract(Duration(minutes: 10)),
+        updaterName: '준기',
+      ),
+      HistoryModel(
+        objectId: '33333',
+        orderObjectId: '1',
+        status: 2,
+        updatedDate: DateTime.now().subtract(Duration(minutes: 30)),
+        updaterName: '준기',
+      ),
+      HistoryModel(
+        objectId: '22222',
+        orderObjectId: '1',
+        status: 1,
+        updatedDate: DateTime.now().subtract(Duration(hours: 1)),
+        updaterName: '준기',
+      ),
+      HistoryModel(
+        objectId: '11111',
+        orderObjectId: '1',
+        status: 0,
+        updatedDate: DateTime.now().subtract(Duration(hours: 2)),
+        updaterName: '준기',
+      ),
+    ];
+
     orders = [
       OrderModel(
         objectId: '1',
@@ -45,6 +86,7 @@ class _OrderViewState extends State<OrderView> {
         shopName: '던킨 도넛',
         address: '마곡럭스나인오피스텔 L동',
         menus: [...menus],
+        histories: [...histories],
       ),
       OrderModel(
         objectId: '2',
@@ -54,6 +96,7 @@ class _OrderViewState extends State<OrderView> {
         shopName: '고샵',
         address: '마곡럭스나인오피스텔 L동',
         menus: [...menus],
+        histories: [...histories],
       ),
       OrderModel(
         objectId: '3',
@@ -63,6 +106,7 @@ class _OrderViewState extends State<OrderView> {
         shopName: '웨스트도어',
         address: '마곡럭스나인오피스텔 L동',
         menus: [...menus],
+        histories: [...histories],
       ),
       OrderModel(
         objectId: '4',
@@ -72,6 +116,7 @@ class _OrderViewState extends State<OrderView> {
         shopName: '봉보야쥬',
         address: '마곡럭스나인오피스텔 L동',
         menus: [...menus],
+        histories: [...histories],
       ),
       OrderModel(
         objectId: '5',
@@ -81,6 +126,7 @@ class _OrderViewState extends State<OrderView> {
         shopName: '비베러디시',
         address: '마곡럭스나인오피스텔 L동',
         menus: [...menus],
+        histories: [...histories],
       ),
       OrderModel(
         objectId: '6',
@@ -90,6 +136,7 @@ class _OrderViewState extends State<OrderView> {
         shopName: '맛집',
         address: '마곡럭스나인오피스텔 L동',
         menus: [...menus],
+        histories: [...histories],
       ),
     ];
   }
@@ -103,7 +150,7 @@ class _OrderViewState extends State<OrderView> {
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.all(12),
         children: [
-          ...orders.map((item) => OrderItem(item: item)),
+          ...orders.map<Widget>((item) => OrderItem(item: item)),
         ],
       ),
     );
