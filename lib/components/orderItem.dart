@@ -143,29 +143,32 @@ class _OrderItemState extends State<OrderItem> {
         ),
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-              color: OrderStatusHelper.statusColor[widget.item.status],
-              child: Row(
-                children: [
-                  Text(
-                    '딜리버리',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
+            InkWell(
+              onTap: () => flipItem(),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                color: OrderStatusHelper.statusColor[widget.item.status],
+                child: Row(
+                  children: [
+                    Text(
+                      '딜리버리',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  Text(
-                    OrderStatusHelper.statusText[widget.item.status],
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17,
+                    Spacer(),
+                    Text(
+                      OrderStatusHelper.statusText[widget.item.status],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(
@@ -190,15 +193,6 @@ class _OrderItemState extends State<OrderItem> {
                         fontSize: 17,
                       ),
                     ),
-                  ),
-                  IconButton(
-                    constraints: BoxConstraints(maxWidth: 25),
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      CupertinoIcons.info_circle,
-                      size: 25,
-                    ),
-                    onPressed: () => flipItem(),
                   ),
                 ],
               ),
