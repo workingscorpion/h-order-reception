@@ -65,7 +65,6 @@ class _OrderItemState extends State<OrderItem> {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.bodyText2,
       child: Container(
-        // padding: EdgeInsets.only(right: 20),
         margin: EdgeInsets.only(right: 12),
         width: MediaQuery.of(context).size.width * .25,
         clipBehavior: Clip.antiAlias,
@@ -134,14 +133,6 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _header() => Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              width: .5,
-              color: CustomColors.doneColor,
-            ),
-          ),
-        ),
         child: Column(
           children: [
             InkWell(
@@ -208,6 +199,13 @@ class _OrderItemState extends State<OrderItem> {
                 ],
               ),
             ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(
+                thickness: 1,
+                color: CustomColors.doneColor,
+              ),
+            ),
           ],
         ),
       );
@@ -243,6 +241,10 @@ class _OrderItemState extends State<OrderItem> {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
         decoration: BoxDecoration(
           border: Border(
+            top: BorderSide(
+              width: 1,
+              color: CustomColors.doneColor,
+            ),
             bottom: BorderSide(
               width: 1,
               color: CustomColors.doneColor,
@@ -283,18 +285,17 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _footer() => Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              width: 1,
-              color: CustomColors.doneColor,
-            ),
-          ),
-        ),
         child: Column(
           children: [
-            _summary(),
-            _timer(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  _summary(),
+                  _timer(),
+                ],
+              ),
+            ),
             _buttons(),
           ],
         ),
