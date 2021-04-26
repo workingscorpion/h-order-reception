@@ -114,19 +114,21 @@ class _OrderItemState extends State<OrderItem> {
         ],
       );
 
-  _back() => Column(
-        children: [
-          _header(),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(10),
-              child: Timeline(
-                histories: widget.item.histories,
+  _back() => Container(
+        child: Column(
+          children: [
+            _header(),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Timeline(
+                  histories: widget.item.histories,
+                ),
               ),
             ),
-          ),
-          _footer(),
-        ],
+            _footer(),
+          ],
+        ),
       );
 
   _header() => Container(
