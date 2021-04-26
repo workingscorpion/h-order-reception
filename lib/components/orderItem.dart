@@ -127,7 +127,6 @@ class _OrderItemState extends State<OrderItem> {
                 ),
               ),
             ),
-            _footer(),
           ],
         ),
       );
