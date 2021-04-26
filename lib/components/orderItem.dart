@@ -167,6 +167,16 @@ class _OrderItemState extends State<OrderItem> {
                         fontSize: 17,
                       ),
                     ),
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Icon(
+                        _displayFront == true
+                            ? CupertinoIcons.info_circle
+                            : CupertinoIcons.info_circle_fill,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                    ),
                   ],
                 ),
               ),
