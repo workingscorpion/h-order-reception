@@ -290,17 +290,20 @@ class _HistoryPageState extends State<HistoryPage> {
           },
           child: Container(
             height: 50,
+            margin: EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: index == order.status
                   ? OrderStatusHelper.statusColor[index]
-                  : CustomColors.tableInnerBorder,
+                  : CustomColors.evenColor,
+              borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
             child: Text(
               OrderStatusHelper.statusText[index],
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+                color: index == order.status ? Colors.white : Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
