@@ -190,11 +190,11 @@ class _OrderItemState extends State<OrderItem> {
                     ),
                   ),
                   IconButton(
-                    constraints: BoxConstraints(maxWidth: 20),
+                    constraints: BoxConstraints(maxWidth: 25),
                     padding: EdgeInsets.zero,
                     icon: Icon(
                       CupertinoIcons.info_circle,
-                      size: 20,
+                      size: 25,
                     ),
                     onPressed: () => flipItem(),
                   ),
