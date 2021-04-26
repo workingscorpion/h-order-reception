@@ -307,13 +307,15 @@ class _OrderItemState extends State<OrderItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _button(
-                onTap: () {},
-                text: widget.item.status == 0 ? '거절' : '취소',
-                background: CustomColors.denyColor,
-              ),
+                  onTap: () {},
+                  text: widget.item.status == 0 ? '거절' : '취소',
+                  background: CustomColors.denyColor,
+                  color: Colors.white),
               _button(
                 onTap: () {},
                 text: OrderStatusHelper.statusText[(widget.item.status + 1) %
+                    OrderStatusHelper.statusColor.length],
+                color: OrderStatusHelper.statusColor[(widget.item.status + 1) %
                     OrderStatusHelper.statusColor.length],
                 flex: 2,
               ),
@@ -326,6 +328,7 @@ class _OrderItemState extends State<OrderItem> {
     GestureTapCallback onTap,
     String text,
     Color background,
+    Color color,
     int flex,
   }) =>
       Expanded(
@@ -346,8 +349,8 @@ class _OrderItemState extends State<OrderItem> {
                 text,
                 style: TextStyle(
                   fontSize: 17,
-                  color: background != null ? Colors.white : Colors.black,
-                  fontWeight: FontWeight.w500,
+                  color: color,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
