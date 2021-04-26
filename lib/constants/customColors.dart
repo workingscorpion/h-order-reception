@@ -16,4 +16,5 @@ class CustomColors {
   static const Color deleveryReadColor = Color(0xff0acf9d);
   static const Color deleveringColor = Color(0xff5998f7);
   static const Color doneColor = Color(0xffd9d9d9);
+  static const Color evenColor = Color(0xfff5f5f5);
 }

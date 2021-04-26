@@ -262,7 +262,7 @@ class _HistoryViewState extends State<HistoryView> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _yearPicker(context),
+              _monthPicker(),
               _datePicker(),
               _row(),
               _rows(),
@@ -283,6 +283,7 @@ class _HistoryViewState extends State<HistoryView> {
                   AppRouter.toHistoryPage(_selectedHistories[index].objectId),
               child: _row(
                 item: _selectedHistories.toList()[index],
+                index: index,
               ),
             ),
           ),
@@ -291,41 +292,52 @@ class _HistoryViewState extends State<HistoryView> {
 
   _row({
     OrderModel item,
+    int index,
   }) =>
       Container(
         padding: EdgeInsets.symmetric(
-          vertical: 10,
+          vertical: item != null ? 15 : 10,
           horizontal: 26,
         ),
         decoration: item != null
             ? BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: CustomColors.tableInnerBorder,
-                    width: 1,
-                  ),
-                ),
+                color: index % 2 == 0 ? Colors.white : CustomColors.evenColor,
               )
             : BoxDecoration(
                 border: Border(
                   bottom: BorderSide(
-                    color: CustomColors.tableOuterBorder,
+                    color: CustomColors.doneColor,
                     width: 1,
                   ),
                 ),
               ),
         child: Row(
           children: List.generate(
-              _flex.length,
-              (index) => Expanded(
-                    flex: _flex[index],
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: item != null
-                          ? _rowItem(item, index)
-                          : _rowTitle(index),
-                    ),
-                  )),
+            _flex.length,
+            (index) => Expanded(
+              flex: _flex[index],
+              child: Container(
+                alignment: Alignment.center,
+                child: item != null
+                    ? DefaultTextStyle(
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
+                        child: _rowItem(item, index),
+                      )
+                    : DefaultTextStyle(
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                        child: _rowTitle(index),
+                      ),
+              ),
+            ),
+          ),
         ),
       );
 
@@ -336,29 +348,30 @@ class _HistoryViewState extends State<HistoryView> {
           DateFormat("yyyy/MM/dd HH:mm:ss").format(item.applyTime).toString(),
         );
       case 1:
-        return Column(
-          children: [
-            Text(
-              item.address,
-              style: TextStyle(fontSize: 13),
-            ),
-            Text(
-              item.roomNumber,
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        );
+        return Text('${item.address}/${item.roomNumber}');
       case 2:
         return Text(item.menus.first.name);
       case 3:
-        return Text('총 ${item.menus.length}개');
+        return Text('${item.menus.length}개');
       case 4:
-        return Text('총 ${NumberFormat().format(item.menus.first.price)}원');
+        return Text('${NumberFormat().format(item.menus.first.price)}원');
       case 5:
-        return Text(
-          OrderStatusHelper.statusText[item.status],
-          style: TextStyle(
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
             color: OrderStatusHelper.statusColor[item.status],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Container(
+            width: 90,
+            padding: EdgeInsets.symmetric(vertical: 3),
+            alignment: Alignment.center,
+            child: Text(
+              OrderStatusHelper.statusText[item.status],
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
           ),
         );
       default:
@@ -371,18 +384,7 @@ class _HistoryViewState extends State<HistoryView> {
       case 0:
         return Text('발생일');
       case 1:
-        return Column(
-          children: [
-            Text(
-              '건물명',
-              style: TextStyle(fontSize: 13),
-            ),
-            Text(
-              '방번호',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        );
+        return Text('건물명/방번호');
       case 2:
         return Text('메뉴명');
       case 3:
@@ -399,15 +401,20 @@ class _HistoryViewState extends State<HistoryView> {
   _datePicker() => Container(
         decoration: BoxDecoration(
           border: Border(
+            top: BorderSide(
+              color: CustomColors.doneColor,
+              width: 1,
+            ),
             bottom: BorderSide(
-              color: CustomColors.tableOuterBorder,
+              color: CustomColors.doneColor,
               width: 1,
             ),
           ),
         ),
         child: DatePicker(
-          DateTime(_selectedYear.year, 1, 1),
-          daysCount: 365,
+          DateTime(_selectedYear.year, _selectedYear.month, 1),
+          daysCount:
+              DateTime(_selectedYear.year, _selectedYear.month + 1, 0).day,
           initialSelectedDate: _selectedValue,
           selectionColor: CustomColors.tableInnerBorder.withOpacity(.5),
           selectedTextColor: CustomColors.aBlack,
@@ -423,50 +430,67 @@ class _HistoryViewState extends State<HistoryView> {
         ),
       );
 
-  _yearPicker(BuildContext context) => Container(
+  _monthPicker() => Container(
         padding: EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 5,
         ),
         alignment: Alignment.centerLeft,
-        child: InkWell(
-          onTap: () => showCupertinoModalPopup(
-            context: context,
-            builder: (BuildContext context) => Container(
-              height: 500,
-              child: CupertinoPicker(
-                children: List.generate(50, (index) => _pickerItem(index)),
-                scrollController: FixedExtentScrollController(
-                    initialItem: DateTime.now().year - _selectedYear.year),
-                onSelectedItemChanged: (int index) {
-                  _selectedYear = DateTime(DateTime.now().year - index,
-                      DateTime.now().month, DateTime.now().day);
-                  _selectedValue = DateTime(
-                    _selectedYear.year,
-                    _selectedValue.month,
-                    _selectedValue.day,
-                  );
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    _moveDatePicker();
-                  });
-                  // _moveDatePicker();
-                  setState(() {});
-                },
-                backgroundColor: Colors.white,
-                itemExtent: 50,
-                magnification: 1.2,
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: CustomColors.textBlack),
+                ),
+                child: Icon(
+                  CupertinoIcons.chevron_left,
+                  size: 18,
+                ),
               ),
-            ),
-          ),
-          child: Text(
-            _selectedYear.year.toString(),
-            style: TextStyle(fontSize: 20),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 5),
+                      child: Text(
+                        '${DateFormat('yyyy년').format(_selectedYear)}',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${DateFormat('MM월').format(_selectedYear)}',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: CustomColors.textBlack),
+                ),
+                child: Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 18,
+                ),
+              ),
+            ],
           ),
         ),
-      );
-
-  _pickerItem(int index) => Center(
-        child: Text('${DateTime.now().year - index}'),
       );
 
   _floatings() => Positioned(
