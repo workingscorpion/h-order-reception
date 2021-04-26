@@ -417,7 +417,7 @@ class _HistoryViewState extends State<HistoryView> {
           daysCount:
               DateTime(_selectedYear.year, _selectedYear.month + 1, 0).day,
           initialSelectedDate: _selectedValue,
-          selectionColor: CustomColors.tableInnerBorder.withOpacity(.5),
+          selectionColor: CustomColors.doneColor.withOpacity(.5),
           selectedTextColor: CustomColors.aBlack,
           monthTextStyle: TextStyle(fontSize: 0, color: Colors.transparent),
           controller: _controller,
