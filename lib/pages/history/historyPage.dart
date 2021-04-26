@@ -22,6 +22,10 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   OrderModel order;
 
+  final List<String> _infoTitles = ['건물정보', '방번호', '발생시간', '서비스명'];
+
+  List<String> _infoData;
+
   get amount {
     return [...order.menus]
         .map((e) => e.price * e.count)
@@ -92,6 +96,13 @@ class _HistoryPageState extends State<HistoryPage> {
       ],
     );
 
+    _infoData = [
+      order.address,
+      order.roomNumber,
+      DateFormat().format(order.applyTime),
+      order.shopName,
+    ];
+
     super.initState();
   }
 
@@ -127,7 +138,9 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   _info() => Expanded(
+        flex: 3,
         child: Container(
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -140,12 +153,25 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ],
           ),
-          child: Text('info'),
+          child: Column(
+            children: List.generate(4, (index) => _infoItem(index)),
+          ),
+        ),
+      );
+
+  _infoItem(int index) => Container(
+        margin: EdgeInsets.only(bottom: 10),
+        child: Row(
+          children: [
+            Text(_infoTitles[index]),
+            Spacer(),
+            Text(_infoData[index]),
+          ],
         ),
       );
 
   _menu() => Expanded(
-        flex: 2,
+        flex: 4,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -194,7 +220,7 @@ class _HistoryPageState extends State<HistoryPage> {
       );
 
   _history() => Expanded(
-        flex: 2,
+        flex: 4,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
