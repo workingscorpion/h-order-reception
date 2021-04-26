@@ -25,8 +25,8 @@ class _OrderViewState extends State<OrderView> {
     menus = [
       MenuModel(
         boundaryId: '11',
-        count: 1,
-        name: '아메리카노',
+        count: 123,
+        name: '아메리카노아메리카노아메리카노호롤롤로호롤롤로호롤롤로',
         objectId: '111',
         price: 1000,
       ),

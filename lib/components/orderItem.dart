@@ -109,6 +109,7 @@ class _OrderItemState extends State<OrderItem> {
           _header(),
           Menu(
             menu: widget.item.menus,
+            existPrice: false,
           ),
           _footer(),
         ],
