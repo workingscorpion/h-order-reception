@@ -139,23 +139,59 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _info() => Expanded(
         flex: 3,
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3), // changes position of shadow
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0,
+                      blurRadius: 3,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: List.generate(4, (index) => _infoItem(index)),
+                ),
               ),
-            ],
-          ),
-          child: Column(
-            children: List.generate(4, (index) => _infoItem(index)),
-          ),
+            ),
+            Container(height: 20),
+            Container(
+              height: 100,
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 0,
+                    blurRadius: 3,
+                    offset: Offset(0, 3), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: CustomColors.denyColor,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  order.status == 0 ? '거절' : '취소',
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
         ),
       );
 
