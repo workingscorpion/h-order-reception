@@ -267,14 +267,14 @@ class _HistoryPageState extends State<HistoryPage> {
               onTap: () => AppRouter.pop(),
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 10),
-                padding: EdgeInsets.all(3),
+                padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: CustomColors.doneColor),
                 ),
                 child: Icon(
                   CupertinoIcons.chevron_left,
-                  size: 15,
+                  size: 18,
                 ),
               ),
             ),
