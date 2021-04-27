@@ -448,7 +448,9 @@ class _HistoryViewState extends State<HistoryView> {
                   setState(() {});
                 },
                 child: Container(
-                  padding: EdgeInsets.all(5),
+                  padding:
+                      EdgeInsets.only(left: 4, right: 5, top: 9, bottom: 10),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: CustomColors.doneColor),
@@ -495,7 +497,9 @@ class _HistoryViewState extends State<HistoryView> {
                   setState(() {});
                 },
                 child: Container(
-                  padding: EdgeInsets.all(5),
+                  alignment: Alignment.center,
+                  padding:
+                      EdgeInsets.only(left: 5, right: 4, top: 9, bottom: 10),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(color: CustomColors.doneColor),
