@@ -174,35 +174,38 @@ class _OrderItemState extends State<OrderItem> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              padding: EdgeInsets.symmetric(horizontal: 12),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        '${widget.item.address}',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                        ),
-                      ),
-                      Spacer(),
-                      Container(
-                        margin: EdgeInsets.only(right: 5),
-                        child: Text(
-                          '${widget.item.roomNumber}호',
+                  Container(
+                    padding: EdgeInsets.only(top: 15, bottom: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${widget.item.address}',
                           style: TextStyle(
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
+                            fontSize: 15,
                           ),
                         ),
-                      ),
-                    ],
+                        Spacer(),
+                        Container(
+                          margin: EdgeInsets.only(right: 5),
+                          child: Text(
+                            '${widget.item.roomNumber}호',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Divider(
                     thickness: 1,
-                    height: 22,
+                    height: 1,
                     color: CustomColors.doneColor,
                   ),
                 ],

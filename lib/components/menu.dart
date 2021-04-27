@@ -19,11 +19,10 @@ class Menu extends StatelessWidget {
         ),
         child: Container(
           child: ListView(
-            padding: EdgeInsets.all(10),
             children: List.generate(
               menu.length,
               (index) => Container(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Row(
                   children: [
                     Expanded(
