@@ -538,7 +538,7 @@ class _HistoryViewState extends State<HistoryView> {
             OrderStatusHelper.statusText[index],
             style: TextStyle(
               fontSize: 15,
-              color: Colors.white,
+              color: index != 4 ? Colors.white : Colors.black,
             ),
           ),
         ),
