@@ -261,26 +261,30 @@ class _HistoryPageState extends State<HistoryPage> {
   _header() => Container(
         height: 50,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
               onTap: () => AppRouter.pop(),
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: CustomColors.doneColor),
-                ),
-                child: Icon(
-                  CupertinoIcons.chevron_left,
-                  size: 18,
-                ),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    padding:
+                        EdgeInsets.only(left: 4, right: 5, top: 9, bottom: 10),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: CustomColors.doneColor),
+                    ),
+                    child: Icon(
+                      CupertinoIcons.chevron_left,
+                      size: 18,
+                    ),
+                  ),
+                  Text(
+                    '주문현황',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  ),
+                ],
               ),
-            ),
-            Text(
-              '주문현황',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             Spacer(),
           ],
