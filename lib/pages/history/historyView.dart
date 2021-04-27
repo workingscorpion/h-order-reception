@@ -423,7 +423,6 @@ class _HistoryViewState extends State<HistoryView> {
           controller: _controller,
           locale: 'ko',
           height: 95,
-          dateTextStyle: TextStyle(fontSize: 22),
           dayTextStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
           onDateChange: (DateTime date) {
             _selectedValue = DateTime(_selectedYear.year, date.month, date.day);
@@ -440,15 +439,24 @@ class _HistoryViewState extends State<HistoryView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: CustomColors.doneColor),
-                ),
-                child: Icon(
-                  CupertinoIcons.chevron_left,
-                  size: 15,
+              GestureDetector(
+                onTap: () {
+                  final lastMonthDate =
+                      DateTime(_selectedYear.year, _selectedYear.month, 0).day;
+                  _selectedYear =
+                      _selectedYear.subtract(Duration(days: lastMonthDate));
+                  setState(() {});
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: CustomColors.doneColor),
+                  ),
+                  child: Icon(
+                    CupertinoIcons.chevron_left,
+                    size: 18,
+                  ),
                 ),
               ),
               Container(
@@ -477,15 +485,25 @@ class _HistoryViewState extends State<HistoryView> {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: CustomColors.doneColor),
-                ),
-                child: Icon(
-                  CupertinoIcons.chevron_right,
-                  size: 15,
+              GestureDetector(
+                onTap: () {
+                  final thisMonthDate =
+                      DateTime(_selectedYear.year, _selectedYear.month + 1, 0)
+                          .day;
+                  _selectedYear =
+                      _selectedYear.add(Duration(days: thisMonthDate));
+                  setState(() {});
+                },
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: CustomColors.doneColor),
+                  ),
+                  child: Icon(
+                    CupertinoIcons.chevron_right,
+                    size: 18,
+                  ),
                 ),
               ),
             ],
