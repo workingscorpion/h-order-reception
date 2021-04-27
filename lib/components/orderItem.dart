@@ -122,7 +122,6 @@ class _OrderItemState extends State<OrderItem> {
             _header(),
             Expanded(
               child: Container(
-                padding: EdgeInsets.all(10),
                 child: Timeline(
                   histories: widget.item.histories,
                 ),
