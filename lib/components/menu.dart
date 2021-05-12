@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/model/baseServiceModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 
@@ -9,7 +10,7 @@ class Menu extends StatelessWidget {
   final HistoryModel history;
   final Map data;
 
-  Map get snapShotData {
+  BaseServiceModel get snapShotData {
     return HistoryStore.instance.snapShotDataMap[history.serviceObjectId];
   }
 
@@ -46,13 +47,12 @@ class Menu extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: Text(snapShotData[key]['name']),
-              // child: Text(
-              //   menu[index].name,
-              //   softWrap: true,
-              //   maxLines: 2,
-              //   overflow: TextOverflow.ellipsis,
-              // ),
+              child: Text(
+                snapShotData.name,
+                softWrap: true,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Container(
               margin: EdgeInsets.only(left: 20),

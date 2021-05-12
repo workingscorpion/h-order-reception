@@ -8,11 +8,11 @@ const String NotificationChannelDescription = 'hOrder notification';
 final Map<int, OrderStatusModel> orderStatus = {
   -1: OrderStatusModel(
     name: '취소',
-    color: CustomColors.doneColor,
+    color: CustomColors.denyColor,
   ),
   -9: OrderStatusModel(
     name: '거절',
-    color: CustomColors.doneColor,
+    color: CustomColors.denyColor,
   ),
   1: OrderStatusModel(
     name: '수락대기',

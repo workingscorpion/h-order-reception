@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
+import 'package:h_order_reception/model/baseServiceModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/snapShotModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
@@ -20,7 +21,7 @@ abstract class HistoryStoreBase with Store {
   ObservableMap<int, HistoryModel> historyMap = ObservableMap();
 
   ObservableList<SnapShotModel> snapShots = ObservableList();
-  ObservableMap<String, Map> snapShotDataMap = ObservableMap();
+  ObservableMap<String, BaseServiceModel> snapShotDataMap = ObservableMap();
 
   @action
   load() async {
@@ -42,6 +43,7 @@ abstract class HistoryStoreBase with Store {
       ..clear()
       ..addEntries(response.data
           .map((e) => jsonDecode(e.data))
-          .map((e) => MapEntry(e['objectId'], e)));
+          .map((e) => BaseServiceModel.fromJson(e))
+          .map((e) => MapEntry(e.objectId, e)));
   }
 }

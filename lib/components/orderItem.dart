@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/components/clock.dart';
 import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/refuseDialog.dart';
 import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/model/baseServiceModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
@@ -27,7 +29,7 @@ class _OrderItemState extends State<OrderItem> {
     return HistoryStore.instance.historyMap[widget.historyIndex];
   }
 
-  Map get snapShotData {
+  BaseServiceModel get snapShotData {
     return HistoryStore.instance.snapShotDataMap[history.serviceObjectId];
   }
 
@@ -71,68 +73,60 @@ class _OrderItemState extends State<OrderItem> {
             width: 1,
           ),
         ),
-        child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
-          transitionBuilder: (widget, animation) {
-            final rotateAnimation =
-                Tween(begin: pi, end: 0.0).animate(animation);
-
-            return AnimatedBuilder(
-              animation: rotateAnimation,
-              child: widget,
-              builder: (context, widget) {
-                final isUnder = (ValueKey(front) != widget.key);
-                final tilt = ((animation.value - 0.5).abs() - 0.5) *
-                    0.003 *
-                    (isUnder ? -1.0 : 1.0);
-                final value = isUnder
-                    ? min(rotateAnimation.value, pi / 2)
-                    : rotateAnimation.value;
-
-                return Transform(
-                  transform: (Matrix4.rotationY(value)..setEntry(3, 0, tilt)),
-                  child: widget,
-                  alignment: Alignment.center,
-                );
-              },
-            );
-          },
-          switchInCurve: Curves.easeInBack,
-          switchOutCurve: Curves.easeInBack.flipped,
-          layoutBuilder: (widget, list) => Stack(
-            children: [
-              widget,
-              ...list,
-            ],
-          ),
-          child: front == true ? _front() : _back(),
-        ),
-      ),
-    );
-  }
-
-  _front() => Column(
-        children: [
-          _header(),
-          Expanded(
-            child: Menu(history: history),
-          ),
-          _footer(),
-        ],
-      );
-
-  _back() => Container(
         child: Column(
           children: [
             _header(),
             Expanded(
               child: Container(
-                child: Timeline(historyIndex: widget.historyIndex),
+                decoration: BoxDecoration(),
+                clipBehavior: Clip.antiAlias,
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  transitionBuilder: (widget, animation) {
+                    final rotateAnimation =
+                        Tween(begin: pi, end: 0.0).animate(animation);
+
+                    return AnimatedBuilder(
+                      animation: rotateAnimation,
+                      child: widget,
+                      builder: (context, widget) {
+                        final isUnder = (ValueKey(front) != widget.key);
+                        final tilt = ((animation.value - 0.5).abs() - 0.5) *
+                            0.003 *
+                            (isUnder ? -1.0 : 1.0);
+                        final value = isUnder
+                            ? min(rotateAnimation.value, pi / 2)
+                            : rotateAnimation.value;
+
+                        return Transform(
+                          transform: (Matrix4.rotationY(value)
+                            ..setEntry(3, 0, tilt)),
+                          alignment: Alignment.center,
+                          child: widget,
+                        );
+                      },
+                    );
+                  },
+                  switchInCurve: Curves.ease,
+                  switchOutCurve: Curves.ease.flipped,
+                  layoutBuilder: (widget, list) => Stack(
+                    children: [
+                      widget,
+                      ...list,
+                    ],
+                  ),
+                  child: front == true
+                      ? Menu(history: history)
+                      : Timeline(historyIndex: widget.historyIndex),
+                ),
               ),
             ),
+            _footer(),
           ],
         ),
-      );
+      ),
+    );
+  }
 
   _header() => Container(
         child: Column(
@@ -148,7 +142,7 @@ class _OrderItemState extends State<OrderItem> {
                 child: Row(
                   children: [
                     Text(
-                      history.serviceObjectId,
+                      snapShotData.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -156,14 +150,14 @@ class _OrderItemState extends State<OrderItem> {
                       ),
                     ),
                     Spacer(),
-                    // Text(
-                    //   OrderStatusHelper.statusText[widget.item.status],
-                    //   style: TextStyle(
-                    //     color: Colors.white,
-                    //     fontWeight: FontWeight.w500,
-                    //     fontSize: 17,
-                    //   ),
-                    // ),
+                    Text(
+                      orderStatus[history.status].name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
+                    ),
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Icon(
@@ -186,25 +180,25 @@ class _OrderItemState extends State<OrderItem> {
                     padding: EdgeInsets.only(top: 15, bottom: 10),
                     child: Row(
                       children: [
-                        // Text(
-                        //   '${widget.item.address}',
-                        //   style: TextStyle(
-                        //     color: Colors.black,
-                        //     fontSize: 15,
-                        //   ),
-                        // ),
-                        // Spacer(),
-                        // Container(
-                        //   margin: EdgeInsets.only(right: 5),
-                        //   child: Text(
-                        //     '${widget.item.roomNumber}호',
-                        //     style: TextStyle(
-                        //       color: Colors.black,
-                        //       fontWeight: FontWeight.bold,
-                        //       fontSize: 17,
-                        //     ),
-                        //   ),
-                        // ),
+                        Text(
+                          history.userName,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          margin: EdgeInsets.only(right: 5),
+                          child: Text(
+                            history.deviceName,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -295,7 +289,12 @@ class _OrderItemState extends State<OrderItem> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _button(
-              onTap: () {},
+              onTap: () {
+                showDialog(
+                  context: context,
+                  child: RefuseDialog(),
+                );
+              },
               text: history.status == 1 ? '거절' : '취소',
               background: CustomColors.denyColor,
               color: Colors.white,

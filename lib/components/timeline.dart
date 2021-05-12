@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class Timeline extends StatefulWidget {
   final int historyIndex;
 
-  Timeline({this.historyIndex});
+  Timeline({
+    this.historyIndex,
+  });
 
   @override
   _TimelineState createState() => _TimelineState();
