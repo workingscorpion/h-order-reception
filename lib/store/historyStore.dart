@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
+import 'package:h_order_reception/http/types/updateValueModel.dart';
 import 'package:h_order_reception/model/baseServiceModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/snapShotModel.dart';
@@ -45,5 +46,15 @@ abstract class HistoryStoreBase with Store {
           .map((e) => jsonDecode(e.data))
           .map((e) => BaseServiceModel.fromJson(e))
           .map((e) => MapEntry(e.objectId, e)));
+  }
+
+  setStatus({
+    int index,
+    int status,
+  }) async {
+    Client.create().updateHistoryStatus(
+      index,
+      UpdateValueModel(value: status),
+    );
   }
 }

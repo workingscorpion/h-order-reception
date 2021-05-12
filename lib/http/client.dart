@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
+import 'package:h_order_reception/http/types/updateValueModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/listModel.dart';
 import 'package:h_order_reception/model/snapShotModel.dart';
@@ -39,4 +40,10 @@ abstract class Client {
 
   @GET("/v1/admin/history")
   Future<ListDataListModel<HistoryModel, SnapShotModel>> histories();
+
+  @POST("/v1/admin/history/{index}/status")
+  Future<ListDataListModel<HistoryModel, SnapShotModel>> updateHistoryStatus(
+    @Path('index') int index,
+    @Body() UpdateValueModel body,
+  );
 }

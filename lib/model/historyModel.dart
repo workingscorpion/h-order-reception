@@ -12,6 +12,8 @@ class HistoryModel {
   final String deviceObjectId;
   final String deviceName;
   final String data;
+  final int amount;
+  final int quantity;
   final DateTime createdTime;
   final DateTime updatedTime;
 
@@ -24,6 +26,8 @@ class HistoryModel {
     this.deviceObjectId,
     this.deviceName,
     this.data,
+    this.amount,
+    this.quantity,
     this.createdTime,
     this.updatedTime,
   });

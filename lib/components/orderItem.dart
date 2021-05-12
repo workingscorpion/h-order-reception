@@ -33,14 +33,6 @@ class _OrderItemState extends State<OrderItem> {
     return HistoryStore.instance.snapShotDataMap[history.serviceObjectId];
   }
 
-  int get amount {
-    return 0;
-  }
-
-  int get quantity {
-    return 0;
-  }
-
   bool front;
 
   @override
@@ -62,7 +54,6 @@ class _OrderItemState extends State<OrderItem> {
       child: Container(
         margin: EdgeInsets.only(right: 12),
         width: MediaQuery.of(context).size.width * .25,
-        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
@@ -71,6 +62,7 @@ class _OrderItemState extends State<OrderItem> {
             width: 1,
           ),
         ),
+        clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
             _header(),
@@ -228,8 +220,7 @@ class _OrderItemState extends State<OrderItem> {
         ),
         child: Row(
           children: [
-            Expanded(
-              flex: 2,
+            Container(
               child: Text(
                 '${DateFormat("yyyy/MM/dd HH:mm").format(history.updatedTime)}',
                 style: TextStyle(
@@ -237,24 +228,30 @@ class _OrderItemState extends State<OrderItem> {
                 ),
               ),
             ),
-            Expanded(
-              child: Text(
-                '${NumberFormat().format(amount)}원',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.end,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              child: Text(
-                '${NumberFormat().format(quantity)}개',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-            ),
+            Spacer(),
+            history.amount != null
+                ? Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      '${NumberFormat().format(history.amount)}원',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.end,
+                    ),
+                  )
+                : Container(),
+            history.quantity != null
+                ? Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      '${NumberFormat().format(history.quantity)}개',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       );
@@ -298,7 +295,12 @@ class _OrderItemState extends State<OrderItem> {
               color: Colors.white,
             ),
             _button(
-              onTap: () {},
+              onTap: () async {
+                await HistoryStore.instance.setStatus(
+                  index: history.index,
+                  status: history.status,
+                );
+              },
               text: orderStatus[next].name,
               flex: 2,
             ),

@@ -69,4 +69,27 @@ class _Client implements Client {
         ListDataListModel<HistoryModel, SnapShotModel>.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<ListDataListModel<HistoryModel, SnapShotModel>> updateHistoryStatus(
+      index, body) async {
+    ArgumentError.checkNotNull(index, 'index');
+    ArgumentError.checkNotNull(body, 'body');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body?.toJson() ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history/$index/status',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value =
+        ListDataListModel<HistoryModel, SnapShotModel>.fromJson(_result.data);
+    return value;
+  }
 }
