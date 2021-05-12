@@ -9,7 +9,7 @@ part of 'historyModel.dart';
 HistoryModel _$HistoryModelFromJson(Map<String, dynamic> json) {
   return HistoryModel(
     index: json['index'] as int,
-    status: json['status'] as String,
+    status: json['status'] as int,
     serviceObjectId: json['serviceObjectId'] as String,
     userObjectId: json['userObjectId'] as String,
     userName: json['userName'] as String,

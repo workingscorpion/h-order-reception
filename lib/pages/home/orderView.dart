@@ -5,7 +5,7 @@ import 'package:h_order_reception/components/orderItem.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
+import 'package:h_order_reception/utils/constants.dart';
 
 class OrderView extends StatefulWidget {
   OrderView() : super();
@@ -52,10 +52,10 @@ class _OrderViewState extends State<OrderView> {
                   EdgeInsets.only(bottom: 12, top: 12, left: 12, right: 100),
               children: [
                 ...histories
-                    .where((element) =>
+                    .where((item) =>
                         (_selectedFilter?.isEmpty ?? true) ||
-                        _selectedFilter.contains(element.status))
-                    .map<Widget>((item) => OrderItem(historyIndex: item.index)),
+                        _selectedFilter.contains(item.status))
+                    .map((item) => OrderItem(historyIndex: item.index)),
               ],
             ),
           ),
@@ -82,7 +82,7 @@ class _OrderViewState extends State<OrderView> {
   _floatingButtonMenus() => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          ...List.generate(4, (index) => _floatingButtonMenu(index)),
+          ...orderStatus.keys.map((value) => _floatingButtonMenu(value)),
         ],
       );
 
@@ -90,7 +90,7 @@ class _OrderViewState extends State<OrderView> {
         margin: EdgeInsets.only(bottom: 10),
         child: Material(
           color: _selectedFilter.contains(value)
-              ? OrderStatusHelper.statusColor[value]
+              ? orderStatus[value].color
               : CustomColors.tableInnerBorder,
           borderRadius: BorderRadius.circular(20),
           clipBehavior: Clip.antiAlias,
@@ -106,7 +106,7 @@ class _OrderViewState extends State<OrderView> {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                OrderStatusHelper.statusText[value],
+                orderStatus[value].name,
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,

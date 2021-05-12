@@ -5,7 +5,7 @@ part 'historyModel.g.dart';
 @JsonSerializable()
 class HistoryModel {
   final int index;
-  final String status;
+  final int status;
   final String serviceObjectId;
   final String userObjectId;
   final String userName;

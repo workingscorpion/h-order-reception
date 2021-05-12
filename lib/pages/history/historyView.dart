@@ -6,7 +6,7 @@ import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
+import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
 class HistoryView extends StatefulWidget {
@@ -324,7 +324,7 @@ class _HistoryViewState extends State<HistoryView> {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: OrderStatusHelper.statusColor[item.status],
+            color: orderStatus[item.status].color,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Container(
@@ -332,7 +332,7 @@ class _HistoryViewState extends State<HistoryView> {
             padding: EdgeInsets.symmetric(vertical: 3),
             alignment: Alignment.center,
             child: Text(
-              OrderStatusHelper.statusText[item.status],
+              orderStatus[item.status].name,
               style: TextStyle(
                 color: item.status == 4 ? Colors.black : Colors.white,
               ),
@@ -501,11 +501,11 @@ class _HistoryViewState extends State<HistoryView> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: List.generate(5, (index) => _floatingMenu(index)));
 
-  _floatingMenu(int index) => InkWell(
+  _floatingMenu(int value) => InkWell(
         onTap: () {
-          _selectedFilter.contains(index)
-              ? _selectedFilter.remove(index)
-              : _selectedFilter.add(index);
+          _selectedFilter.contains(value)
+              ? _selectedFilter.remove(value)
+              : _selectedFilter.add(value);
           _filterHistories();
           setState(() {});
         },
@@ -515,16 +515,16 @@ class _HistoryViewState extends State<HistoryView> {
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: _selectedFilter.contains(index)
-                ? OrderStatusHelper.statusColor[index]
+            color: _selectedFilter.contains(value)
+                ? orderStatus[value].color
                 : CustomColors.tableInnerBorder,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
-            OrderStatusHelper.statusText[index],
+            orderStatus[value].name,
             style: TextStyle(
               fontSize: 15,
-              color: index != 4 ? Colors.white : Colors.black,
+              color: value != 4 ? Colors.white : Colors.black,
             ),
           ),
         ),

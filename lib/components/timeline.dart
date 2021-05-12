@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:h_order_reception/model/historyModel.dart';
 
-class Timeline extends StatelessWidget {
-  Timeline({this.histories});
+class Timeline extends StatefulWidget {
+  final int historyIndex;
 
-  final List<HistoryModel> histories;
+  Timeline({this.historyIndex});
 
+  @override
+  _TimelineState createState() => _TimelineState();
+}
+
+class _TimelineState extends State<Timeline> {
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(10),
-      // children: _timelines(),
+      children: [
+        //   ...List.generate(
+        // widget.historyIndex.length, (index) => _timeline(histories[index], index)),
+      ],
     );
   }
 
-  // _timelines() => List.generate(
-  //     histories.length, (index) => _timeline(histories[index], index));
-
-  // Widget _timeline(HistoryModel item, int index) => TimelineTile(
+  //  _timeline(HistoryModel item, int index) => TimelineTile(
   //       axis: TimelineAxis.vertical,
   //       alignment: TimelineAlign.manual,
   //       lineXY: .1,

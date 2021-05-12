@@ -1,11 +1,15 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/components/clock.dart';
+import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/utils/constants.dart';
+import 'package:intl/intl.dart';
 
 class OrderItem extends StatefulWidget {
   final int historyIndex;
@@ -23,29 +27,23 @@ class _OrderItemState extends State<OrderItem> {
     return HistoryStore.instance.historyMap[widget.historyIndex];
   }
 
-  // get amount {
-  //   return [...widget.item.menus]
-  //       .map((e) => e.price * e.count)
-  //       .reduce((value, element) => value + element);
-  // }
+  Map get snapShotData {
+    return HistoryStore.instance.snapShotDataMap[history.serviceObjectId];
+  }
 
-  // get quantity {
-  //   return [...widget.item.menus]
-  //       .map((e) => e.count)
-  //       .reduce((value, element) => value + element);
-  // }
+  int get amount {
+    return 0;
+  }
 
-  Timer timer;
+  int get quantity {
+    return 0;
+  }
+
   bool front;
 
   @override
   void initState() {
     super.initState();
-
-    timer =
-        Timer.periodic(Duration(milliseconds: (1000 / 10).floor()), (timer) {
-      setState(() {});
-    });
 
     front = true;
 
@@ -54,8 +52,6 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   void dispose() {
-    timer.cancel();
-
     super.dispose();
   }
 
@@ -101,6 +97,8 @@ class _OrderItemState extends State<OrderItem> {
               },
             );
           },
+          switchInCurve: Curves.easeInBack,
+          switchOutCurve: Curves.easeInBack.flipped,
           layoutBuilder: (widget, list) => Stack(
             children: [
               widget,
@@ -108,8 +106,6 @@ class _OrderItemState extends State<OrderItem> {
             ],
           ),
           child: front == true ? _front() : _back(),
-          switchInCurve: Curves.easeInBack,
-          switchOutCurve: Curves.easeInBack.flipped,
         ),
       ),
     );
@@ -118,10 +114,9 @@ class _OrderItemState extends State<OrderItem> {
   _front() => Column(
         children: [
           _header(),
-          // Menu(
-          //   menu: widget.item.menus,
-          //   existPrice: false,
-          // ),
+          Expanded(
+            child: Menu(history: history),
+          ),
           _footer(),
         ],
       );
@@ -132,10 +127,8 @@ class _OrderItemState extends State<OrderItem> {
             _header(),
             Expanded(
               child: Container(
-                  // child: Timeline(
-                  //   histories: widget.item.histories,
-                  // ),
-                  ),
+                child: Timeline(historyIndex: widget.historyIndex),
+              ),
             ),
           ],
         ),
@@ -151,11 +144,11 @@ class _OrderItemState extends State<OrderItem> {
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                // color: OrderStatusHelper.statusColor[widget.item.status],
+                color: orderStatus[history.status].color,
                 child: Row(
                   children: [
                     Text(
-                      '딜리버리',
+                      history.serviceObjectId,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -227,33 +220,6 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _timer() {
-    final duration = DateTime.now().difference(history.updatedTime);
-    final seconds = duration.inSeconds;
-    final h = (seconds / 3600).floor();
-    final hh = h < 10 ? '0$h' : '$h';
-
-    final m = (seconds % 3600 / 60).floor();
-    final mm = m < 10 ? '0$m' : '$m';
-
-    final s = (seconds % 60).floor();
-    final ss = s < 10 ? '0$s' : '$s';
-
-    final text = "$hh:$mm:$ss";
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-      alignment: Alignment.center,
-      child: Text(
-        '$text',
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
   _summary() => Container(
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
@@ -270,33 +236,33 @@ class _OrderItemState extends State<OrderItem> {
         ),
         child: Row(
           children: [
-            // Expanded(
-            //   flex: 2,
-            //   child: Text(
-            //     '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
-            //     style: TextStyle(
-            //       fontSize: 15,
-            //     ),
-            //   ),
-            // ),
-            // Expanded(
-            //   child: Text(
-            //     '${NumberFormat().format(amount)}원',
-            //     style: TextStyle(
-            //       fontSize: 15,
-            //     ),
-            //     textAlign: TextAlign.end,
-            //   ),
-            // ),
-            // Container(
-            //   margin: EdgeInsets.only(left: 20),
-            //   child: Text(
-            //     '${NumberFormat().format(quantity)}개',
-            //     style: TextStyle(
-            //       fontSize: 15,
-            //     ),
-            //   ),
-            // ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                '${DateFormat("yyyy/MM/dd HH:mm").format(history.updatedTime)}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '${NumberFormat().format(amount)}원',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                textAlign: TextAlign.end,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Text(
+                '${NumberFormat().format(quantity)}개',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -309,7 +275,7 @@ class _OrderItemState extends State<OrderItem> {
               child: Column(
                 children: [
                   _summary(),
-                  _timer(),
+                  Clock(dateTime: history.updatedTime),
                 ],
               ),
             ),
@@ -318,30 +284,32 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _buttons() => IntrinsicHeight(
-        child: Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // _button(
-              //   onTap: () {},
-              //   text: widget.item.status == 0 ? '거절' : '취소',
-              //   background: CustomColors.denyColor,
-              //   color: Colors.white,
-              // ),
-              // _button(
-              //   onTap: () {},
-              //   text: OrderStatusHelper.statusText[(widget.item.status + 1) %
-              //       OrderStatusHelper.statusColor.length],
-              //   color: OrderStatusHelper.statusColor[(widget.item.status + 1) %
-              //       OrderStatusHelper.statusColor.length],
-              //   flex: 2,
-              // ),
-            ],
-          ),
+  _buttons() {
+    final keys = orderStatus.keys.toList();
+    final next = (keys.indexOf(history.status) + 1) % keys.length;
+
+    return IntrinsicHeight(
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _button(
+              onTap: () {},
+              text: history.status == 1 ? '거절' : '취소',
+              background: CustomColors.denyColor,
+              color: Colors.white,
+            ),
+            _button(
+              onTap: () {},
+              text: orderStatus[next].name,
+              flex: 2,
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
   _button({
     GestureTapCallback onTap,
