@@ -16,29 +16,24 @@ final Map<int, OrderStatusModel> orderStatus = {
   ),
   1: OrderStatusModel(
     name: '수락대기',
-    color: CustomColors.doneColor,
+    color: CustomColors.waitAcceptColor,
   ),
   2: OrderStatusModel(
     name: '준비중',
-    color: CustomColors.doneColor,
+    color: CustomColors.itemReadyColor,
   ),
   3: OrderStatusModel(
     name: '배달 준비중',
-    color: CustomColors.doneColor,
+    color: CustomColors.deliveryReadColor,
   ),
   4: OrderStatusModel(
     name: '배달중',
-    color: CustomColors.doneColor,
+    color: CustomColors.deliveringColor,
   ),
   9: OrderStatusModel(
     name: '완료',
     color: CustomColors.doneColor,
   ),
-
-  // '상품 준비',
-  // '배달 준비 중',
-  // '배달 중',
-  // '완료',
 };
 
 class OrderStatusModel {
