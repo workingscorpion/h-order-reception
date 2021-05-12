@@ -48,8 +48,6 @@ class _OrderItemState extends State<OrderItem> {
     super.initState();
 
     front = true;
-
-    setState(() {});
   }
 
   @override

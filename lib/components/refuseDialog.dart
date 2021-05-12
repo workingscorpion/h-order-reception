@@ -9,9 +9,7 @@ class RefuseDialog extends StatefulWidget {
 }
 
 class _RefuseDialogState extends State<RefuseDialog> {
-  String refuseReasonKey;
-
-  Map<String, String> refuseReasonText = {
+  static final Map<String, String> reasons = {
     'outOfStock': '재고가 모두 소진되었습니다.',
     'outOfBusinessTime': '영업시간이 종료되었습니다.',
     '': '',
@@ -19,69 +17,135 @@ class _RefuseDialogState extends State<RefuseDialog> {
     'etc': '',
   };
 
+  TextEditingController textEditingController;
+  String selectedKey;
+
+  @override
+  void initState() {
+    super.initState();
+
+    textEditingController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('서비스 요청 거절'),
       content: StatefulBuilder(
-        builder: (context, setState) {
-          final TextEditingController textEditingController =
-              TextEditingController();
+        builder: (_context, _setState) {
+          return Builder(
+            builder: (context) {
+              final selectKey = (String key) {
+                selectedKey = key;
+                textEditingController.text = reasons[key];
+                _setState(() {});
+              };
 
-          final selectKey = (String key) {
-            textEditingController.text = refuseReasonText[key];
-            setState(() {});
-          };
-
-          return IntrinsicHeight(
-            child: Column(
-              children: [
-                Text('거절 사유를 선택해주세요.'),
-                Container(height: 12),
-                Row(
+              return IntrinsicHeight(
+                child: Column(
                   children: [
-                    _item(
-                      selectKey: selectKey,
-                      key: 'outOfStock',
-                      text: '재고소진',
+                    Text('거절 사유를 선택해주세요.'),
+                    Container(height: 12),
+                    Row(
+                      children: [
+                        _item(
+                          selectKey: selectKey,
+                          key: 'outOfStock',
+                          text: '재고소진',
+                        ),
+                        Container(width: 6),
+                        _item(
+                          selectKey: selectKey,
+                          key: 'outOfBusinessTime',
+                          text: '영업종료',
+                        ),
+                        Container(width: 6),
+                        _item(
+                          selectKey: selectKey,
+                          key: '',
+                          text: '??',
+                        ),
+                        Container(width: 6),
+                        _item(
+                          selectKey: selectKey,
+                          key: 'requestedByClient',
+                          text: '고객요청',
+                        ),
+                        Container(width: 6),
+                        _item(
+                          selectKey: selectKey,
+                          key: 'etc',
+                          text: '직접입력',
+                        ),
+                      ],
                     ),
-                    Container(width: 6),
-                    _item(
-                      selectKey: selectKey,
-                      key: 'outOfBusinessTime',
-                      text: '영업종료',
+                    Container(height: 12),
+                    TextField(
+                      controller: textEditingController,
                     ),
-                    Container(width: 6),
-                    _item(
-                      selectKey: selectKey,
-                      key: '',
-                      text: '??',
-                    ),
-                    Container(width: 6),
-                    _item(
-                      selectKey: selectKey,
-                      key: 'requestedByClient',
-                      text: '고객요청',
-                    ),
-                    Container(width: 6),
-                    _item(
-                      selectKey: selectKey,
-                      key: 'etc',
-                      text: '직접입력',
+                    Container(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _button(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          text: '취소',
+                        ),
+                        Container(width: 6),
+                        _button(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          text: '확인',
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Container(height: 12),
-                TextField(
-                  controller: textEditingController,
-                ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),
     );
   }
+
+  _button({
+    GestureTapCallback onTap,
+    String text,
+  }) =>
+      Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(5),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Container(
+            height: 30,
+            padding: EdgeInsets.symmetric(
+              horizontal: 12,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                width: 1,
+                color: Colors.grey,
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Text(text),
+          ),
+        ),
+      );
 
   _item({
     Function(String key) selectKey,
