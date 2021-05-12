@@ -37,7 +37,6 @@ class _OrderItemState extends State<OrderItem> {
   Timer timer;
 
   bool _displayFront;
-  bool _flipXAxis;
 
   @override
   void initState() {
@@ -46,7 +45,6 @@ class _OrderItemState extends State<OrderItem> {
       setState(() {});
     });
     _displayFront = true;
-    _flipXAxis = true;
     setState(() {});
   }
 
@@ -72,10 +70,11 @@ class _OrderItemState extends State<OrderItem> {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: CustomColors.doneColor, width: 1),
         ),
         child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
+          duration: Duration(milliseconds: 500),
           transitionBuilder: _transitionBuilder,
           layoutBuilder: (widget, list) => Stack(children: [widget, ...list]),
           child: _displayFront == true ? _front() : _back(),
@@ -98,10 +97,7 @@ class _OrderItemState extends State<OrderItem> {
         final value =
             isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
         return Transform(
-          // TODO: x 고정
-          transform: _flipXAxis
-              ? (Matrix4.rotationY(value)..setEntry(3, 0, tilt))
-              : (Matrix4.rotationX(value)..setEntry(3, 1, tilt)),
+          transform: (Matrix4.rotationY(value)..setEntry(3, 0, tilt)),
           child: widget,
           alignment: Alignment.center,
         );
@@ -114,34 +110,23 @@ class _OrderItemState extends State<OrderItem> {
           _header(),
           Menu(
             menu: widget.item.menus,
+            existPrice: false,
           ),
           _footer(),
         ],
       );
 
   _back() => Container(
-        padding: EdgeInsets.all(10),
-        child: Stack(
+        child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(),
-              child: Timeline(
-                histories: widget.item.histories,
+            _header(),
+            Expanded(
+              child: Container(
+                child: Timeline(
+                  histories: widget.item.histories,
+                ),
               ),
             ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: IconButton(
-                constraints: BoxConstraints(maxWidth: 20),
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  CupertinoIcons.info_circle,
-                  size: 20,
-                ),
-                onPressed: () => flipItem(),
-              ),
-            )
           ],
         ),
       );
@@ -149,60 +134,78 @@ class _OrderItemState extends State<OrderItem> {
   _header() => Container(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              color: OrderStatusHelper.statusColor[widget.item.status],
-              child: Row(
-                children: [
-                  Text(
-                    OrderStatusHelper.statusText[widget.item.status],
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                  Text(
-                    '${widget.item.address}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: Row(
-                children: [
-                  Text(
-                    '딜리버리',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    margin: EdgeInsets.only(right: 5),
-                    child: Text(
-                      '${widget.item.roomNumber}호',
+            InkWell(
+              onTap: () => flipItem(),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                color: OrderStatusHelper.statusColor[widget.item.status],
+                child: Row(
+                  children: [
+                    Text(
+                      '딜리버리',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                         fontSize: 17,
                       ),
                     ),
-                  ),
-                  IconButton(
-                    constraints: BoxConstraints(maxWidth: 20),
-                    padding: EdgeInsets.zero,
-                    icon: Icon(
-                      CupertinoIcons.info_circle,
-                      size: 20,
+                    Spacer(),
+                    Text(
+                      OrderStatusHelper.statusText[widget.item.status],
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17,
+                      ),
                     ),
-                    onPressed: () => flipItem(),
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Icon(
+                        _displayFront == true
+                            ? CupertinoIcons.info_circle
+                            : CupertinoIcons.info_circle_fill,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 15, bottom: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${widget.item.address}',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          margin: EdgeInsets.only(right: 5),
+                          child: Text(
+                            '${widget.item.roomNumber}호',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    height: 1,
+                    color: CustomColors.doneColor,
                   ),
                 ],
               ),
@@ -226,50 +229,59 @@ class _OrderItemState extends State<OrderItem> {
     final text = "$hh:$mm:$ss";
 
     return Container(
-      padding: EdgeInsets.only(
-        bottom: 6,
-        left: 12,
-        right: 12,
-      ),
-      child: Row(
-        children: [
-          Text(
-            '$text',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-          Spacer(),
-          Text(
-            '${NumberFormat().format(quantity)}개',
-            style: TextStyle(
-              fontSize: 15,
-            ),
-          ),
-        ],
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      alignment: Alignment.center,
+      child: Text(
+        '$text',
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
 
   _summary() => Container(
-        padding: EdgeInsets.only(
-          top: 6,
-          left: 12,
-          right: 12,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              width: 1,
+              color: CustomColors.doneColor,
+            ),
+            bottom: BorderSide(
+              width: 1,
+              color: CustomColors.doneColor,
+            ),
+          ),
         ),
         child: Row(
           children: [
-            Text(
-              '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
-              style: TextStyle(
-                fontSize: 15,
+            Expanded(
+              flex: 2,
+              child: Text(
+                '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
             ),
-            Spacer(),
-            Text(
-              '${NumberFormat().format(amount)}원',
-              style: TextStyle(
-                fontSize: 15,
+            Expanded(
+              child: Text(
+                '${NumberFormat().format(amount)}원',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+                textAlign: TextAlign.end,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 20),
+              child: Text(
+                '${NumberFormat().format(quantity)}개',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
               ),
             ),
           ],
@@ -279,8 +291,15 @@ class _OrderItemState extends State<OrderItem> {
   _footer() => Container(
         child: Column(
           children: [
-            _summary(),
-            _timer(),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  _summary(),
+                  _timer(),
+                ],
+              ),
+            ),
             _buttons(),
           ],
         ),
@@ -294,16 +313,17 @@ class _OrderItemState extends State<OrderItem> {
             children: [
               _button(
                 onTap: () {},
-                text: '거절',
-                background: CustomColors.tableInnerBorder,
+                text: widget.item.status == 0 ? '거절' : '취소',
+                background: CustomColors.denyColor,
+                color: Colors.white,
               ),
               _button(
                 onTap: () {},
                 text: OrderStatusHelper.statusText[(widget.item.status + 1) %
                     OrderStatusHelper.statusColor.length],
-                background: OrderStatusHelper.statusColor[
-                    (widget.item.status + 1) %
-                        OrderStatusHelper.statusColor.length],
+                color: OrderStatusHelper.statusColor[(widget.item.status + 1) %
+                    OrderStatusHelper.statusColor.length],
+                flex: 2,
               ),
             ],
           ),
@@ -314,20 +334,32 @@ class _OrderItemState extends State<OrderItem> {
     GestureTapCallback onTap,
     String text,
     Color background,
+    Color color,
+    int flex,
   }) =>
       Expanded(
+        flex: flex != null ? flex : 1,
         child: Material(
-          color: background,
+          color: background != null ? background : Colors.white,
           child: InkWell(
             onTap: onTap,
             child: Container(
-              height: 40,
+              decoration: background == CustomColors.denyColor
+                  ? BoxDecoration()
+                  : BoxDecoration(
+                      border: Border(
+                        top:
+                            BorderSide(color: CustomColors.doneColor, width: 1),
+                      ),
+                    ),
+              height: 50,
               alignment: Alignment.center,
               child: Text(
                 text,
                 style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.white,
+                  fontSize: 17,
+                  color: color,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),

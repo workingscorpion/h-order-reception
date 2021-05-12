@@ -22,6 +22,10 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   OrderModel order;
 
+  final List<String> _infoTitles = ['건물정보', '방번호', '발생시간', '서비스명'];
+
+  List<String> _infoData;
+
   get amount {
     return [...order.menus]
         .map((e) => e.price * e.count)
@@ -92,12 +96,20 @@ class _HistoryPageState extends State<HistoryPage> {
       ],
     );
 
+    _infoData = [
+      order.address,
+      order.roomNumber,
+      DateFormat().format(order.applyTime),
+      order.shopName,
+    ];
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Container(
           child: Column(
@@ -110,11 +122,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      _info(),
-                      Container(width: 20),
-                      _menu(),
-                      Container(width: 20),
                       _history(),
+                      Container(width: 15),
+                      _menu(),
+                      Container(width: 15),
+                      _info(),
                     ],
                   ),
                 ),
@@ -127,37 +139,71 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   _info() => Expanded(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3), // changes position of shadow
+        flex: 3,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: CustomColors.doneColor, width: 1),
+                ),
+                child: Column(
+                  children: List.generate(4, (index) => _infoItem(index)),
+                ),
               ),
-            ],
-          ),
-          child: Text('info'),
+            ),
+            Container(height: 10),
+            Container(
+              height: 50,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: CustomColors.denyColor,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                order.status == 0 ? '거절' : '취소',
+                style: TextStyle(fontSize: 17, color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  _infoItem(int index) => Container(
+        padding: EdgeInsets.symmetric(vertical: 5),
+        margin: EdgeInsets.only(bottom: 10),
+        child: Row(
+          children: [
+            Text(
+              _infoTitles[index],
+              style: TextStyle(fontSize: 17),
+            ),
+            Spacer(),
+            Text(
+              _infoData[index],
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       );
 
   _menu() => Expanded(
-        flex: 2,
+        flex: 4,
         child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
+            border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
           child: Column(
             children: [
@@ -165,7 +211,10 @@ class _HistoryPageState extends State<HistoryPage> {
                 menu: order.menus,
                 existPrice: true,
               ),
-              _amount(),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: _amount(),
+              ),
             ],
           ),
         ),
@@ -173,10 +222,14 @@ class _HistoryPageState extends State<HistoryPage> {
 
   _amount() => Container(
         height: 50,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: CustomColors.doneColor, width: 1),
+          ),
+        ),
         child: DefaultTextStyle(
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 22,
             color: CustomColors.aBlack,
           ),
           child: Row(
@@ -194,37 +247,44 @@ class _HistoryPageState extends State<HistoryPage> {
       );
 
   _history() => Expanded(
-        flex: 2,
+        flex: 4,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 3,
-                offset: Offset(0, 3), // changes position of shadow
-              ),
-            ],
+            border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
           child: Timeline(histories: order.histories),
         ),
       );
 
   _header() => Container(
-        height: 40,
+        height: 50,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: Icon(CupertinoIcons.chevron_left),
-              onPressed: () => AppRouter.pop(),
-            ),
-            Spacer(),
-            Text(
-              '주문현황',
-              style: TextStyle(fontSize: 20),
+            GestureDetector(
+              onTap: () => AppRouter.pop(),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    padding:
+                        EdgeInsets.only(left: 4, right: 5, top: 9, bottom: 10),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: CustomColors.doneColor),
+                    ),
+                    child: Icon(
+                      CupertinoIcons.chevron_left,
+                      size: 18,
+                    ),
+                  ),
+                  Text(
+                    '주문현황',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
             ),
             Spacer(),
           ],
@@ -232,8 +292,9 @@ class _HistoryPageState extends State<HistoryPage> {
       );
 
   _statuses() => Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
-          children: List.generate(4, (index) => _status(index)),
+          children: List.generate(5, (index) => _status(index)),
         ),
       );
 
@@ -245,17 +306,22 @@ class _HistoryPageState extends State<HistoryPage> {
           },
           child: Container(
             height: 50,
+            margin: index != 4 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
               color: index == order.status
                   ? OrderStatusHelper.statusColor[index]
-                  : CustomColors.tableInnerBorder,
+                  : CustomColors.evenColor,
+              borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
             child: Text(
               OrderStatusHelper.statusText[index],
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+                color: index == order.status && order.status != 4
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

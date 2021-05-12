@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/store/userInfoStore.dart';
 
 class CustomBar extends StatefulWidget {
   CustomBar({
@@ -16,6 +17,8 @@ class CustomBar extends StatefulWidget {
 }
 
 class _CustomBarState extends State<CustomBar> {
+  UserInfoStore userInfoStore = UserInfoStore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -28,6 +31,7 @@ class _CustomBarState extends State<CustomBar> {
               '봉보야쥬',
               style: TextStyle(
                 color: Colors.white,
+                fontSize: 20,
               ),
             ),
             Spacer(),
@@ -35,6 +39,17 @@ class _CustomBarState extends State<CustomBar> {
               children: List.generate(
                 widget.controller.length,
                 (index) => _tabButton(index),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: OutlineButton(
+                onPressed: () => userInfoStore.logout(),
+                child: Text(
+                  '로그아웃',
+                  style: TextStyle(color: Colors.white),
+                ),
+                borderSide: BorderSide(color: CustomColors.aWhite, width: 1),
               ),
             ),
           ],

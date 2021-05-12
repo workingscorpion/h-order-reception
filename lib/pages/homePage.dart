@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/components/customBar.dart';
 import 'package:h_order_reception/pages/history/historyView.dart';
 import 'package:h_order_reception/pages/home/orderView.dart';
-import 'package:h_order_reception/pages/home/setttingView.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -19,13 +18,10 @@ class _HomePageState extends State<HomePage>
   final icons = [
     CupertinoIcons.home,
     CupertinoIcons.time,
-    CupertinoIcons.gear,
   ];
 
   @override
   void initState() {
-    super.initState();
-
     _tabController = TabController(
       vsync: this,
       initialIndex: 0,
@@ -35,6 +31,8 @@ class _HomePageState extends State<HomePage>
     _tabController.addListener(() {
       setState(() {});
     });
+
+    super.initState();
   }
 
   @override
@@ -69,7 +67,6 @@ class _HomePageState extends State<HomePage>
           children: [
             OrderView(),
             HistoryView(),
-            SettingView(),
           ],
         ),
       );

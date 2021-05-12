@@ -14,34 +14,31 @@ class Menu extends StatelessWidget {
     return Expanded(
       child: DefaultTextStyle(
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 17,
           color: CustomColors.aBlack,
         ),
         child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-              bottom: BorderSide(
-                width: .5,
-                color: Colors.black26,
-              ),
-            ),
-          ),
           child: ListView(
-            padding: EdgeInsets.all(10),
             children: List.generate(
               menu.length,
               (index) => Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 child: Row(
                   children: [
-                    Text(menu[index].name),
-                    Spacer(),
-                    Text('${menu[index].count}개'),
-                    existPrice != null ? Spacer() : Container(),
-                    existPrice != null
+                    Expanded(
+                      child: Text(
+                        menu[index].name,
+                        softWrap: true,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: Text('${menu[index].count}개'),
+                    ),
+                    existPrice == true ? Spacer() : Container(),
+                    existPrice == true
                         ? Text(
                             '${NumberFormat().format(menu[index].price * menu[index].count)}원')
                         : Container(),
