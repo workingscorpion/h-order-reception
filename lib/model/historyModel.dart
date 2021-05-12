@@ -8,14 +8,14 @@ class HistoryModel {
   final String orderObjectId;
   final int status;
   final String updaterName;
-  final DateTime updatedDate;
+  final DateTime updatedTime;
 
   HistoryModel({
     this.objectId,
     this.orderObjectId,
     this.status,
     this.updaterName,
-    this.updatedDate,
+    this.updatedTime,
   });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) =>

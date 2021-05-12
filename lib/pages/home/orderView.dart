@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:h_order_reception/components/orderItem.dart';
@@ -80,22 +81,25 @@ class _OrderViewState extends State<OrderView> {
       );
 
   _floatingButtonMenus() => Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: List.generate(4, (index) => _floatingButtonMenu(index)));
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          ...List.generate(4, (index) => _floatingButtonMenu(index)),
+        ],
+      );
 
-  _floatingButtonMenu(int index) => Container(
+  _floatingButtonMenu(int value) => Container(
         margin: EdgeInsets.only(bottom: 10),
         child: Material(
-          color: _selectedFilter.contains(index)
-              ? OrderStatusHelper.statusColor[index]
+          color: _selectedFilter.contains(value)
+              ? OrderStatusHelper.statusColor[value]
               : CustomColors.tableInnerBorder,
           borderRadius: BorderRadius.circular(20),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              _selectedFilter.contains(index)
-                  ? _selectedFilter.remove(index)
-                  : _selectedFilter.add(index);
+              _selectedFilter.contains(value)
+                  ? _selectedFilter.remove(value)
+                  : _selectedFilter.add(value);
               setState(() {});
             },
             child: Container(
@@ -103,7 +107,7 @@ class _OrderViewState extends State<OrderView> {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Text(
-                OrderStatusHelper.statusText[index],
+                OrderStatusHelper.statusText[value],
                 style: TextStyle(
                   fontSize: 15,
                   color: Colors.white,
@@ -128,7 +132,7 @@ class _OrderViewState extends State<OrderView> {
             height: 70,
             width: 70,
             child: Icon(
-              Icons.add,
+              CupertinoIcons.color_filter,
               color: Colors.white,
             ),
           ),

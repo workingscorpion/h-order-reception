@@ -12,9 +12,9 @@ HistoryModel _$HistoryModelFromJson(Map<String, dynamic> json) {
     orderObjectId: json['orderObjectId'] as String,
     status: json['status'] as int,
     updaterName: json['updaterName'] as String,
-    updatedDate: json['updatedDate'] == null
+    updatedTime: json['updatedTime'] == null
         ? null
-        : DateTime.parse(json['updatedDate'] as String),
+        : DateTime.parse(json['updatedTime'] as String),
   );
 }
 
@@ -24,5 +24,5 @@ Map<String, dynamic> _$HistoryModelToJson(HistoryModel instance) =>
       'orderObjectId': instance.orderObjectId,
       'status': instance.status,
       'updaterName': instance.updaterName,
-      'updatedDate': instance.updatedDate?.toIso8601String(),
+      'updatedTime': instance.updatedTime?.toIso8601String(),
     };

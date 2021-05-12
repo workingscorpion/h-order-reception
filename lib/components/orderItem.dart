@@ -36,8 +36,7 @@ class _OrderItemState extends State<OrderItem> {
   // }
 
   Timer timer;
-
-  bool _displayFront;
+  bool front;
 
   @override
   void initState() {
@@ -48,7 +47,8 @@ class _OrderItemState extends State<OrderItem> {
       setState(() {});
     });
 
-    _displayFront = true;
+    front = true;
+
     setState(() {});
   }
 
@@ -57,11 +57,6 @@ class _OrderItemState extends State<OrderItem> {
     timer.cancel();
 
     super.dispose();
-  }
-
-  void flipItem() {
-    _displayFront = !_displayFront;
-    setState(() {});
   }
 
   @override
@@ -75,37 +70,48 @@ class _OrderItemState extends State<OrderItem> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: CustomColors.doneColor, width: 1),
+          border: Border.all(
+            color: CustomColors.doneColor,
+            width: 1,
+          ),
         ),
         child: AnimatedSwitcher(
           duration: Duration(milliseconds: 500),
-          transitionBuilder: _transitionBuilder,
-          layoutBuilder: (widget, list) => Stack(children: [widget, ...list]),
-          child: _displayFront == true ? _front() : _back(),
+          transitionBuilder: (widget, animation) {
+            final rotateAnimation =
+                Tween(begin: pi, end: 0.0).animate(animation);
+
+            return AnimatedBuilder(
+              animation: rotateAnimation,
+              child: widget,
+              builder: (context, widget) {
+                final isUnder = (ValueKey(front) != widget.key);
+                final tilt = ((animation.value - 0.5).abs() - 0.5) *
+                    0.003 *
+                    (isUnder ? -1.0 : 1.0);
+                final value = isUnder
+                    ? min(rotateAnimation.value, pi / 2)
+                    : rotateAnimation.value;
+
+                return Transform(
+                  transform: (Matrix4.rotationY(value)..setEntry(3, 0, tilt)),
+                  child: widget,
+                  alignment: Alignment.center,
+                );
+              },
+            );
+          },
+          layoutBuilder: (widget, list) => Stack(
+            children: [
+              widget,
+              ...list,
+            ],
+          ),
+          child: front == true ? _front() : _back(),
           switchInCurve: Curves.easeInBack,
           switchOutCurve: Curves.easeInBack.flipped,
         ),
       ),
-    );
-  }
-
-  Widget _transitionBuilder(Widget widget, Animation<double> animation) {
-    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
-    return AnimatedBuilder(
-      animation: rotateAnim,
-      child: widget,
-      builder: (context, widget) {
-        final isUnder = (ValueKey(_displayFront) != widget.key);
-        var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
-        tilt *= isUnder ? -1.0 : 1.0;
-        final value =
-            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
-        return Transform(
-          transform: (Matrix4.rotationY(value)..setEntry(3, 0, tilt)),
-          child: widget,
-          alignment: Alignment.center,
-        );
-      },
     );
   }
 
@@ -139,7 +145,10 @@ class _OrderItemState extends State<OrderItem> {
         child: Column(
           children: [
             InkWell(
-              onTap: () => flipItem(),
+              onTap: () {
+                front = !front;
+                setState(() {});
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 // color: OrderStatusHelper.statusColor[widget.item.status],
@@ -165,7 +174,7 @@ class _OrderItemState extends State<OrderItem> {
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Icon(
-                        _displayFront == true
+                        front == true
                             ? CupertinoIcons.info_circle
                             : CupertinoIcons.info_circle_fill,
                         size: 25,
@@ -218,32 +227,32 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  // _timer() {
-  //   final duration = DateTime.now().difference(widget.item.applyTime);
-  //   final seconds = duration.inSeconds;
-  //   final h = (seconds / 3600).floor();
-  //   final hh = h < 10 ? '0$h' : '$h';
+  _timer() {
+    final duration = DateTime.now().difference(history.updatedDate);
+    final seconds = duration.inSeconds;
+    final h = (seconds / 3600).floor();
+    final hh = h < 10 ? '0$h' : '$h';
 
-  //   final m = (seconds % 3600 / 60).floor();
-  //   final mm = m < 10 ? '0$m' : '$m';
+    final m = (seconds % 3600 / 60).floor();
+    final mm = m < 10 ? '0$m' : '$m';
 
-  //   final s = (seconds % 60).floor();
-  //   final ss = s < 10 ? '0$s' : '$s';
+    final s = (seconds % 60).floor();
+    final ss = s < 10 ? '0$s' : '$s';
 
-  //   final text = "$hh:$mm:$ss";
+    final text = "$hh:$mm:$ss";
 
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-  //     alignment: Alignment.center,
-  //     child: Text(
-  //       '$text',
-  //       style: TextStyle(
-  //         fontSize: 17,
-  //         fontWeight: FontWeight.bold,
-  //       ),
-  //     ),
-  //   );
-  // }
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+      alignment: Alignment.center,
+      child: Text(
+        '$text',
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 
   _summary() => Container(
         padding: EdgeInsets.symmetric(vertical: 15),
@@ -300,7 +309,7 @@ class _OrderItemState extends State<OrderItem> {
               child: Column(
                 children: [
                   _summary(),
-                  // _timer(),
+                  _timer(),
                 ],
               ),
             ),
