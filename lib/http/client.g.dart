@@ -9,7 +9,7 @@ part of 'client.dart';
 class _Client implements Client {
   _Client(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.0.104:5000/api';
+    baseUrl ??= 'http://192.168.50.11:5000/api';
   }
 
   final Dio _dio;
@@ -61,7 +61,7 @@ class _Client implements Client {
         '/v1/admin/history',
         queryParameters: queryParameters,
         options: RequestOptions(
-            method: 'POST',
+            method: 'GET',
             headers: <String, dynamic>{},
             extra: _extra,
             baseUrl: baseUrl),

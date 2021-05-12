@@ -6,9 +6,21 @@ import 'package:retrofit/retrofit.dart';
 
 part 'client.g.dart';
 
-@RestApi(baseUrl: "http://192.168.0.104:5000/api")
+@RestApi(baseUrl: "http://192.168.50.11:5000/api")
 abstract class Client {
-  factory Client.create() => _Client(Dio());
+  factory Client.create() => _Client(
+        Dio(
+          BaseOptions(
+            headers: token != null
+                ? {
+                    "Authorization": 'Bearer $token',
+                  }
+                : {},
+          ),
+        ),
+      );
+
+  static String token;
 
   @POST("/v1/auth/login")
   Future login(
@@ -18,6 +30,6 @@ abstract class Client {
   @POST("/v1/auth/logout")
   Future logout();
 
-  @POST("/v1/admin/history")
+  @GET("/v1/admin/history")
   Future<ListDataModel<HistoryModel, Map>> histories();
 }
