@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/baseServiceModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 
 class Menu extends StatelessWidget {
   final HistoryModel history;
   final Map data;
 
-  BaseServiceModel get snapShotData {
+  ServiceModel get snapShotData {
     return HistoryStore.instance.snapShotDataMap[history.serviceObjectId];
   }
 

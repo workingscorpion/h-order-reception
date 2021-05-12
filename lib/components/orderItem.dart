@@ -7,8 +7,8 @@ import 'package:h_order_reception/components/menu.dart';
 import 'package:h_order_reception/components/refuseDialog.dart';
 import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/baseServiceModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class _OrderItemState extends State<OrderItem> {
     return HistoryStore.instance.historyMap[widget.historyIndex];
   }
 
-  BaseServiceModel get snapShotData {
+  ServiceModel get snapShotData {
     return HistoryStore.instance.snapShotDataMap[history.serviceObjectId];
   }
 

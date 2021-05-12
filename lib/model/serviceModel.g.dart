@@ -1,20 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'baseServiceModel.dart';
+part of 'serviceModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BaseServiceModel _$BaseServiceModelFromJson(Map<String, dynamic> json) {
-  return BaseServiceModel(
+ServiceModel _$ServiceModelFromJson(Map<String, dynamic> json) {
+  return ServiceModel(
     objectId: json['objectId'] as String,
     name: json['name'] as String,
     type: json['type'] as int,
   );
 }
 
-Map<String, dynamic> _$BaseServiceModelToJson(BaseServiceModel instance) =>
+Map<String, dynamic> _$ServiceModelToJson(ServiceModel instance) =>
     <String, dynamic>{
       'objectId': instance.objectId,
       'name': instance.name,
