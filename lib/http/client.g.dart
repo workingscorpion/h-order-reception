@@ -9,7 +9,6 @@ part of 'client.dart';
 class _Client implements Client {
   _Client(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.50.11:5000/api';
   }
 
   final Dio _dio;
@@ -53,7 +52,7 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListDataModel<HistoryModel, Map<dynamic, dynamic>>> histories() async {
+  Future<ListDataListModel<HistoryModel, SnapShotModel>> histories() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -66,8 +65,8 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ListDataModel<HistoryModel, Map<dynamic, dynamic>>.fromJson(
-        _result.data);
+    final value =
+        ListDataListModel<HistoryModel, SnapShotModel>.fromJson(_result.data);
     return value;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/snapShotModel.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 class JsonGenericConverter<T> implements JsonConverter<T, Object> {
@@ -10,6 +11,10 @@ class JsonGenericConverter<T> implements JsonConverter<T, Object> {
       case List:
         final list = json as List;
         return list.map((e) => fromJson(e)).toList() as T;
+        break;
+
+      case SnapShotModel:
+        return SnapShotModel.fromJson(json) as T;
         break;
 
       case HistoryModel:
