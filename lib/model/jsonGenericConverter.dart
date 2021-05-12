@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/snapShotModel.dart';
 import 'package:json_annotation/json_annotation.dart';
