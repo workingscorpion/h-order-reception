@@ -112,10 +112,10 @@ class _OrderItemState extends State<OrderItem> {
   _front() => Column(
         children: [
           _header(),
-          Menu(
-            menu: widget.item.menus,
-            existPrice: false,
-          ),
+          // Menu(
+          //   menu: widget.item.menus,
+          //   existPrice: false,
+          // ),
           _footer(),
         ],
       );
@@ -126,10 +126,10 @@ class _OrderItemState extends State<OrderItem> {
             _header(),
             Expanded(
               child: Container(
-                child: Timeline(
-                  histories: widget.item.histories,
-                ),
-              ),
+                  // child: Timeline(
+                  //   histories: widget.item.histories,
+                  // ),
+                  ),
             ),
           ],
         ),
@@ -142,7 +142,7 @@ class _OrderItemState extends State<OrderItem> {
               onTap: () => flipItem(),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                color: OrderStatusHelper.statusColor[widget.item.status],
+                // color: OrderStatusHelper.statusColor[widget.item.status],
                 child: Row(
                   children: [
                     Text(
@@ -154,14 +154,14 @@ class _OrderItemState extends State<OrderItem> {
                       ),
                     ),
                     Spacer(),
-                    Text(
-                      OrderStatusHelper.statusText[widget.item.status],
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 17,
-                      ),
-                    ),
+                    // Text(
+                    //   OrderStatusHelper.statusText[widget.item.status],
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontWeight: FontWeight.w500,
+                    //     fontSize: 17,
+                    //   ),
+                    // ),
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Icon(
@@ -184,25 +184,25 @@ class _OrderItemState extends State<OrderItem> {
                     padding: EdgeInsets.only(top: 15, bottom: 10),
                     child: Row(
                       children: [
-                        Text(
-                          '${widget.item.address}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
-                        ),
-                        Spacer(),
-                        Container(
-                          margin: EdgeInsets.only(right: 5),
-                          child: Text(
-                            '${widget.item.roomNumber}호',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                            ),
-                          ),
-                        ),
+                        // Text(
+                        //   '${widget.item.address}',
+                        //   style: TextStyle(
+                        //     color: Colors.black,
+                        //     fontSize: 15,
+                        //   ),
+                        // ),
+                        // Spacer(),
+                        // Container(
+                        //   margin: EdgeInsets.only(right: 5),
+                        //   child: Text(
+                        //     '${widget.item.roomNumber}호',
+                        //     style: TextStyle(
+                        //       color: Colors.black,
+                        //       fontWeight: FontWeight.bold,
+                        //       fontSize: 17,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -232,18 +232,18 @@ class _OrderItemState extends State<OrderItem> {
 
   //   final text = "$hh:$mm:$ss";
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-      alignment: Alignment.center,
-      child: Text(
-        '$text',
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+  //     alignment: Alignment.center,
+  //     child: Text(
+  //       '$text',
+  //       style: TextStyle(
+  //         fontSize: 17,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _summary() => Container(
         padding: EdgeInsets.symmetric(vertical: 15),
@@ -261,33 +261,33 @@ class _OrderItemState extends State<OrderItem> {
         ),
         child: Row(
           children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '${NumberFormat().format(amount)}원',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.end,
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(left: 20),
-              child: Text(
-                '${NumberFormat().format(quantity)}개',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: Text(
+            //     '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
+            //     style: TextStyle(
+            //       fontSize: 15,
+            //     ),
+            //   ),
+            // ),
+            // Expanded(
+            //   child: Text(
+            //     '${NumberFormat().format(amount)}원',
+            //     style: TextStyle(
+            //       fontSize: 15,
+            //     ),
+            //     textAlign: TextAlign.end,
+            //   ),
+            // ),
+            // Container(
+            //   margin: EdgeInsets.only(left: 20),
+            //   child: Text(
+            //     '${NumberFormat().format(quantity)}개',
+            //     style: TextStyle(
+            //       fontSize: 15,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       );
@@ -300,7 +300,7 @@ class _OrderItemState extends State<OrderItem> {
               child: Column(
                 children: [
                   _summary(),
-                  _timer(),
+                  // _timer(),
                 ],
               ),
             ),
@@ -315,20 +315,20 @@ class _OrderItemState extends State<OrderItem> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _button(
-                onTap: () {},
-                text: widget.item.status == 0 ? '거절' : '취소',
-                background: CustomColors.denyColor,
-                color: Colors.white,
-              ),
-              _button(
-                onTap: () {},
-                text: OrderStatusHelper.statusText[(widget.item.status + 1) %
-                    OrderStatusHelper.statusColor.length],
-                color: OrderStatusHelper.statusColor[(widget.item.status + 1) %
-                    OrderStatusHelper.statusColor.length],
-                flex: 2,
-              ),
+              // _button(
+              //   onTap: () {},
+              //   text: widget.item.status == 0 ? '거절' : '취소',
+              //   background: CustomColors.denyColor,
+              //   color: Colors.white,
+              // ),
+              // _button(
+              //   onTap: () {},
+              //   text: OrderStatusHelper.statusText[(widget.item.status + 1) %
+              //       OrderStatusHelper.statusColor.length],
+              //   color: OrderStatusHelper.statusColor[(widget.item.status + 1) %
+              //       OrderStatusHelper.statusColor.length],
+              //   flex: 2,
+              // ),
             ],
           ),
         ),
