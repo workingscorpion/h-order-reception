@@ -28,7 +28,7 @@ class _HistoryViewState extends State<HistoryView> {
 
   List<int> _flex = [2, 2, 2, 1, 2, 1];
 
-  bool isOpended = false;
+  bool open = false;
 
   List<int> _selectedFilter = List<int>();
 
@@ -53,43 +53,7 @@ class _HistoryViewState extends State<HistoryView> {
       ),
     ];
 
-    histories = [
-      HistoryModel(
-        objectId: '55555',
-        orderObjectId: '1',
-        status: 4,
-        updatedDate: DateTime.now().subtract(Duration(minutes: 5)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '44444',
-        orderObjectId: '1',
-        status: 3,
-        updatedDate: DateTime.now().subtract(Duration(minutes: 10)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '33333',
-        orderObjectId: '1',
-        status: 2,
-        updatedDate: DateTime.now().subtract(Duration(minutes: 30)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '22222',
-        orderObjectId: '1',
-        status: 1,
-        updatedDate: DateTime.now().subtract(Duration(hours: 1)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '11111',
-        orderObjectId: '1',
-        status: 0,
-        updatedDate: DateTime.now().subtract(Duration(hours: 2)),
-        updaterName: '준기',
-      ),
-    ];
+    histories = [];
 
     _histories = [
       OrderModel(
@@ -269,7 +233,7 @@ class _HistoryViewState extends State<HistoryView> {
               _rows(),
             ],
           ),
-          _floatings(),
+          _floats(),
         ],
       ),
     );
@@ -515,13 +479,13 @@ class _HistoryViewState extends State<HistoryView> {
         ),
       );
 
-  _floatings() => Positioned(
+  _floats() => Positioned(
         bottom: 20,
         right: 20,
         child: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: isOpended == true
+            children: open == true
                 ? [
                     _floatingMenus(),
                     _floating(),
@@ -568,7 +532,7 @@ class _HistoryViewState extends State<HistoryView> {
 
   _floating() => InkWell(
         onTap: () {
-          isOpended = !isOpended;
+          open = !open;
           setState(() {});
         },
         child: Container(

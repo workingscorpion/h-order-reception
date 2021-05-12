@@ -17,7 +17,7 @@ class HistoryStore extends HistoryStoreBase with _$HistoryStore {
 
 abstract class HistoryStoreBase with Store {
   ObservableList<HistoryModel> histories = ObservableList();
-  ObservableMap<String, HistoryModel> historyMap = ObservableMap();
+  ObservableMap<int, HistoryModel> historyMap = ObservableMap();
 
   ObservableList<SnapShotModel> snapShots = ObservableList();
   ObservableMap<String, Map> snapShotDataMap = ObservableMap();
@@ -32,7 +32,7 @@ abstract class HistoryStoreBase with Store {
 
     historyMap
       ..clear()
-      ..addEntries(response.list.map((item) => MapEntry(item.objectId, item)));
+      ..addEntries(response.list.map((item) => MapEntry(item.index, item)));
 
     snapShots
       ..clear()

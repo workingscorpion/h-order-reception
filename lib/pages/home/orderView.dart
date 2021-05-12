@@ -55,8 +55,7 @@ class _OrderViewState extends State<OrderView> {
                     .where((element) =>
                         (_selectedFilter?.isEmpty ?? true) ||
                         _selectedFilter.contains(element.status))
-                    .map<Widget>(
-                        (item) => OrderItem(historyObjectId: item.objectId)),
+                    .map<Widget>((item) => OrderItem(historyIndex: item.index)),
               ],
             ),
           ),

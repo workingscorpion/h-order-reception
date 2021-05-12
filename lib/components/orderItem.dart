@@ -8,10 +8,10 @@ import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 
 class OrderItem extends StatefulWidget {
-  final String historyObjectId;
+  final int historyIndex;
 
   OrderItem({
-    this.historyObjectId,
+    this.historyIndex,
   });
 
   @override
@@ -20,7 +20,7 @@ class OrderItem extends StatefulWidget {
 
 class _OrderItemState extends State<OrderItem> {
   HistoryModel get history {
-    return HistoryStore.instance.historyMap[widget.historyObjectId];
+    return HistoryStore.instance.historyMap[widget.historyIndex];
   }
 
   // get amount {
@@ -228,7 +228,7 @@ class _OrderItemState extends State<OrderItem> {
       );
 
   _timer() {
-    final duration = DateTime.now().difference(history.updatedDate);
+    final duration = DateTime.now().difference(history.updatedTime);
     final seconds = duration.inSeconds;
     final h = (seconds / 3600).floor();
     final hh = h < 10 ? '0$h' : '$h';

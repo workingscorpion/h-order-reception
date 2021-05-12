@@ -4,17 +4,27 @@ part 'historyModel.g.dart';
 
 @JsonSerializable()
 class HistoryModel {
-  final String objectId;
-  final String orderObjectId;
-  final int status;
-  final String updaterName;
+  final int index;
+  final String status;
+  final String serviceObjectId;
+  final String userObjectId;
+  final String userName;
+  final String deviceObjectId;
+  final String deviceName;
+  final String data;
+  final DateTime createdTime;
   final DateTime updatedTime;
 
   HistoryModel({
-    this.objectId,
-    this.orderObjectId,
+    this.index,
     this.status,
-    this.updaterName,
+    this.serviceObjectId,
+    this.userObjectId,
+    this.userName,
+    this.deviceObjectId,
+    this.deviceName,
+    this.data,
+    this.createdTime,
     this.updatedTime,
   });
 
