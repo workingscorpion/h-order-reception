@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
+import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/listModel.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'client.g.dart';
@@ -15,4 +17,7 @@ abstract class Client {
 
   @POST("/v1/auth/logout")
   Future logout();
+
+  @POST("/v1/admin/history")
+  Future<ListDataModel<HistoryModel, Map>> histories();
 }

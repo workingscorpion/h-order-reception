@@ -3,18 +3,15 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:h_order_reception/components/menu.dart';
-import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/orderModel.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
-import 'package:intl/intl.dart';
+import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 
 class OrderItem extends StatefulWidget {
-  final OrderModel item;
+  final String historyObjectId;
 
   OrderItem({
-    this.item,
+    this.historyObjectId,
   });
 
   @override
@@ -22,17 +19,21 @@ class OrderItem extends StatefulWidget {
 }
 
 class _OrderItemState extends State<OrderItem> {
-  get amount {
-    return [...widget.item.menus]
-        .map((e) => e.price * e.count)
-        .reduce((value, element) => value + element);
+  HistoryModel get history {
+    return HistoryStore.instance.historyMap[widget.historyObjectId];
   }
 
-  get quantity {
-    return [...widget.item.menus]
-        .map((e) => e.count)
-        .reduce((value, element) => value + element);
-  }
+  // get amount {
+  //   return [...widget.item.menus]
+  //       .map((e) => e.price * e.count)
+  //       .reduce((value, element) => value + element);
+  // }
+
+  // get quantity {
+  //   return [...widget.item.menus]
+  //       .map((e) => e.count)
+  //       .reduce((value, element) => value + element);
+  // }
 
   Timer timer;
 
@@ -40,10 +41,13 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   void initState() {
+    super.initState();
+
     timer =
         Timer.periodic(Duration(milliseconds: (1000 / 10).floor()), (timer) {
       setState(() {});
     });
+
     _displayFront = true;
     setState(() {});
   }
@@ -214,19 +218,19 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _timer() {
-    final duration = DateTime.now().difference(widget.item.applyTime);
-    final seconds = duration.inSeconds;
-    final h = (seconds / 3600).floor();
-    final hh = h < 10 ? '0$h' : '$h';
+  // _timer() {
+  //   final duration = DateTime.now().difference(widget.item.applyTime);
+  //   final seconds = duration.inSeconds;
+  //   final h = (seconds / 3600).floor();
+  //   final hh = h < 10 ? '0$h' : '$h';
 
-    final m = (seconds % 3600 / 60).floor();
-    final mm = m < 10 ? '0$m' : '$m';
+  //   final m = (seconds % 3600 / 60).floor();
+  //   final mm = m < 10 ? '0$m' : '$m';
 
-    final s = (seconds % 60).floor();
-    final ss = s < 10 ? '0$s' : '$s';
+  //   final s = (seconds % 60).floor();
+  //   final ss = s < 10 ? '0$s' : '$s';
 
-    final text = "$hh:$mm:$ss";
+  //   final text = "$hh:$mm:$ss";
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),

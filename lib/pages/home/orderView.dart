@@ -14,10 +14,6 @@ class OrderView extends StatefulWidget {
 }
 
 class _OrderViewState extends State<OrderView> {
-  List<MenuModel> menus;
-
-  List<OrderModel> orders;
-
   List<HistoryModel> histories;
 
   bool isOpended = false;

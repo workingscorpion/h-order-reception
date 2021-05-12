@@ -51,4 +51,23 @@ class _Client implements Client {
     final value = _result.data;
     return value;
   }
+
+  @override
+  Future<ListDataModel<HistoryModel, Map<dynamic, dynamic>>> histories() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'POST',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ListDataModel<HistoryModel, Map<dynamic, dynamic>>.fromJson(
+        _result.data);
+    return value;
+  }
 }

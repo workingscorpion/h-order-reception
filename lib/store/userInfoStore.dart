@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
-import 'package:h_order_reception/http/types/login/responseLogin.dart';
 import 'package:h_order_reception/utils/fcmManager.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:h_order_reception/utils/sharedPreferencesHelper.dart';
