@@ -6,7 +6,7 @@ import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
+import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
 class HistoryView extends StatefulWidget {
@@ -28,12 +28,14 @@ class _HistoryViewState extends State<HistoryView> {
 
   List<int> _flex = [2, 2, 2, 1, 2, 1];
 
-  bool isOpended = false;
+  bool open = false;
 
   List<int> _selectedFilter = List<int>();
 
   @override
   void initState() {
+    super.initState();
+
     _selectToday();
 
     menus = [
@@ -53,43 +55,7 @@ class _HistoryViewState extends State<HistoryView> {
       ),
     ];
 
-    histories = [
-      HistoryModel(
-        objectId: '55555',
-        orderObjectId: '1',
-        status: 4,
-        updatedDate: DateTime.now().subtract(Duration(minutes: 5)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '44444',
-        orderObjectId: '1',
-        status: 3,
-        updatedDate: DateTime.now().subtract(Duration(minutes: 10)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '33333',
-        orderObjectId: '1',
-        status: 2,
-        updatedDate: DateTime.now().subtract(Duration(minutes: 30)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '22222',
-        orderObjectId: '1',
-        status: 1,
-        updatedDate: DateTime.now().subtract(Duration(hours: 1)),
-        updaterName: '준기',
-      ),
-      HistoryModel(
-        objectId: '11111',
-        orderObjectId: '1',
-        status: 0,
-        updatedDate: DateTime.now().subtract(Duration(hours: 2)),
-        updaterName: '준기',
-      ),
-    ];
+    histories = [];
 
     _histories = [
       OrderModel(
@@ -211,7 +177,6 @@ class _HistoryViewState extends State<HistoryView> {
     _selectedFilter.addAll([0, 1, 2, 3, 4]);
 
     _filterHistories();
-    super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _moveDatePicker();
@@ -269,7 +234,7 @@ class _HistoryViewState extends State<HistoryView> {
               _rows(),
             ],
           ),
-          _floatings(),
+          _floats(),
         ],
       ),
     );
@@ -348,19 +313,24 @@ class _HistoryViewState extends State<HistoryView> {
         return Text(
           DateFormat("yyyy/MM/dd HH:mm:ss").format(item.applyTime).toString(),
         );
+
       case 1:
         return Text('${item.address}/${item.roomNumber}');
+
       case 2:
         return Text(item.menus.first.name);
+
       case 3:
         return Text('${item.menus.length}개');
+
       case 4:
         return Text('${NumberFormat().format(item.menus.first.price)}원');
+
       case 5:
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: OrderStatusHelper.statusColor[item.status],
+            color: orderStatus[item.status].color,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Container(
@@ -368,7 +338,7 @@ class _HistoryViewState extends State<HistoryView> {
             padding: EdgeInsets.symmetric(vertical: 3),
             alignment: Alignment.center,
             child: Text(
-              OrderStatusHelper.statusText[item.status],
+              orderStatus[item.status].name,
               style: TextStyle(
                 color: item.status == 4 ? Colors.black : Colors.white,
               ),
@@ -384,16 +354,22 @@ class _HistoryViewState extends State<HistoryView> {
     switch (index) {
       case 0:
         return Text('발생일');
+
       case 1:
         return Text('건물명/방번호');
+
       case 2:
         return Text('메뉴명');
+
       case 3:
         return Text('총 개수');
+
       case 4:
         return Text('가격');
+
       case 5:
         return Text('상태');
+
       default:
         return Container();
     }
@@ -515,13 +491,13 @@ class _HistoryViewState extends State<HistoryView> {
         ),
       );
 
-  _floatings() => Positioned(
+  _floats() => Positioned(
         bottom: 20,
         right: 20,
         child: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: isOpended == true
+            children: open == true
                 ? [
                     _floatingMenus(),
                     _floating(),
@@ -537,11 +513,11 @@ class _HistoryViewState extends State<HistoryView> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: List.generate(5, (index) => _floatingMenu(index)));
 
-  _floatingMenu(int index) => InkWell(
+  _floatingMenu(int value) => InkWell(
         onTap: () {
-          _selectedFilter.contains(index)
-              ? _selectedFilter.remove(index)
-              : _selectedFilter.add(index);
+          _selectedFilter.contains(value)
+              ? _selectedFilter.remove(value)
+              : _selectedFilter.add(value);
           _filterHistories();
           setState(() {});
         },
@@ -551,16 +527,16 @@ class _HistoryViewState extends State<HistoryView> {
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: _selectedFilter.contains(index)
-                ? OrderStatusHelper.statusColor[index]
+            color: _selectedFilter.contains(value)
+                ? orderStatus[value].color
                 : CustomColors.tableInnerBorder,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
-            OrderStatusHelper.statusText[index],
+            orderStatus[value].name,
             style: TextStyle(
               fontSize: 15,
-              color: index != 4 ? Colors.white : Colors.black,
+              color: value != 4 ? Colors.white : Colors.black,
             ),
           ),
         ),
@@ -568,7 +544,7 @@ class _HistoryViewState extends State<HistoryView> {
 
   _floating() => InkWell(
         onTap: () {
-          isOpended = !isOpended;
+          open = !open;
           setState(() {});
         },
         child: Container(

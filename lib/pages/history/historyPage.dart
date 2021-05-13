@@ -1,13 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
-import 'package:h_order_reception/components/menu.dart';
-import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/model/orderModel.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
 import 'package:intl/intl.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -57,43 +53,7 @@ class _HistoryPageState extends State<HistoryPage> {
           price: 3500,
         ),
       ],
-      histories: [
-        HistoryModel(
-          objectId: '55555',
-          orderObjectId: '1',
-          status: 4,
-          updatedDate: DateTime.now().subtract(Duration(minutes: 5)),
-          updaterName: '준기',
-        ),
-        HistoryModel(
-          objectId: '44444',
-          orderObjectId: '1',
-          status: 3,
-          updatedDate: DateTime.now().subtract(Duration(minutes: 10)),
-          updaterName: '준기',
-        ),
-        HistoryModel(
-          objectId: '33333',
-          orderObjectId: '1',
-          status: 2,
-          updatedDate: DateTime.now().subtract(Duration(minutes: 30)),
-          updaterName: '준기',
-        ),
-        HistoryModel(
-          objectId: '22222',
-          orderObjectId: '1',
-          status: 1,
-          updatedDate: DateTime.now().subtract(Duration(hours: 1)),
-          updaterName: '준기',
-        ),
-        HistoryModel(
-          objectId: '11111',
-          orderObjectId: '1',
-          status: 0,
-          updatedDate: DateTime.now().subtract(Duration(hours: 2)),
-          updaterName: '준기',
-        ),
-      ],
+      histories: [],
     );
 
     _infoData = [
@@ -207,10 +167,10 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
           child: Column(
             children: [
-              Menu(
-                menu: order.menus,
-                existPrice: true,
-              ),
+              // Menu(
+              //   menu: order.menus,
+              //   existPrice: true,
+              // ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: _amount(),
@@ -254,7 +214,7 @@ class _HistoryPageState extends State<HistoryPage> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
-          child: Timeline(histories: order.histories),
+          // child: Timeline(histories: order.histories),
         ),
       );
 
@@ -308,22 +268,22 @@ class _HistoryPageState extends State<HistoryPage> {
             height: 50,
             margin: index != 4 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
-              color: index == order.status
-                  ? OrderStatusHelper.statusColor[index]
-                  : CustomColors.evenColor,
+              // color: index == order.status
+              //     ? OrderStatusHelper.statusColor[index]
+              //     : CustomColors.evenColor,
               borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
-            child: Text(
-              OrderStatusHelper.statusText[index],
-              style: TextStyle(
-                color: index == order.status && order.status != 4
-                    ? Colors.white
-                    : Colors.black,
-                fontSize: 17,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            // child: Text(
+            //   OrderStatusHelper.statusText[index],
+            //   style: TextStyle(
+            //     color: index == order.status && order.status != 4
+            //         ? Colors.white
+            //         : Colors.black,
+            //     fontSize: 17,
+            //     fontWeight: FontWeight.w500,
+            //   ),
+            // ),
           ),
         ),
       );

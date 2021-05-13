@@ -1,27 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyModel.dart';
-import 'package:h_order_reception/utils/orderStatusHelper.dart';
+import 'package:h_order_reception/model/historyDetailItemModel.dart';
+import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class Timeline extends StatelessWidget {
-  Timeline({this.histories});
+class Timeline extends StatefulWidget {
+  final int historyIndex;
 
-  final List<HistoryModel> histories;
+  Timeline({
+    this.historyIndex,
+  });
+
+  @override
+  _TimelineState createState() => _TimelineState();
+}
+
+class _TimelineState extends State<Timeline> {
+  HistoryDetailModel get historyDetail {
+    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(10),
-      children: _timelines(),
+      children: [
+        ...List.generate(
+            historyDetail.details?.length ?? 0,
+            (index) => _item(
+                  index: index,
+                  item: historyDetail.details[index],
+                )),
+      ],
     );
   }
 
-  _timelines() => List.generate(
-      histories.length, (index) => _timeline(histories[index], index));
-
-  Widget _timeline(HistoryModel item, int index) => TimelineTile(
+  _item({
+    int index,
+    HistoryDetailItemModel item,
+  }) =>
+      TimelineTile(
         axis: TimelineAxis.vertical,
         alignment: TimelineAlign.manual,
         lineXY: .1,
@@ -31,13 +52,13 @@ class Timeline extends StatelessWidget {
           indicator: Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: OrderStatusHelper.statusColor[item.status],
+              color: orderStatus[item.status].color,
               shape: BoxShape.circle,
             ),
             child: Text(
-              '${histories.length - (index)}',
+              '${historyDetail.details.length - index}',
               style: TextStyle(
-                color: item.status >= 4 ? Colors.black : Colors.white,
+                color: Colors.white,
               ),
             ),
           ),
@@ -50,14 +71,28 @@ class Timeline extends StatelessWidget {
           color: CustomColors.doneColor,
           thickness: 2,
         ),
-        isFirst: index <= 0 ? true : false,
-        isLast: histories.length <= index + 1 ? true : false,
+        isFirst: index == 0,
+        isLast: index == historyDetail.details.length - 1,
         endChild: Container(
           padding: EdgeInsets.only(left: 10),
           alignment: Alignment.centerLeft,
-          child: Text(
-            "${DateFormat('yyyy-MM-dd HH:mm:ss').format(item.updatedDate)}\n'${item.updaterName}'님이 '${OrderStatusHelper.statusText[item.status]}'로 수정",
-            style: TextStyle(color: Colors.black),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '${DateFormat('yyyy-MM-dd HH:mm:ss').format(item.createdTime)}',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                "'${item.userName}'님이 '${orderStatus[item.status].name}' 상태로 수정",
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ],
           ),
         ),
       );

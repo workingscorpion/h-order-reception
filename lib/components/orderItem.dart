@@ -1,67 +1,57 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:h_order_reception/components/clock.dart';
+import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/refuseDialog.dart';
+import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/model/historyDetailModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/utils/constants.dart';
+import 'package:intl/intl.dart';
 
 class OrderItem extends StatefulWidget {
-  final String historyObjectId;
+  final int historyIndex;
 
   OrderItem({
-    this.historyObjectId,
-  });
+    this.historyIndex,
+  }) : super(key: Key(historyIndex.toString()));
 
   @override
   _OrderItemState createState() => _OrderItemState();
 }
 
 class _OrderItemState extends State<OrderItem> {
-  HistoryModel get history {
-    return HistoryStore.instance.historyMap[widget.historyObjectId];
+  HistoryDetailModel get historyDetail {
+    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
   }
 
-  // get amount {
-  //   return [...widget.item.menus]
-  //       .map((e) => e.price * e.count)
-  //       .reduce((value, element) => value + element);
-  // }
+  HistoryModel get history {
+    return historyDetail.history;
+  }
 
-  // get quantity {
-  //   return [...widget.item.menus]
-  //       .map((e) => e.count)
-  //       .reduce((value, element) => value + element);
-  // }
+  ServiceModel get snapShotData {
+    return HistoryStore
+        .instance.snapShotDataMap[historyDetail.snapShot.objectId];
+  }
 
-  Timer timer;
-
-  bool _displayFront;
+  bool front;
 
   @override
   void initState() {
     super.initState();
 
-    timer =
-        Timer.periodic(Duration(milliseconds: (1000 / 10).floor()), (timer) {
-      setState(() {});
-    });
-
-    _displayFront = true;
-    setState(() {});
+    front = true;
   }
 
   @override
   void dispose() {
-    timer.cancel();
-
     super.dispose();
-  }
-
-  void flipItem() {
-    _displayFront = !_displayFront;
-    setState(() {});
   }
 
   @override
@@ -71,82 +61,87 @@ class _OrderItemState extends State<OrderItem> {
       child: Container(
         margin: EdgeInsets.only(right: 12),
         width: MediaQuery.of(context).size.width * .25,
-        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: CustomColors.doneColor, width: 1),
+          border: Border.all(
+            color: CustomColors.doneColor,
+            width: 1,
+          ),
         ),
-        child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
-          transitionBuilder: _transitionBuilder,
-          layoutBuilder: (widget, list) => Stack(children: [widget, ...list]),
-          child: _displayFront == true ? _front() : _back(),
-          switchInCurve: Curves.easeInBack,
-          switchOutCurve: Curves.easeInBack.flipped,
+        clipBehavior: Clip.antiAlias,
+        child: Observer(
+          builder: (context) => Column(
+            children: [
+              _header(),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(),
+                  clipBehavior: Clip.antiAlias,
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 500),
+                    transitionBuilder: (widget, animation) {
+                      final rotateAnimation =
+                          Tween(begin: pi, end: 0.0).animate(animation);
+
+                      return AnimatedBuilder(
+                        animation: rotateAnimation,
+                        child: widget,
+                        builder: (context, widget) {
+                          final isUnder = (ValueKey(front) != widget.key);
+                          final tilt = ((animation.value - 0.5).abs() - 0.5) *
+                              0.003 *
+                              (isUnder ? -1.0 : 1.0);
+                          final value = isUnder
+                              ? min(rotateAnimation.value, pi / 2)
+                              : rotateAnimation.value;
+
+                          return Transform(
+                            transform: (Matrix4.rotationY(value)
+                              ..setEntry(3, 0, tilt)),
+                            alignment: Alignment.center,
+                            child: widget,
+                          );
+                        },
+                      );
+                    },
+                    switchInCurve: Curves.ease,
+                    switchOutCurve: Curves.ease.flipped,
+                    layoutBuilder: (widget, list) => Stack(
+                      children: [
+                        widget,
+                        ...list,
+                      ],
+                    ),
+                    child: front == true
+                        ? Menu(historyIndex: widget.historyIndex)
+                        : Timeline(historyIndex: widget.historyIndex),
+                  ),
+                ),
+              ),
+              _footer(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _transitionBuilder(Widget widget, Animation<double> animation) {
-    final rotateAnim = Tween(begin: pi, end: 0.0).animate(animation);
-    return AnimatedBuilder(
-      animation: rotateAnim,
-      child: widget,
-      builder: (context, widget) {
-        final isUnder = (ValueKey(_displayFront) != widget.key);
-        var tilt = ((animation.value - 0.5).abs() - 0.5) * 0.003;
-        tilt *= isUnder ? -1.0 : 1.0;
-        final value =
-            isUnder ? min(rotateAnim.value, pi / 2) : rotateAnim.value;
-        return Transform(
-          transform: (Matrix4.rotationY(value)..setEntry(3, 0, tilt)),
-          child: widget,
-          alignment: Alignment.center,
-        );
-      },
-    );
-  }
-
-  _front() => Column(
-        children: [
-          _header(),
-          Menu(
-            menu: widget.item.menus,
-            existPrice: false,
-          ),
-          _footer(),
-        ],
-      );
-
-  _back() => Container(
-        child: Column(
-          children: [
-            _header(),
-            Expanded(
-              child: Container(
-                child: Timeline(
-                  histories: widget.item.histories,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-
   _header() => Container(
         child: Column(
           children: [
             InkWell(
-              onTap: () => flipItem(),
+              onTap: () {
+                front = !front;
+                setState(() {});
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-                color: OrderStatusHelper.statusColor[widget.item.status],
+                color: orderStatus[history.status].color,
                 child: Row(
                   children: [
                     Text(
-                      '딜리버리',
+                      snapShotData.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -155,7 +150,7 @@ class _OrderItemState extends State<OrderItem> {
                     ),
                     Spacer(),
                     Text(
-                      OrderStatusHelper.statusText[widget.item.status],
+                      orderStatus[history.status].name,
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
@@ -165,7 +160,7 @@ class _OrderItemState extends State<OrderItem> {
                     Container(
                       margin: EdgeInsets.only(left: 10),
                       child: Icon(
-                        _displayFront == true
+                        front == true
                             ? CupertinoIcons.info_circle
                             : CupertinoIcons.info_circle_fill,
                         size: 25,
@@ -185,7 +180,7 @@ class _OrderItemState extends State<OrderItem> {
                     child: Row(
                       children: [
                         Text(
-                          '${widget.item.address}',
+                          history.userName,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 15,
@@ -195,7 +190,7 @@ class _OrderItemState extends State<OrderItem> {
                         Container(
                           margin: EdgeInsets.only(right: 5),
                           child: Text(
-                            '${widget.item.roomNumber}호',
+                            history.deviceName,
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -218,33 +213,6 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  // _timer() {
-  //   final duration = DateTime.now().difference(widget.item.applyTime);
-  //   final seconds = duration.inSeconds;
-  //   final h = (seconds / 3600).floor();
-  //   final hh = h < 10 ? '0$h' : '$h';
-
-  //   final m = (seconds % 3600 / 60).floor();
-  //   final mm = m < 10 ? '0$m' : '$m';
-
-  //   final s = (seconds % 60).floor();
-  //   final ss = s < 10 ? '0$s' : '$s';
-
-  //   final text = "$hh:$mm:$ss";
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-      alignment: Alignment.center,
-      child: Text(
-        '$text',
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
   _summary() => Container(
         padding: EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
@@ -261,33 +229,38 @@ class _OrderItemState extends State<OrderItem> {
         ),
         child: Row(
           children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                '${DateFormat("yyyy/MM/dd HH:mm").format(widget.item.applyTime)}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                '${NumberFormat().format(amount)}원',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-                textAlign: TextAlign.end,
-              ),
-            ),
             Container(
-              margin: EdgeInsets.only(left: 20),
               child: Text(
-                '${NumberFormat().format(quantity)}개',
+                '${DateFormat("yyyy/MM/dd HH:mm").format(history.updatedTime)}',
                 style: TextStyle(
                   fontSize: 15,
                 ),
               ),
             ),
+            Spacer(),
+            history.amount != null
+                ? Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      '${NumberFormat().format(history.amount)}원',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                      textAlign: TextAlign.end,
+                    ),
+                  )
+                : Container(),
+            history.quantity != null
+                ? Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(
+                      '${NumberFormat().format(history.quantity)}개',
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       );
@@ -300,7 +273,7 @@ class _OrderItemState extends State<OrderItem> {
               child: Column(
                 children: [
                   _summary(),
-                  _timer(),
+                  Clock(dateTime: history.updatedTime),
                 ],
               ),
             ),
@@ -309,30 +282,43 @@ class _OrderItemState extends State<OrderItem> {
         ),
       );
 
-  _buttons() => IntrinsicHeight(
-        child: Container(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _button(
-                onTap: () {},
-                text: widget.item.status == 0 ? '거절' : '취소',
-                background: CustomColors.denyColor,
-                color: Colors.white,
-              ),
-              _button(
-                onTap: () {},
-                text: OrderStatusHelper.statusText[(widget.item.status + 1) %
-                    OrderStatusHelper.statusColor.length],
-                color: OrderStatusHelper.statusColor[(widget.item.status + 1) %
-                    OrderStatusHelper.statusColor.length],
-                flex: 2,
-              ),
-            ],
-          ),
+  _buttons() {
+    final keys = orderStatus.keys.toList();
+    final nextIndex = (keys.indexOf(history.status) + 1) % keys.length;
+    final nextStatus = keys[nextIndex];
+
+    return IntrinsicHeight(
+      child: Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _button(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  child: RefuseDialog(),
+                );
+              },
+              text: history.status == 1 ? '거절' : '취소',
+              background: CustomColors.denyColor,
+              color: Colors.white,
+            ),
+            _button(
+              onTap: () async {
+                await HistoryStore.instance.setStatus(
+                  index: history.index,
+                  status: nextStatus,
+                );
+              },
+              text: orderStatus[nextStatus].name,
+              flex: 2,
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
   _button({
     GestureTapCallback onTap,

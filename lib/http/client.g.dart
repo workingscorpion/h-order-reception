@@ -9,7 +9,6 @@ part of 'client.dart';
 class _Client implements Client {
   _Client(this._dio, {this.baseUrl}) {
     ArgumentError.checkNotNull(_dio, '_dio');
-    baseUrl ??= 'http://192.168.0.104:5000/api';
   }
 
   final Dio _dio;
@@ -53,12 +52,54 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListDataModel<HistoryModel, Map<dynamic, dynamic>>> histories() async {
+  Future<ListModel<HistoryDetailModel>> historyDetails(status, order) async {
+    ArgumentError.checkNotNull(status, 'status');
+    ArgumentError.checkNotNull(order, 'order');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
     final _result = await _dio.request<Map<String, dynamic>>(
-        '/v1/admin/history',
+        '/v1/admin/history?filter.order=$order&$status',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ListModel<HistoryDetailModel>.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<ListModel<HistoryDetailModel>> historyDetail(index) async {
+    ArgumentError.checkNotNull(index, 'index');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history/$index',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ListModel<HistoryDetailModel>.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<HistoryDetailModel> updateHistoryStatus(index, model) async {
+    ArgumentError.checkNotNull(index, 'index');
+    ArgumentError.checkNotNull(model, 'model');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(model?.toJson() ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history/$index/status',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'POST',
@@ -66,8 +107,7 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ListDataModel<HistoryModel, Map<dynamic, dynamic>>.fromJson(
-        _result.data);
+    final value = HistoryDetailModel.fromJson(_result.data);
     return value;
   }
 }

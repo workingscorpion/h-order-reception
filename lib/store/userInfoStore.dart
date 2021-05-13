@@ -79,6 +79,8 @@ abstract class UserInfoStoreBase with Store {
         token: token ?? '',
       ));
 
+      Client.token = response['token'];
+
       // final user = ResponseLogin.fromJson(response.data);
       // setLoginInfo(user.identity, user.token);
     } catch (ex) {
