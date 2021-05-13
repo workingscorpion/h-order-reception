@@ -37,10 +37,12 @@ abstract class HistoryStoreBase with Store {
     snapShotDataMap
       ..clear()
       ..addEntries(
-        response.list
-            .map(
-                (item) => ServiceModel.fromJson(jsonDecode(item.snapShot.data)))
-            .map((item) => MapEntry(item.objectId, item)),
+        response.list.map(
+          (item) => MapEntry(
+            item.snapShot.objectId,
+            ServiceModel.fromJson(jsonDecode(item.snapShot.data)),
+          ),
+        ),
       );
   }
 

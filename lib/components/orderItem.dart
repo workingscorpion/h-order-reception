@@ -36,7 +36,7 @@ class _OrderItemState extends State<OrderItem> {
 
   ServiceModel get snapShotData {
     return HistoryStore
-        .instance.snapShotDataMap[historyDetail.history.serviceObjectId];
+        .instance.snapShotDataMap[historyDetail.snapShot.objectId];
   }
 
   bool front;

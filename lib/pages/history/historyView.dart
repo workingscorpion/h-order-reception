@@ -34,6 +34,8 @@ class _HistoryViewState extends State<HistoryView> {
 
   @override
   void initState() {
+    super.initState();
+
     _selectToday();
 
     menus = [
@@ -175,7 +177,6 @@ class _HistoryViewState extends State<HistoryView> {
     _selectedFilter.addAll([0, 1, 2, 3, 4]);
 
     _filterHistories();
-    super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _moveDatePicker();
@@ -312,14 +313,19 @@ class _HistoryViewState extends State<HistoryView> {
         return Text(
           DateFormat("yyyy/MM/dd HH:mm:ss").format(item.applyTime).toString(),
         );
+
       case 1:
         return Text('${item.address}/${item.roomNumber}');
+
       case 2:
         return Text(item.menus.first.name);
+
       case 3:
         return Text('${item.menus.length}개');
+
       case 4:
         return Text('${NumberFormat().format(item.menus.first.price)}원');
+
       case 5:
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -348,16 +354,22 @@ class _HistoryViewState extends State<HistoryView> {
     switch (index) {
       case 0:
         return Text('발생일');
+
       case 1:
         return Text('건물명/방번호');
+
       case 2:
         return Text('메뉴명');
+
       case 3:
         return Text('총 개수');
+
       case 4:
         return Text('가격');
+
       case 5:
         return Text('상태');
+
       default:
         return Container();
     }

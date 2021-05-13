@@ -26,7 +26,7 @@ class _MenuState extends State<Menu> {
 
   ServiceModel get snapShotData {
     return HistoryStore
-        .instance.snapShotDataMap[historyDetail.history.serviceObjectId];
+        .instance.snapShotDataMap[historyDetail.snapShot.objectId];
   }
 
   Map data;
@@ -50,10 +50,14 @@ class _MenuState extends State<Menu> {
       child: Container(
         child: ListView(
           children: [
-            ...data.entries.where((e) => e.value != 'null').map((e) => _item(
-                  key: e.key,
-                  value: e.value,
-                )),
+            ...data.entries
+                .where((e) => e.value != 'null')
+                .where((e) => itemMap.containsKey(e.key))
+                .map((e) => _item(
+                      item: itemMap[e.key],
+                      key: e.key,
+                      value: e.value,
+                    )),
           ],
         ),
       ),
@@ -61,6 +65,7 @@ class _MenuState extends State<Menu> {
   }
 
   _item({
+    ItemModel item,
     String key,
     String value,
   }) =>
@@ -68,24 +73,18 @@ class _MenuState extends State<Menu> {
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
           children: [
+            Text(
+              item.value ?? '',
+              overflow: TextOverflow.ellipsis,
+            ),
+            Container(width: 20),
             Expanded(
-              child: Text(
-                itemMap[key]?.value ?? '',
-                softWrap: true,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              child: _value(
+                type: itemMap[key].type ?? -1,
+                value: value,
               ),
             ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(left: 20),
-                child: _value(
-                  type: itemMap[key]?.type ?? -1,
-                  value: value,
-                ),
-              ),
-            ),
-            itemMap[key]?.price != null
+            item.price != null
                 ? Expanded(
                     child: Container(
                       margin: EdgeInsets.only(left: 20),
@@ -96,11 +95,6 @@ class _MenuState extends State<Menu> {
                     ),
                   )
                 : Container(),
-            //   : Container(),
-            // existPrice == true
-            //     ? Text(
-            //         '${NumberFormat().format(menu[index].price * menu[index].count)}원')
-            //     : Container(),
           ],
         ),
       );
@@ -140,5 +134,10 @@ class _MenuState extends State<Menu> {
     int price,
     int quantity,
   }) =>
-      Text('${NumberFormat().format(price * quantity)}원');
+      Container(
+        child: Text(
+          '${NumberFormat().format(price * quantity)}원',
+          textAlign: TextAlign.right,
+        ),
+      );
 }
