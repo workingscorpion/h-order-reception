@@ -294,10 +294,22 @@ class _OrderItemState extends State<OrderItem> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _button(
-              onTap: () {
-                showDialog(
+              onTap: () async {
+                final result = await showDialog(
                   context: context,
                   child: RefuseDialog(),
+                );
+
+                if (result == null) {
+                  return;
+                }
+
+                final message = result as String;
+
+                HistoryStore.instance.setStatus(
+                  index: widget.historyIndex,
+                  status: -9,
+                  message: message,
                 );
               },
               text: history.status == 1 ? '거절' : '취소',

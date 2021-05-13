@@ -56,12 +56,17 @@ abstract class HistoryStoreBase with Store {
   setStatus({
     int index,
     int status,
+    String message,
   }) async {
     final item = await Client.create().updateHistoryStatus(
       index,
       UpdateHistoryStatusModel(
         status: status,
-        data: '',
+        data: (message?.isNotEmpty ?? false)
+            ? jsonEncode({
+                message: message,
+              })
+            : '',
       ),
     );
 

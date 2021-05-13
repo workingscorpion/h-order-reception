@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 
 class RefuseDialog extends StatefulWidget {
   RefuseDialog();
@@ -12,7 +13,7 @@ class _RefuseDialogState extends State<RefuseDialog> {
   static final Map<String, String> reasons = {
     'outOfStock': '재고가 모두 소진되었습니다.',
     'outOfBusinessTime': '영업시간이 종료되었습니다.',
-    '': '',
+    'deliveryDelayed': '배달이 지연되어 거절되었습니다.',
     'requestedByClient': '고객 요청에 따라 거절되었습니다.',
     'etc': '',
   };
@@ -69,8 +70,8 @@ class _RefuseDialogState extends State<RefuseDialog> {
                         Container(width: 6),
                         _item(
                           selectKey: selectKey,
-                          key: '',
-                          text: '??',
+                          key: 'deliveryDelayed',
+                          text: '배달지연',
                         ),
                         Container(width: 6),
                         _item(
@@ -103,7 +104,8 @@ class _RefuseDialogState extends State<RefuseDialog> {
                         Container(width: 6),
                         _button(
                           onTap: () {
-                            Navigator.of(context).pop();
+                            Navigator.of(context)
+                                .pop(textEditingController.text);
                           },
                           text: '확인',
                         ),
