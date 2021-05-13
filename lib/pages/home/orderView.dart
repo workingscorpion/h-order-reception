@@ -55,7 +55,10 @@ class _OrderViewState extends State<OrderView> {
                     .where((item) =>
                         (_selectedFilter?.isEmpty ?? true) ||
                         _selectedFilter.contains(item.history.status))
-                    .map((item) => OrderItem(historyIndex: item.history.index)),
+                    .map((item) => OrderItem(
+                          key: Key('${item.history.index}'),
+                          historyIndex: item.history.index,
+                        )),
               ],
             ),
           ),

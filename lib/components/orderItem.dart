@@ -18,8 +18,9 @@ class OrderItem extends StatefulWidget {
   final int historyIndex;
 
   OrderItem({
+    Key key,
     this.historyIndex,
-  });
+  }) : super(key: key);
 
   @override
   _OrderItemState createState() => _OrderItemState();
@@ -281,7 +282,8 @@ class _OrderItemState extends State<OrderItem> {
 
   _buttons() {
     final keys = orderStatus.keys.toList();
-    final next = (keys.indexOf(history.status) + 1) % keys.length;
+    final nextIndex = (keys.indexOf(history.status) + 1) % keys.length;
+    final nextStatus = keys[nextIndex];
 
     return IntrinsicHeight(
       child: Container(
@@ -304,10 +306,10 @@ class _OrderItemState extends State<OrderItem> {
               onTap: () async {
                 await HistoryStore.instance.setStatus(
                   index: history.index,
-                  status: history.status,
+                  status: nextStatus,
                 );
               },
-              text: orderStatus[next].name,
+              text: orderStatus[nextStatus].name,
               flex: 2,
             ),
           ],

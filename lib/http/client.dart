@@ -39,6 +39,7 @@ abstract class Client {
 
   @GET("/v1/admin/history")
   Future<ListModel<HistoryDetailModel>> historyDetails(
+    @Query('filter.status') String status,
     @Query('filter.order') String order,
   );
 

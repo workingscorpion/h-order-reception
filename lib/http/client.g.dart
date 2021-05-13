@@ -52,10 +52,14 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListModel<HistoryDetailModel>> historyDetails(order) async {
+  Future<ListModel<HistoryDetailModel>> historyDetails(status, order) async {
+    ArgumentError.checkNotNull(status, 'status');
     ArgumentError.checkNotNull(order, 'order');
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'filter.order': order};
+    final queryParameters = <String, dynamic>{
+      r'filter.status': status,
+      r'filter.order': order
+    };
     final _data = <String, dynamic>{};
     final _result = await _dio.request<Map<String, dynamic>>(
         '/v1/admin/history',

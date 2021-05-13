@@ -23,7 +23,10 @@ abstract class HistoryStoreBase with Store {
 
   @action
   load() async {
-    final response = await Client.create().historyDetails('UpdatedTime');
+    final response = await Client.create().historyDetails(
+      [1, 2, 3, 4].join(','),
+      'UpdatedTime',
+    );
 
     historyDetails
       ..clear()
@@ -63,15 +66,17 @@ abstract class HistoryStoreBase with Store {
     final listIndex = historyDetails
         .indexWhere((item) => item.history.index == item.history.index);
 
-    if (listIndex != -1) {
-      historyDetails..replaceRange(listIndex, listIndex + 1, [item]);
+    if (item.history.status == 9) {
+      if (listIndex != -1) {
+        historyDetails..removeAt(listIndex);
+      }
     } else {
-      historyDetails..add(item);
+      if (listIndex != -1) {
+        historyDetails..replaceRange(listIndex, listIndex + 1, [item]);
+      } else {
+        historyDetails..add(item);
+      }
     }
-
-    historyDetails
-      ..sort((a, b) =>
-          a.history.updatedTime.isAfter(b.history.updatedTime) ? -1 : 1);
 
     historyDetailMap[item.history.index] = item;
     snapShotDataMap[item.snapShot.objectId] =
