@@ -37,10 +37,10 @@ abstract class Client {
   @POST("/v1/auth/logout")
   Future logout();
 
-  @GET("/v1/admin/history")
+  @GET("/v1/admin/history?filter.order={order}&{status}")
   Future<ListModel<HistoryDetailModel>> historyDetails(
-    @Query('filter.status') String status,
-    @Query('filter.order') String order,
+    @Path('status') String status,
+    @Path('order') String order,
   );
 
   @GET("/v1/admin/history/{index}")

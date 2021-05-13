@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/model/historyDetailItemModel.dart';
+import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/utils/constants.dart';
+import 'package:intl/intl.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 class Timeline extends StatefulWidget {
   final int historyIndex;
@@ -12,55 +19,81 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
+  HistoryDetailModel get historyDetail {
+    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       padding: EdgeInsets.all(10),
       children: [
-        //   ...List.generate(
-        // widget.historyIndex.length, (index) => _timeline(histories[index], index)),
+        ...List.generate(
+            historyDetail.details?.length ?? 0,
+            (index) => _item(
+                  index: index,
+                  item: historyDetail.details[index],
+                )),
       ],
     );
   }
 
-  //  _timeline(HistoryModel item, int index) => TimelineTile(
-  //       axis: TimelineAxis.vertical,
-  //       alignment: TimelineAlign.manual,
-  //       lineXY: .1,
-  //       indicatorStyle: IndicatorStyle(
-  //         width: 35,
-  //         height: 50,
-  //         indicator: Container(
-  //           alignment: Alignment.center,
-  //           decoration: BoxDecoration(
-  //             color: OrderStatusHelper.statusColor[item.status],
-  //             shape: BoxShape.circle,
-  //           ),
-  //           child: Text(
-  //             '${histories.length - (index)}',
-  //             style: TextStyle(
-  //               color: item.status >= 4 ? Colors.black : Colors.white,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       afterLineStyle: LineStyle(
-  //         color: CustomColors.doneColor,
-  //         thickness: 2,
-  //       ),
-  //       beforeLineStyle: LineStyle(
-  //         color: CustomColors.doneColor,
-  //         thickness: 2,
-  //       ),
-  //       isFirst: index <= 0 ? true : false,
-  //       isLast: histories.length <= index + 1 ? true : false,
-  //       endChild: Container(
-  //         padding: EdgeInsets.only(left: 10),
-  //         alignment: Alignment.centerLeft,
-  //         child: Text(
-  //           "${DateFormat('yyyy-MM-dd HH:mm:ss').format(item.updatedDate)}\n'${item.updaterName}'님이 '${OrderStatusHelper.statusText[item.status]}'로 수정",
-  //           style: TextStyle(color: Colors.black),
-  //         ),
-  //       ),
-  //     );
+  _item({
+    int index,
+    HistoryDetailItemModel item,
+  }) =>
+      TimelineTile(
+        axis: TimelineAxis.vertical,
+        alignment: TimelineAlign.manual,
+        lineXY: .1,
+        indicatorStyle: IndicatorStyle(
+          width: 35,
+          height: 50,
+          indicator: Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: orderStatus[item.status].color,
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              '${historyDetail.details.length - index}',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        afterLineStyle: LineStyle(
+          color: CustomColors.doneColor,
+          thickness: 2,
+        ),
+        beforeLineStyle: LineStyle(
+          color: CustomColors.doneColor,
+          thickness: 2,
+        ),
+        isFirst: index == 0,
+        isLast: index == historyDetail.details.length - 1,
+        endChild: Container(
+          padding: EdgeInsets.only(left: 10),
+          alignment: Alignment.centerLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '${DateFormat('yyyy-MM-dd HH:mm:ss').format(item.createdTime)}',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                "'${item.userName}'님이 '${orderStatus[item.status].name}' 상태로 수정",
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }

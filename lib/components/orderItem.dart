@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:h_order_reception/components/clock.dart';
 import 'package:h_order_reception/components/menu.dart';
 import 'package:h_order_reception/components/refuseDialog.dart';
@@ -18,9 +19,8 @@ class OrderItem extends StatefulWidget {
   final int historyIndex;
 
   OrderItem({
-    Key key,
     this.historyIndex,
-  }) : super(key: key);
+  }) : super(key: Key(historyIndex.toString()));
 
   @override
   _OrderItemState createState() => _OrderItemState();
@@ -70,56 +70,58 @@ class _OrderItemState extends State<OrderItem> {
           ),
         ),
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          children: [
-            _header(),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(),
-                clipBehavior: Clip.antiAlias,
-                child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
-                  transitionBuilder: (widget, animation) {
-                    final rotateAnimation =
-                        Tween(begin: pi, end: 0.0).animate(animation);
+        child: Observer(
+          builder: (context) => Column(
+            children: [
+              _header(),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(),
+                  clipBehavior: Clip.antiAlias,
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 500),
+                    transitionBuilder: (widget, animation) {
+                      final rotateAnimation =
+                          Tween(begin: pi, end: 0.0).animate(animation);
 
-                    return AnimatedBuilder(
-                      animation: rotateAnimation,
-                      child: widget,
-                      builder: (context, widget) {
-                        final isUnder = (ValueKey(front) != widget.key);
-                        final tilt = ((animation.value - 0.5).abs() - 0.5) *
-                            0.003 *
-                            (isUnder ? -1.0 : 1.0);
-                        final value = isUnder
-                            ? min(rotateAnimation.value, pi / 2)
-                            : rotateAnimation.value;
+                      return AnimatedBuilder(
+                        animation: rotateAnimation,
+                        child: widget,
+                        builder: (context, widget) {
+                          final isUnder = (ValueKey(front) != widget.key);
+                          final tilt = ((animation.value - 0.5).abs() - 0.5) *
+                              0.003 *
+                              (isUnder ? -1.0 : 1.0);
+                          final value = isUnder
+                              ? min(rotateAnimation.value, pi / 2)
+                              : rotateAnimation.value;
 
-                        return Transform(
-                          transform: (Matrix4.rotationY(value)
-                            ..setEntry(3, 0, tilt)),
-                          alignment: Alignment.center,
-                          child: widget,
-                        );
-                      },
-                    );
-                  },
-                  switchInCurve: Curves.ease,
-                  switchOutCurve: Curves.ease.flipped,
-                  layoutBuilder: (widget, list) => Stack(
-                    children: [
-                      widget,
-                      ...list,
-                    ],
+                          return Transform(
+                            transform: (Matrix4.rotationY(value)
+                              ..setEntry(3, 0, tilt)),
+                            alignment: Alignment.center,
+                            child: widget,
+                          );
+                        },
+                      );
+                    },
+                    switchInCurve: Curves.ease,
+                    switchOutCurve: Curves.ease.flipped,
+                    layoutBuilder: (widget, list) => Stack(
+                      children: [
+                        widget,
+                        ...list,
+                      ],
+                    ),
+                    child: front == true
+                        ? Menu(historyIndex: widget.historyIndex)
+                        : Timeline(historyIndex: widget.historyIndex),
                   ),
-                  child: front == true
-                      ? Menu(historyIndex: widget.historyIndex)
-                      : Timeline(historyIndex: widget.historyIndex),
                 ),
               ),
-            ),
-            _footer(),
-          ],
+              _footer(),
+            ],
+          ),
         ),
       ),
     );

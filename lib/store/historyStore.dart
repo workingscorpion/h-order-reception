@@ -21,10 +21,12 @@ abstract class HistoryStoreBase with Store {
   ObservableMap<int, HistoryDetailModel> historyDetailMap = ObservableMap();
   ObservableMap<String, ServiceModel> snapShotDataMap = ObservableMap();
 
+  static final activeStatus = [1, 2, 3, 4];
+
   @action
   load() async {
     final response = await Client.create().historyDetails(
-      [1, 2, 3, 4].join(','),
+      activeStatus.map((item) => 'filter.status=$item').join('&'),
       'UpdatedTime',
     );
 
@@ -66,15 +68,17 @@ abstract class HistoryStoreBase with Store {
     final listIndex = historyDetails
         .indexWhere((item) => item.history.index == item.history.index);
 
-    if (item.history.status == 9) {
+    if (activeStatus.contains(item.history.status)) {
       if (listIndex != -1) {
-        historyDetails..removeAt(listIndex);
+        historyDetails
+          ..removeAt(listIndex)
+          ..insert(0, item);
+      } else {
+        historyDetails..add(item);
       }
     } else {
       if (listIndex != -1) {
-        historyDetails..replaceRange(listIndex, listIndex + 1, [item]);
-      } else {
-        historyDetails..add(item);
+        historyDetails..removeAt(listIndex);
       }
     }
 
