@@ -52,7 +52,7 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListDataListModel<HistoryModel, SnapShotModel>> histories() async {
+  Future<ListModel<HistoryDetailModel>> histories() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -65,14 +65,31 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value =
-        ListDataListModel<HistoryModel, SnapShotModel>.fromJson(_result.data);
+    final value = ListModel<HistoryDetailModel>.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<ListDataListModel<HistoryModel, SnapShotModel>> updateHistoryStatus(
-      index, body) async {
+  Future<ListModel<HistoryDetailModel>> history(index) async {
+    ArgumentError.checkNotNull(index, 'index');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history/$index',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = ListModel<HistoryDetailModel>.fromJson(_result.data);
+    return value;
+  }
+
+  @override
+  Future<HistoryDetailModel> updateHistoryStatus(index, body) async {
     ArgumentError.checkNotNull(index, 'index');
     ArgumentError.checkNotNull(body, 'body');
     const _extra = <String, dynamic>{};
@@ -88,8 +105,7 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value =
-        ListDataListModel<HistoryModel, SnapShotModel>.fromJson(_result.data);
+    final value = HistoryDetailModel.fromJson(_result.data);
     return value;
   }
 }

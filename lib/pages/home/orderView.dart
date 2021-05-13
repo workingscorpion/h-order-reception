@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:h_order_reception/components/orderItem.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/historyDetailModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 
@@ -17,7 +17,7 @@ class OrderView extends StatefulWidget {
 class _OrderViewState extends State<OrderView> {
   bool open = false;
 
-  List<HistoryModel> get histories {
+  List<HistoryDetailModel> get histories {
     return HistoryStore.instance.histories;
   }
 
@@ -54,8 +54,8 @@ class _OrderViewState extends State<OrderView> {
                 ...histories
                     .where((item) =>
                         (_selectedFilter?.isEmpty ?? true) ||
-                        _selectedFilter.contains(item.status))
-                    .map((item) => OrderItem(historyIndex: item.index)),
+                        _selectedFilter.contains(item.history.status))
+                    .map((item) => OrderItem(historyIndex: item.history.index)),
               ],
             ),
           ),

@@ -2,15 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
 import 'package:h_order_reception/http/types/updateValueModel.dart';
-import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/historyDetailModel.dart';
 import 'package:h_order_reception/model/listModel.dart';
-import 'package:h_order_reception/model/snapShotModel.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'client.g.dart';
 
 const baseUrl = kDebugMode
-    ? "http://192.168.50.11:5000/api"
+    ? "http://192.168.0.103:5000/api"
     : "http://jinjoosoft.io:49233/api";
 
 @RestApi()
@@ -39,10 +38,15 @@ abstract class Client {
   Future logout();
 
   @GET("/v1/admin/history")
-  Future<ListDataListModel<HistoryModel, SnapShotModel>> histories();
+  Future<ListModel<HistoryDetailModel>> histories();
+
+  @GET("/v1/admin/history/{index}")
+  Future<ListModel<HistoryDetailModel>> history(
+    @Path('index') int index,
+  );
 
   @POST("/v1/admin/history/{index}/status")
-  Future<ListDataListModel<HistoryModel, SnapShotModel>> updateHistoryStatus(
+  Future<HistoryDetailModel> updateHistoryStatus(
     @Path('index') int index,
     @Body() UpdateValueModel body,
   );
