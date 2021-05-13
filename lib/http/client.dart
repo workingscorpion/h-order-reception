@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
-import 'package:h_order_reception/http/types/updateValueModel.dart';
+import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
 import 'package:h_order_reception/model/historyDetailModel.dart';
 import 'package:h_order_reception/model/listModel.dart';
 import 'package:retrofit/retrofit.dart';
@@ -38,16 +38,18 @@ abstract class Client {
   Future logout();
 
   @GET("/v1/admin/history")
-  Future<ListModel<HistoryDetailModel>> histories();
+  Future<ListModel<HistoryDetailModel>> historyDetails(
+    @Query('filter.order') String order,
+  );
 
   @GET("/v1/admin/history/{index}")
-  Future<ListModel<HistoryDetailModel>> history(
+  Future<ListModel<HistoryDetailModel>> historyDetail(
     @Path('index') int index,
   );
 
   @POST("/v1/admin/history/{index}/status")
   Future<HistoryDetailModel> updateHistoryStatus(
     @Path('index') int index,
-    @Body() UpdateValueModel body,
+    @Body() UpdateHistoryStatusModel model,
   );
 }

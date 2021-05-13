@@ -52,9 +52,10 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListModel<HistoryDetailModel>> histories() async {
+  Future<ListModel<HistoryDetailModel>> historyDetails(order) async {
+    ArgumentError.checkNotNull(order, 'order');
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'filter.order': order};
     final _data = <String, dynamic>{};
     final _result = await _dio.request<Map<String, dynamic>>(
         '/v1/admin/history',
@@ -70,7 +71,7 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListModel<HistoryDetailModel>> history(index) async {
+  Future<ListModel<HistoryDetailModel>> historyDetail(index) async {
     ArgumentError.checkNotNull(index, 'index');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -89,13 +90,13 @@ class _Client implements Client {
   }
 
   @override
-  Future<HistoryDetailModel> updateHistoryStatus(index, body) async {
+  Future<HistoryDetailModel> updateHistoryStatus(index, model) async {
     ArgumentError.checkNotNull(index, 'index');
-    ArgumentError.checkNotNull(body, 'body');
+    ArgumentError.checkNotNull(model, 'model');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(body?.toJson() ?? <String, dynamic>{});
+    _data.addAll(model?.toJson() ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>(
         '/v1/admin/history/$index/status',
         queryParameters: queryParameters,

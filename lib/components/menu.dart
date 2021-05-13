@@ -21,7 +21,7 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   HistoryDetailModel get historyDetail {
-    return HistoryStore.instance.historyMap[widget.historyIndex];
+    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
   }
 
   ServiceModel get snapShotData {

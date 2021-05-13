@@ -27,7 +27,7 @@ class OrderItem extends StatefulWidget {
 
 class _OrderItemState extends State<OrderItem> {
   HistoryDetailModel get historyDetail {
-    return HistoryStore.instance.historyMap[widget.historyIndex];
+    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
   }
 
   HistoryModel get history {

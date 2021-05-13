@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
-import 'package:h_order_reception/http/types/updateValueModel.dart';
+import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
 import 'package:h_order_reception/model/historyDetailModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
@@ -17,19 +17,21 @@ class HistoryStore extends HistoryStoreBase with _$HistoryStore {
 }
 
 abstract class HistoryStoreBase with Store {
-  ObservableList<HistoryDetailModel> histories = ObservableList();
-  ObservableMap<int, HistoryDetailModel> historyMap = ObservableMap();
+  ObservableList<HistoryDetailModel> historyDetails = ObservableList();
+  ObservableMap<int, HistoryDetailModel> historyDetailMap = ObservableMap();
   ObservableMap<String, ServiceModel> snapShotDataMap = ObservableMap();
 
   @action
   load() async {
-    final response = await Client.create().histories();
+    final response = await Client.create().historyDetails('UpdatedTime');
 
-    histories
+    historyDetails
       ..clear()
-      ..addAll(response.list);
+      ..addAll(response.list)
+      ..sort((a, b) =>
+          a.history.updatedTime.isAfter(b.history.updatedTime) ? -1 : 1);
 
-    historyMap
+    historyDetailMap
       ..clear()
       ..addEntries(
           response.list.map((item) => MapEntry(item.history.index, item)));
@@ -50,9 +52,29 @@ abstract class HistoryStoreBase with Store {
     int index,
     int status,
   }) async {
-    Client.create().updateHistoryStatus(
+    final item = await Client.create().updateHistoryStatus(
       index,
-      UpdateValueModel(value: status),
+      UpdateHistoryStatusModel(
+        status: status,
+        data: '',
+      ),
     );
+
+    final listIndex = historyDetails
+        .indexWhere((item) => item.history.index == item.history.index);
+
+    if (listIndex != -1) {
+      historyDetails..replaceRange(listIndex, listIndex + 1, [item]);
+    } else {
+      historyDetails..add(item);
+    }
+
+    historyDetails
+      ..sort((a, b) =>
+          a.history.updatedTime.isAfter(b.history.updatedTime) ? -1 : 1);
+
+    historyDetailMap[item.history.index] = item;
+    snapShotDataMap[item.snapShot.objectId] =
+        ServiceModel.fromJson(jsonDecode(item.snapShot.data));
   }
 }

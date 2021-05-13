@@ -18,7 +18,7 @@ class _OrderViewState extends State<OrderView> {
   bool open = false;
 
   List<HistoryDetailModel> get histories {
-    return HistoryStore.instance.histories;
+    return HistoryStore.instance.historyDetails;
   }
 
   List<int> _selectedFilter;
