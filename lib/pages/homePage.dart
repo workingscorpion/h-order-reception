@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:h_order_reception/components/customBar.dart';
 import 'package:h_order_reception/pages/history/historyView.dart';
 import 'package:h_order_reception/pages/home/orderView.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage>
     _tabController.addListener(() {
       setState(() {});
     });
+
+    // HistoryStore.instance.connectHub();
 
     super.initState();
   }

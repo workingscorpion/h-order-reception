@@ -1,3 +1,4 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
@@ -8,9 +9,9 @@ import 'package:retrofit/retrofit.dart';
 
 part 'client.g.dart';
 
-const baseUrl = kDebugMode
-    ? "http://192.168.0.103:5000/api"
-    : "http://jinjoosoft.io:49233/api";
+const protocol = kDebugMode ? 'http' : 'https';
+const host = kDebugMode ? '192.168.0.11' : 'jinjoosoft.io';
+const port = kDebugMode ? '5000' : '49233';
 
 @RestApi()
 abstract class Client {
@@ -26,6 +27,16 @@ abstract class Client {
           ),
         ),
       );
+
+  static CookieJar cookieJar = CookieJar();
+
+  static get baseUrl {
+    return "$protocol://$host:$port/api";
+  }
+
+  static get signalRUrl {
+    return "$protocol://$host:$port/signal";
+  }
 
   static String token;
 

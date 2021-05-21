@@ -16,19 +16,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _loading = false;
 
-  TextEditingController _idController;
-  TextEditingController _passwordController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _idController = TextEditingController();
-    _passwordController = TextEditingController();
-
-    _idController.text = 'djdj159';
-    _passwordController.text = '123123';
-  }
+  TextEditingController _idController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
