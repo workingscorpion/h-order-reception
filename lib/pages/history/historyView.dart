@@ -59,35 +59,35 @@ class _HistoryViewState extends State<HistoryView> {
         orderObjectId: '1',
         status: 4,
         updatedDate: DateTime.now().subtract(Duration(minutes: 5)),
-        updaterName: '준기',
+        updaterName: '웨스트도어',
       ),
       HistoryModel(
         objectId: '44444',
         orderObjectId: '1',
         status: 3,
         updatedDate: DateTime.now().subtract(Duration(minutes: 10)),
-        updaterName: '준기',
+        updaterName: '웨스트도어',
       ),
       HistoryModel(
         objectId: '33333',
         orderObjectId: '1',
         status: 2,
         updatedDate: DateTime.now().subtract(Duration(minutes: 30)),
-        updaterName: '준기',
+        updaterName: '웨스트도어',
       ),
       HistoryModel(
         objectId: '22222',
         orderObjectId: '1',
         status: 1,
         updatedDate: DateTime.now().subtract(Duration(hours: 1)),
-        updaterName: '준기',
+        updaterName: '웨스트도어',
       ),
       HistoryModel(
         objectId: '11111',
         orderObjectId: '1',
         status: 0,
         updatedDate: DateTime.now().subtract(Duration(hours: 2)),
-        updaterName: '준기',
+        updaterName: '웨스트도어',
       ),
     ];
 
@@ -96,9 +96,9 @@ class _HistoryViewState extends State<HistoryView> {
         objectId: '1',
         status: 0,
         applyTime: DateTime.now().subtract(Duration(days: 2)),
-        roomNumber: '1208',
+        roomNumber: '1202',
         shopName: '던킨 도넛',
-        address: '마곡럭스나인오피스텔 L동',
+        address: '태림 센트윈',
         menus: [
           MenuModel(
             boundaryId: '11',
@@ -116,9 +116,9 @@ class _HistoryViewState extends State<HistoryView> {
         applyTime: DateTime.now()
             .subtract(Duration(days: 1))
             .subtract(Duration(hours: 6)),
-        roomNumber: '1208',
+        roomNumber: '1202',
         shopName: '고샵',
-        address: '마곡럭스나인오피스텔 L동',
+        address: '태림 센트윈',
         menus: [
           MenuModel(
             boundaryId: '11',
@@ -136,9 +136,9 @@ class _HistoryViewState extends State<HistoryView> {
         applyTime: DateTime.now()
             .subtract(Duration(days: 1))
             .subtract(Duration(hours: 3)),
-        roomNumber: '1208',
+        roomNumber: '1202',
         shopName: '웨스트도어',
-        address: '마곡럭스나인오피스텔 L동',
+        address: '태림 센트윈',
         menus: [
           MenuModel(
             boundaryId: '11',
@@ -156,9 +156,9 @@ class _HistoryViewState extends State<HistoryView> {
         applyTime: DateTime.now()
             .subtract(Duration(days: 1))
             .subtract(Duration(hours: 1)),
-        roomNumber: '1208',
-        shopName: '봉보야쥬',
-        address: '마곡럭스나인오피스텔 L동',
+        roomNumber: '1202',
+        shopName: '웨스트도어',
+        address: '태림 센트윈',
         menus: [
           MenuModel(
             boundaryId: '11',
@@ -174,9 +174,9 @@ class _HistoryViewState extends State<HistoryView> {
         objectId: '5',
         status: 4,
         applyTime: DateTime.now().subtract(Duration(hours: 3)),
-        roomNumber: '1208',
+        roomNumber: '1202',
         shopName: '비베러디시',
-        address: '마곡럭스나인오피스텔 L동',
+        address: '태림 센트윈',
         menus: [
           MenuModel(
             boundaryId: '11',
@@ -192,9 +192,9 @@ class _HistoryViewState extends State<HistoryView> {
         objectId: '6',
         status: 4,
         applyTime: DateTime.now().subtract(Duration(minutes: 10)),
-        roomNumber: '1208',
+        roomNumber: '1202',
         shopName: '맛집',
-        address: '마곡럭스나인오피스텔 L동',
+        address: '태림 센트윈',
         menus: [
           MenuModel(
             boundaryId: '11',
