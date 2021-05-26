@@ -64,4 +64,7 @@ abstract class Client {
     @Path('index') int index,
     @Body() UpdateHistoryStatusModel model,
   );
+
+  @PUT("/v1/admin/user/boundary")
+  Future updateUserBoundary();
 }

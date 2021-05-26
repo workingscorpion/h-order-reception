@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage>
       setState(() {});
     });
 
-    // HistoryStore.instance.connectHub();
+    HistoryStore.instance.connectHub();
 
     super.initState();
   }

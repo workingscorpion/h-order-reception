@@ -20,7 +20,7 @@ class OrderItem extends StatefulWidget {
 
   OrderItem({
     this.historyIndex,
-  }) : super(key: Key(historyIndex.toString()));
+  }) : super(key: Key('$historyIndex'));
 
   @override
   _OrderItemState createState() => _OrderItemState();

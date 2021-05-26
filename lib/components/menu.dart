@@ -42,26 +42,30 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTextStyle(
-      style: TextStyle(
-        fontSize: 17,
-        color: CustomColors.aBlack,
-      ),
-      child: Container(
-        child: ListView(
-          children: [
-            ...data.entries
-                .where((e) => e.value != 'null')
-                .where((e) => itemMap.containsKey(e.key))
-                .map((e) => _item(
-                      item: itemMap[e.key],
-                      key: e.key,
-                      value: e.value,
-                    )),
-          ],
-        ),
-      ),
+    return Container(
+      child: Text('123'),
     );
+    // return DefaultTextStyle(
+    //   style: TextStyle(
+    //     fontSize: 17,
+    //     color: CustomColors.aBlack,
+    //   ),
+    //   child: Container(
+    //     child: Text('123'),
+    //     // child: ListView(
+    //     //   children: [
+    //     //     ...data.entries
+    //     //         .where((e) => e.value != 'null')
+    //     //         .where((e) => itemMap.containsKey(e.key))
+    //     //         .map((e) => _item(
+    //     //               item: itemMap[e.key],
+    //     //               key: e.key,
+    //     //               value: e.value,
+    //     //             )),
+    //     //   ],
+    //     // ),
+    //   ),
+    // );
   }
 
   _item({

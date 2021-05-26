@@ -110,4 +110,21 @@ class _Client implements Client {
     final value = HistoryDetailModel.fromJson(_result.data);
     return value;
   }
+
+  @override
+  Future<dynamic> updateUserBoundary() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request('/v1/admin/user/boundary',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'PUT',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = _result.data;
+    return value;
+  }
 }

@@ -62,21 +62,21 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   autoLogin() async {
-    try {
-      final String id = await SharedPreferencesHelper.getUserId();
+    AppRouter.toLoginPage();
+    // try {
+    //   final String id = await SharedPreferencesHelper.getUserId();
 
-      if (id == null) {
-        throw Exception();
-      }
+    //   if (id == null) {
+    //     throw Exception();
+    //   }
 
-      await _userInfoStore.login(id: id);
+    //   await _userInfoStore.login(id: id);
 
-      // FIXME
-      AppRouter.toHomePage();
-      // await loadInfo();
-    } catch (ex) {
-      AppRouter.toLoginPage();
-    }
+    //   // FIXME
+    //   AppRouter.toHomePage();
+    //   // await loadInfo();
+    // } catch (ex) {
+    // }
   }
 
   loadInfo() async {

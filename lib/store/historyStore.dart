@@ -38,6 +38,10 @@ abstract class HistoryStoreBase with Store {
 
   @action
   connectHub() async {
+    if (Client.token?.isEmpty ?? true) {
+      return;
+    }
+
     if (hubConnection != null) {
       hubConnection.stop();
     }
@@ -159,9 +163,7 @@ class PushNotificationModel {
 class SignalRClient extends IOClient {
   @override
   Future<IOStreamedResponse> send(BaseRequest request) async {
-    final list = Client.cookieJar.loadForRequest(request.url);
-    final cookie = list.map((e) => '${e.name}=${e.value};').join(' ');
-    request.headers['Cookie'] = cookie;
+    request.headers['Authorization'] = 'Bearer ${Client.token}';
 
     return super.send(request);
   }
