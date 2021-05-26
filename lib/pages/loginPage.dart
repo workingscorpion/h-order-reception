@@ -146,24 +146,24 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   _login() async {
-    if ((_idController.text?.isEmpty ?? true)) {
-      showToast('아이디를 입력해주세요.');
-      return;
-    }
+    // if ((_idController.text?.isEmpty ?? true)) {
+    //   showToast('아이디를 입력해주세요.');
+    //   return;
+    // }
 
-    if (_passwordController.text?.isEmpty ?? true) {
-      showToast('비밀번호를 입력해주세요.');
-      return;
-    }
+    // if (_passwordController.text?.isEmpty ?? true) {
+    //   showToast('비밀번호를 입력해주세요.');
+    //   return;
+    // }
 
     _loading = true;
     setState(() {});
 
     try {
-      await UserInfoStore.instance.login(
-        id: _idController.text,
-        password: _passwordController.text,
-      );
+      // await UserInfoStore.instance.login(
+      //   id: _idController.text,
+      //   password: _passwordController.text,
+      // );
 
       AppRouter.toHomePage();
     } catch (ex) {
