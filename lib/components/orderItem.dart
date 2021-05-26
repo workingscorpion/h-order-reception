@@ -120,11 +120,6 @@ class _OrderItemState extends State<OrderItem> {
                             : Timeline(historyIndex: widget.historyIndex),
                       ),
                     ),
-                    child: front == true
-                        ? Container(
-                            child: Menu(historyIndex: widget.historyIndex),
-                          )
-                        : Timeline(historyIndex: widget.historyIndex),
                   ),
                   _footer(),
                 ],
