@@ -36,12 +36,79 @@ class _MenuState extends State<Menu> {
   void initState() {
     super.initState();
 
-    data = jsonDecode(historyDetail.history.data);
-    itemMap = snapShotData.itemMap() ?? Map();
+    data = (historyDetail?.history?.data?.isNotEmpty ?? false)
+        ? jsonDecode(historyDetail.history.data)
+        : Map();
+    itemMap = snapShotData?.itemMap() ?? Map();
   }
 
   @override
   Widget build(BuildContext context) {
+    final children = <Widget>[];
+
+    switch (snapShotData.type) {
+      case ServiceType.Call:
+        {
+          final widgets = data.entries
+              .where((e) => e.value != 'null')
+              .where((e) => itemMap.containsKey(e.key))
+              .map((e) => _item(
+                    item: itemMap[e.key],
+                    value: e.value,
+                  ));
+
+          children..addAll(widgets);
+        }
+        break;
+
+      case ServiceType.Shop:
+        {
+          if ((data?.containsKey('cart') ?? false) == false) {
+            break;
+          }
+
+          final cart = jsonDecode(data['cart']) as List;
+          final widgets = cart.map((e) {
+            final productObjectId = e['product']['objectId'];
+            final product = itemMap[productObjectId];
+
+            final quantity = e['quantity'];
+            final optionQuantity = e['optionQuantity'] as Map;
+
+            return Column(
+              children: [
+                _item(
+                  item: product,
+                  value: quantity.toString(),
+                ),
+                DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.only(left: 24),
+                    child: Column(
+                      children: [
+                        ...optionQuantity.entries.where((e) => e.value > 0).map(
+                              (e) => _item(
+                                item: itemMap[e.key],
+                                value: e.value.toString(),
+                              ),
+                            ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }).toList();
+
+          children..addAll(widgets);
+        }
+        break;
+    }
+
     return DefaultTextStyle(
       style: TextStyle(
         fontSize: 17,
@@ -50,48 +117,41 @@ class _MenuState extends State<Menu> {
       child: Container(
         child: ListView(
           children: [
-            ...data.entries
-                .where((e) => e.value != 'null')
-                .where((e) => itemMap.containsKey(e.key))
-                .map((e) => _item(
-                      item: itemMap[e.key],
-                      key: e.key,
-                      value: e.value,
-                    )),
+            ...children,
           ],
         ),
       ),
     );
   }
 
-  _item({
+  Widget _item({
     ItemModel item,
-    String key,
     String value,
   }) =>
       Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
           children: [
-            Text(
-              item.value ?? '',
-              overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Text(
+                item.value ?? '',
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             Container(width: 20),
             Expanded(
-              child: _value(
-                type: itemMap[key].type ?? -1,
-                value: value,
-              ),
+              child: value?.isNotEmpty ?? false
+                  ? _value(
+                      type: item.type ?? -1,
+                      value: value,
+                    )
+                  : Container(),
             ),
             item.price != null
                 ? Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: _price(
-                        price: itemMap[key]?.price,
-                        quantity: int.parse(value),
-                      ),
+                    child: _price(
+                      price: item.price,
+                      quantity: 1,
                     ),
                   )
                 : Container(),
@@ -104,21 +164,25 @@ class _MenuState extends State<Menu> {
     String value,
   }) {
     switch (type) {
-      case 0:
+      case ItemType.Group:
         return;
 
-      case 2:
+      case ItemType.Number:
         final number = int.parse(value);
         value = '${NumberFormat().format(number)}';
         break;
 
-      case 3:
+      case ItemType.Boolean:
         value = value.toLowerCase() == 'true' ? '선택' : '미선택';
         break;
 
-      case 100:
+      case ItemType.DateTime:
         final dateTime = DateTime.parse(value);
         value = '${DateFormat('yyyy-MM-dd HH:mm').format(dateTime)}';
+        break;
+
+      case ItemType.Product:
+      case ItemType.ProductOption:
         break;
     }
 
@@ -140,4 +204,31 @@ class _MenuState extends State<Menu> {
           textAlign: TextAlign.right,
         ),
       );
+}
+
+class ServiceType {
+  static const Call = 2;
+  static const Shop = 3;
+}
+
+class ItemType {
+  static const Position = -1;
+  static const Group = 0;
+
+  static const Text = 1;
+  static const Number = 2;
+  static const Boolean = 3;
+  static const Input = 4;
+
+  static const DateTime = 100;
+  static const Date = 101;
+  static const Time = 102;
+
+  static const Url = 200;
+  static const Image = 201;
+  static const File = 202;
+  static const WebView = 203;
+
+  static const Product = 300;
+  static const ProductOption = 301;
 }

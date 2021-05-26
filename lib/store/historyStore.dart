@@ -32,9 +32,7 @@ abstract class HistoryStoreBase with Store {
 
     historyDetails
       ..clear()
-      ..addAll(response.list)
-      ..sort((a, b) =>
-          a.history.updatedTime.isAfter(b.history.updatedTime) ? -1 : 1);
+      ..addAll(response.list);
 
     historyDetailMap
       ..clear()

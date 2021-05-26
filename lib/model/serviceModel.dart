@@ -22,20 +22,22 @@ class ServiceModel {
 
   Map<String, dynamic> toJson() => _$ServiceModelToJson(this);
 
-  Map<String, ItemModel> itemMap([List<ItemModel> list]) {
-    if (list == null) {
-      list = items;
+  Map<String, ItemModel> itemMap() {
+    return _itemMap(items);
+  }
+
+  Map<String, ItemModel> _itemMap(List<ItemModel> list) {
+    final result =
+        list.asMap().map((key, value) => MapEntry(value.objectId, value));
+
+    final subItems = list.where((item) => (item.items?.isNotEmpty ?? false));
+
+    if (subItems?.isNotEmpty ?? false) {
+      subItems.map<Map<String, ItemModel>>((item) => _itemMap(item.items))
+        ..forEach((element) {
+          result..addAll(element);
+        });
     }
-
-    final map =
-        items.asMap().map((key, value) => MapEntry(value.objectId, value));
-
-    final result = items
-        .where((item) => (item.items?.isNotEmpty ?? false))
-        .fold<Map<String, ItemModel>>(
-            map,
-            (previousValue, item) =>
-                previousValue..addAll(itemMap(item.items)));
 
     return result;
   }

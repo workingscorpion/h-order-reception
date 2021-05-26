@@ -114,7 +114,9 @@ class _OrderItemState extends State<OrderItem> {
                       ],
                     ),
                     child: front == true
-                        ? Menu(historyIndex: widget.historyIndex)
+                        ? Container(
+                            child: Menu(historyIndex: widget.historyIndex),
+                          )
                         : Timeline(historyIndex: widget.historyIndex),
                   ),
                 ),
