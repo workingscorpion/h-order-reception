@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
 import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:mobx/mobx.dart';
@@ -61,7 +62,14 @@ abstract class HistoryStoreBase with Store {
 
     hubConnection.on('notified', (json) {
       final map = json.first as Map;
-      print(map.toString());
+      final data = HistoryModel.fromJson(map);
+      var target = historyDetails
+          .singleWhere((element) => element.history.index == data.index);
+      if (target != null) {
+        target.history = data;
+      } else {
+        load();
+      }
       // if (map['type'] != null) {
       //   final type = map['type'] as int;
       //   final targetObjectId = map['targetObjectId'] as String;
