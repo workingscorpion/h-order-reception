@@ -7,7 +7,7 @@ part 'historyDetailModel.g.dart';
 
 @JsonSerializable()
 class HistoryDetailModel {
-  final HistoryModel history;
+  HistoryModel history;
   final List<HistoryDetailItemModel> details;
   final SnapShotModel snapShot;
 
