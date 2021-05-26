@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
 import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:signalr_core/signalr_core.dart';
+import 'package:http/io_client.dart';
+import 'package:http/http.dart' hide Client;
 
 part 'historyStore.g.dart';
 
@@ -21,7 +25,62 @@ abstract class HistoryStoreBase with Store {
   ObservableMap<int, HistoryDetailModel> historyDetailMap = ObservableMap();
   ObservableMap<String, ServiceModel> snapShotDataMap = ObservableMap();
 
+  @observable
+  HubConnection hubConnection;
+
+  @observable
+  bool isConnected = false;
+
   static final activeStatus = [1, 2, 3, 4];
+
+  @observable
+  Stream<PushNotificationModel> stream =
+      Stream<PushNotificationModel>.empty().asBroadcastStream();
+
+  @action
+  connectHub() async {
+    if (Client.token?.isEmpty ?? true) {
+      return;
+    }
+
+    if (hubConnection != null) {
+      hubConnection.stop();
+    }
+
+    hubConnection = HubConnectionBuilder()
+        .withUrl(
+          Client.signalRUrl,
+          HttpConnectionOptions(
+            client: SignalRClient(),
+            logging: (level, message) {
+              print('### $level $message');
+            },
+          ),
+        )
+        .withAutomaticReconnect()
+        .build();
+
+    hubConnection.on('notified', (json) {
+      final map = json.first as Map;
+      final data = HistoryModel.fromJson(map);
+      var target = historyDetails
+          .singleWhere((element) => element.history.index == data.index);
+      if (target != null) {
+        target.history = data;
+      } else {
+        load();
+      }
+      // if (map['type'] != null) {
+      //   final type = map['type'] as int;
+      //   final targetObjectId = map['targetObjectId'] as String;
+
+      //   print(type.toString());
+      //   print(targetObjectId);
+      // }
+    });
+
+    await hubConnection.start();
+  }
 
   @action
   load() async {
@@ -44,7 +103,7 @@ abstract class HistoryStoreBase with Store {
       ..addEntries(
         response.list.map(
           (item) => MapEntry(
-            item.snapShot.objectId,
+            item.snapShot != null ? item.snapShot.objectId : '123',
             ServiceModel.fromJson(jsonDecode(item.snapShot.data)),
           ),
         ),
@@ -88,5 +147,30 @@ abstract class HistoryStoreBase with Store {
     historyDetailMap[item.history.index] = item;
     snapShotDataMap[item.snapShot.objectId] =
         ServiceModel.fromJson(jsonDecode(item.snapShot.data));
+  }
+}
+
+class PushNotificationModel {
+  final int type;
+  final String hotelUrl;
+  final String hotelObjectId;
+  final String targetObjectId;
+  final dynamic data;
+
+  PushNotificationModel({
+    this.type,
+    this.hotelUrl,
+    this.hotelObjectId,
+    this.targetObjectId,
+    this.data,
+  });
+}
+
+class SignalRClient extends IOClient {
+  @override
+  Future<IOStreamedResponse> send(BaseRequest request) async {
+    request.headers['Authorization'] = 'Bearer ${Client.token}';
+
+    return super.send(request);
   }
 }

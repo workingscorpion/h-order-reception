@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 
 class CustomBar extends StatefulWidget {
@@ -41,6 +42,18 @@ class _CustomBarState extends State<CustomBar> {
                 (index) => _tabButton(index),
               ),
             ),
+            // Container(
+            //   padding: EdgeInsets.all(10),
+            //   child: OutlineButton(
+            //     onPressed: () async =>
+            //         await Client.create().updateUserBoundary(),
+            //     child: Text(
+            //       '바운더리',
+            //       style: TextStyle(color: Colors.white),
+            //     ),
+            //     borderSide: BorderSide(color: CustomColors.aWhite, width: 1),
+            //   ),
+            // ),
             Container(
               padding: EdgeInsets.all(10),
               child: OutlineButton(
