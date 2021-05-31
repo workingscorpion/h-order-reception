@@ -1,4 +1,4 @@
-# h_order_reception
+# H Order Reception
 
 H Order Reception App - 매장용 리셉션 패드
 
