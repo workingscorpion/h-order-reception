@@ -25,19 +25,19 @@ H Order Reception App - 매장용 리셉션 패드
 1. get library(pubspec.yaml)
 
 ```
-~~\h-order-app> flutter pub get
+~~\h-order-reception> flutter pub get
 ```
 
 2. code generate
 
 ```
-~~\h-order-app> flutter pub run build_runner build
+~~\h-order-reception> flutter pub run build_runner build
 ```
 
 3. build
 
 ```
-~~\h-order-app> flutter build apk
+~~\h-order-reception> flutter build apk
 ```
 
 ## Repository
