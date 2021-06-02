@@ -64,8 +64,9 @@ mixin _$HistoryStore on HistoryStoreBase, Store {
   final _$loadAsyncAction = AsyncAction('HistoryStoreBase.load');
 
   @override
-  Future load() {
-    return _$loadAsyncAction.run(() => super.load());
+  Future load({DateTime startTime, DateTime endTime}) {
+    return _$loadAsyncAction
+        .run(() => super.load(startTime: startTime, endTime: endTime));
   }
 
   @override

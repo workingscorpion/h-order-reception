@@ -31,7 +31,7 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (BuildContext context) =>
-              HistoryPage(orderObjectId: settings.arguments as String),
+              HistoryPage(historyIndex: settings.arguments as String),
         );
 
       default:

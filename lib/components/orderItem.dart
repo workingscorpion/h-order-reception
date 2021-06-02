@@ -8,7 +8,7 @@ import 'package:h_order_reception/components/menu.dart';
 import 'package:h_order_reception/components/refuseDialog.dart';
 import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
@@ -27,7 +27,7 @@ class OrderItem extends StatefulWidget {
 }
 
 class _OrderItemState extends State<OrderItem> {
-  HistoryDetailModel get historyDetail {
+  RecordModel get historyDetail {
     return HistoryStore.instance.historyDetailMap[widget.historyIndex];
   }
 

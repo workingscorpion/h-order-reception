@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
-import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:http/io_client.dart';
@@ -21,8 +22,8 @@ class HistoryStore extends HistoryStoreBase with _$HistoryStore {
 }
 
 abstract class HistoryStoreBase with Store {
-  ObservableList<HistoryDetailModel> historyDetails = ObservableList();
-  ObservableMap<int, HistoryDetailModel> historyDetailMap = ObservableMap();
+  ObservableList<RecordModel> historyDetails = ObservableList();
+  ObservableMap<int, RecordModel> historyDetailMap = ObservableMap();
   ObservableMap<String, ServiceModel> snapShotDataMap = ObservableMap();
 
   @observable
@@ -83,10 +84,12 @@ abstract class HistoryStoreBase with Store {
   }
 
   @action
-  load() async {
+  load({DateTime startTime, DateTime endTime}) async {
     final response = await Client.create().historyDetails(
       activeStatus.map((item) => 'filter.status=$item').join('&'),
       'UpdatedTime',
+      startTime != null ? DateFormat('yyyy-MM-dd').format(startTime) : null,
+      endTime != null ? DateFormat('yyyy-MM-dd').format(endTime) : null,
     );
 
     historyDetails

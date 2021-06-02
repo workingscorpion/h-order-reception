@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'historyDetailModel.dart';
+part of 'recordModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-HistoryDetailModel _$HistoryDetailModelFromJson(Map<String, dynamic> json) {
-  return HistoryDetailModel(
+RecordModel _$RecordModelFromJson(Map<String, dynamic> json) {
+  return RecordModel(
     history: json['history'] == null
         ? null
         : HistoryModel.fromJson(json['history'] as Map<String, dynamic>),
@@ -22,7 +22,7 @@ HistoryDetailModel _$HistoryDetailModelFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$HistoryDetailModelToJson(HistoryDetailModel instance) =>
+Map<String, dynamic> _$RecordModelToJson(RecordModel instance) =>
     <String, dynamic>{
       'history': instance.history,
       'details': instance.details,

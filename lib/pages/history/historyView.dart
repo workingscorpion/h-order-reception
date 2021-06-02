@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
-import 'package:h_order_reception/http/types/common/filterModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
 import 'package:h_order_reception/utils/constants.dart';
@@ -63,8 +64,29 @@ class _HistoryViewState extends State<HistoryView> {
       _selectedValue.toString(),
       endOfToday.toString(),
     );
-    print(res.toString());
-    _histories = res.list;
+    _histories = res.list.map((e) {
+      var menuName = '';
+      if (e.data != null) {
+        final data = jsonDecode(e.data);
+        menuName = jsonDecode(data['cart']).first['name'];
+      }
+
+      return HistoryModel(
+        status: e.status,
+        serviceObjectId: e.serviceObjectId,
+        userObjectId: e.userObjectId,
+        userName: e.userName,
+        deviceObjectId: e.deviceObjectId,
+        deviceName: e.deviceName,
+        data: e.data,
+        amount: e.amount,
+        quantity: e.quantity,
+        createdTime: e.createdTime,
+        updatedTime: e.updatedTime,
+        menuName: menuName,
+      );
+    }).toList();
+
     setState(() {});
   }
 
@@ -213,8 +235,8 @@ class _HistoryViewState extends State<HistoryView> {
         return Text('건물이름/${item.deviceName}');
 
       case 2:
-        return Text('메뉴메뉴');
-      // return Text(item.menus.first.name);
+        // return Text('메뉴메뉴');
+        return Text(item.menuName);
 
       case 3:
         return Text('${item.quantity}개');

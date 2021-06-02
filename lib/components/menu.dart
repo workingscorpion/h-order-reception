@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/itemModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
@@ -20,7 +20,7 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  HistoryDetailModel get historyDetail {
+  RecordModel get historyDetail {
     return HistoryStore.instance.historyDetailMap[widget.historyIndex];
   }
 

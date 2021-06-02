@@ -1,4 +1,4 @@
-import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/itemModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
@@ -27,8 +27,8 @@ class JsonGenericConverter<T> implements JsonConverter<T, Object> {
       case HistoryModel:
         return HistoryModel.fromJson(json) as T;
 
-      case HistoryDetailModel:
-        return HistoryDetailModel.fromJson(json) as T;
+      case RecordModel:
+        return RecordModel.fromJson(json) as T;
     }
 
     return json as T;

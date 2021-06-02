@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/model/historyDetailItemModel.dart';
-import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +9,7 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 class Timeline extends StatefulWidget {
   final int historyIndex;
+  // final List<History>
 
   Timeline({
     this.historyIndex,
@@ -19,7 +20,7 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-  HistoryDetailModel get historyDetail {
+  RecordModel get historyDetail {
     return HistoryStore.instance.historyDetailMap[widget.historyIndex];
   }
 
