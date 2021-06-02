@@ -1,10 +1,13 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:h_order_reception/http/types/common/filterModel.dart';
 import 'package:h_order_reception/http/types/login/requestLoginModel.dart';
 import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
 import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/listModel.dart';
+import 'package:h_order_reception/model/pageModel.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'client.g.dart';
@@ -67,4 +70,21 @@ abstract class Client {
 
   @PUT("/v1/admin/user/boundary")
   Future updateUserBoundary();
+
+  // @GET(
+  //     "/v1/admin/history/summary?filter.startTime={startTime}&filter.endTime={endTime}&{status}")
+  @GET(
+      "/v1/admin/history/summary?filter.order={order}&{status}&filter.startTime={startTime}&filter.endTime={endTime}")
+  Future<PageModel<HistoryModel>> histories(
+    @Path('order') String order,
+    @Path('status') String status,
+    @Path('startTime') String startTime,
+    @Path('endTime') String endTime,
+  );
+
+  // @GET("/v1/admin/history/summary?filter.order={order}&{status}")
+  // Future<PageModel<HistoryModel>> histories(
+  //   @Path('order') String order,
+  //   @Path('status') String status,
+  // );
 }

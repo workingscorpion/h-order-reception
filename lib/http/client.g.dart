@@ -127,4 +127,27 @@ class _Client implements Client {
     final value = _result.data;
     return value;
   }
+
+  @override
+  Future<PageModel<HistoryModel>> histories(
+      order, status, startTime, endTime) async {
+    ArgumentError.checkNotNull(order, 'order');
+    ArgumentError.checkNotNull(status, 'status');
+    ArgumentError.checkNotNull(startTime, 'startTime');
+    ArgumentError.checkNotNull(endTime, 'endTime');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history/summary?filter.order=$order&$status&filter.startTime=$startTime&filter.endTime=$endTime',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = PageModel<HistoryModel>.fromJson(_result.data);
+    return value;
+  }
 }
