@@ -162,29 +162,30 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _rows() => Expanded(
-        child: Observer(
-          builder: (BuildContext context) {
-            return _selectedHistories.length > 0
-                ? ListView(
-                    children: List.generate(
-                      _selectedHistories.length,
-                      (_selectedHistoryIndex) => InkWell(
-                        onTap: () => AppRouter.toHistoryPage(
-                          _selectedHistories[_selectedHistoryIndex]
-                              .index
-                              .toString(),
-                        ),
-                        // child: Text('order'),
-                        child: _row(
-                          item: _selectedHistories[_selectedHistoryIndex],
-                          index: _selectedHistoryIndex,
-                        ),
-                      ),
+        child: _selectedHistories.length > 0
+            ? ListView(
+                children: List.generate(
+                  _selectedHistories.length,
+                  (_selectedHistoryIndex) => InkWell(
+                    onTap: () => AppRouter.toHistoryPage(
+                      _selectedHistories[_selectedHistoryIndex]
+                          .index
+                          .toString(),
                     ),
-                  )
-                : Container();
-          },
-        ),
+                    // child: Text('order'),
+                    child: _row(
+                      item: _selectedHistories[_selectedHistoryIndex],
+                      index: _selectedHistoryIndex,
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+        // child: Observer(
+        //   builder: (BuildContext context) {
+        //     return ;
+        //   },
+        // ),
       );
 
   _row({
@@ -494,7 +495,7 @@ class _HistoryViewState extends State<HistoryView> {
                 ),
               ]),
           child: Icon(
-            Icons.add,
+            CupertinoIcons.color_filter,
             color: Colors.white,
           ),
         ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/itemModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
@@ -20,26 +21,32 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  RecordModel get historyDetail {
-    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
-  }
-
-  ServiceModel get snapShotData {
-    return HistoryStore
-        .instance.snapShotDataMap[historyDetail.snapShot.objectId];
-  }
-
+  RecordModel record;
+  ServiceModel snapShotData;
   Map data;
   Map<String, ItemModel> itemMap;
 
-  @override
-  void initState() {
-    super.initState();
+  load() async {
+    record = HistoryStore.instance.historyDetailMap[widget.historyIndex];
+    snapShotData =
+        HistoryStore.instance.snapShotDataMap[record.snapShot.objectId];
 
-    data = (historyDetail?.history?.data?.isNotEmpty ?? false)
-        ? jsonDecode(historyDetail.history.data)
+    if (record == null || snapShotData == null) {
+      record =
+          await Client.create().historyDetail(widget.historyIndex.toString());
+      snapShotData = ServiceModel.fromJson(jsonDecode(record.snapShot.data));
+    }
+
+    data = (record?.history?.data?.isNotEmpty ?? false)
+        ? jsonDecode(record.history.data)
         : Map();
     itemMap = snapShotData?.itemMap() ?? Map();
+  }
+
+  @override
+  void initState() {
+    load();
+    super.initState();
   }
 
   @override
@@ -115,13 +122,15 @@ class _MenuState extends State<Menu> {
         color: CustomColors.aBlack,
       ),
       child: Container(
-        child: ListView(
+        child: Stack(
+          // direction: Axis.vertical,
           children: [
             ...children,
           ],
         ),
       ),
     );
+
     // return DefaultTextStyle(
     //   style: TextStyle(
     //     fontSize: 17,

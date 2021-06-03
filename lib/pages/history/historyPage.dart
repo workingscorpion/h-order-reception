@@ -7,6 +7,7 @@ import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -24,6 +25,9 @@ class _HistoryPageState extends State<HistoryPage> {
   final List<String> _infoTitles = ['건물정보', '방번호', '발생시간', '서비스명'];
 
   List<String> _infoData;
+
+  int status;
+  OrderStatusModel statusData;
 
   List<RecordModel> get histories {
     return HistoryStore.instance.historyDetails;
@@ -46,6 +50,8 @@ class _HistoryPageState extends State<HistoryPage> {
       DateFormat().format(record.history.createdTime),
       '가게이름'
     ];
+    status = record.history.status;
+    statusData = orderStatus[status];
     setState(() {});
   }
 
@@ -153,8 +159,9 @@ class _HistoryPageState extends State<HistoryPage> {
             border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Menu(historyIndex: record.history.index),
+              Menu(historyIndex: record.history.index),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: _amount(),
@@ -246,29 +253,28 @@ class _HistoryPageState extends State<HistoryPage> {
         child: InkWell(
           onTap: () {
             // TODO: status 변경
-            // order.status = index;
+            status = index;
             setState(() {});
           },
           child: Container(
             height: 50,
             margin: index != 4 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
-              // color: index == order.status
-              //     ? OrderStatusHelper.statusColor[index]
-              //     : CustomColors.evenColor,
+              color:
+                  index == status ? statusData.color : CustomColors.evenColor,
               borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
-            // child: Text(
-            //   OrderStatusHelper.statusText[index],
-            //   style: TextStyle(
-            //     color: index == order.status && order.status != 4
-            //         ? Colors.white
-            //         : Colors.black,
-            //     fontSize: 17,
-            //     fontWeight: FontWeight.w500,
-            //   ),
-            // ),
+            child: Text(
+              statusData?.name ?? '',
+              style: TextStyle(
+                color: index == status && status != 4
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ),
       );
