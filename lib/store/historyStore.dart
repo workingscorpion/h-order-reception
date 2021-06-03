@@ -88,8 +88,8 @@ abstract class HistoryStoreBase with Store {
     final response = await Client.create().historyDetails(
       activeStatus.map((item) => 'filter.status=$item').join('&'),
       'UpdatedTime',
-      startTime != null ? DateFormat('yyyy-MM-dd').format(startTime) : null,
-      endTime != null ? DateFormat('yyyy-MM-dd').format(endTime) : null,
+      // startTime != null ? DateFormat('yyyy-MM-dd').format(startTime) : null,
+      // endTime != null ? DateFormat('yyyy-MM-dd').format(endTime) : null,
     );
 
     historyDetails

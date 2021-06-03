@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -36,6 +39,10 @@ class _HistoryViewState extends State<HistoryView> {
 
   List<int> _selectedFilter = List<int>();
 
+  // List<RecordModel> get histories {
+  //   return HistoryStore.instance.historyDetails;
+  // }
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +59,6 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _load() async {
-    print('load');
     final endOfToday = _selectedValue
         .add(Duration(days: 1))
         .subtract(Duration(microseconds: 1));
@@ -72,6 +78,7 @@ class _HistoryViewState extends State<HistoryView> {
       }
 
       return HistoryModel(
+        index: e.index,
         status: e.status,
         serviceObjectId: e.serviceObjectId,
         userObjectId: e.userObjectId,
@@ -116,6 +123,7 @@ class _HistoryViewState extends State<HistoryView> {
 
   _filterHistories() {
     _selectedHistories = _histories
+        // .map((e) => e.history)
         .where((element) => _compare(element.createdTime))
         .where((element) => _selectedFilter.contains(element.status))
         .toList();
@@ -154,23 +162,29 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _rows() => Expanded(
-        child: _selectedHistories.length > 0
-            ? ListView(
-                children: List.generate(
-                  _selectedHistories.length,
-                  (index) => InkWell(
-                    onTap: () => AppRouter.toHistoryPage(
-                      _selectedHistories[index].index.toString(),
+        child: Observer(
+          builder: (BuildContext context) {
+            return _selectedHistories.length > 0
+                ? ListView(
+                    children: List.generate(
+                      _selectedHistories.length,
+                      (_selectedHistoryIndex) => InkWell(
+                        onTap: () => AppRouter.toHistoryPage(
+                          _selectedHistories[_selectedHistoryIndex]
+                              .index
+                              .toString(),
+                        ),
+                        // child: Text('order'),
+                        child: _row(
+                          item: _selectedHistories[_selectedHistoryIndex],
+                          index: _selectedHistoryIndex,
+                        ),
+                      ),
                     ),
-                    // child: Text('order'),
-                    child: _row(
-                      item: _selectedHistories[index],
-                      index: index,
-                    ),
-                  ),
-                ),
-              )
-            : Container(),
+                  )
+                : Container();
+          },
+        ),
       );
 
   _row({

@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
+import 'package:h_order_reception/components/menu.dart';
 import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/recordModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 import 'package:intl/intl.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -23,11 +25,8 @@ class _HistoryPageState extends State<HistoryPage> {
 
   List<String> _infoData;
 
-  get amount {
-    return 19090;
-    // return [...order.menus]
-    //     .map((e) => e.price * e.count)
-    //     .reduce((value, element) => value + element);
+  List<RecordModel> get histories {
+    return HistoryStore.instance.historyDetails;
   }
 
   @override
@@ -38,10 +37,9 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   _load() async {
-    print('load');
+    await HistoryStore.instance.load();
+
     record = await Client.create().historyDetail(widget.historyIndex);
-    print(record.history.deviceName);
-    print(record.history.createdTime);
     _infoData = [
       '건물명',
       record.history.deviceName,
@@ -156,10 +154,7 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
           child: Column(
             children: [
-              // Menu(
-              //   menu: order.menus,
-              //   existPrice: true,
-              // ),
+              // Menu(historyIndex: record.history.index),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: _amount(),
@@ -189,7 +184,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 margin: EdgeInsets.only(right: 10),
                 child: Text('${record.history.quantity}개'),
               ),
-              Text('${NumberFormat().format(amount)}원'),
+              Text('${NumberFormat().format(record.history.amount)}원'),
             ],
           ),
         ),
@@ -203,7 +198,7 @@ class _HistoryPageState extends State<HistoryPage> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
-          // child: Timeline(histories: order.histories),
+          child: Timeline(historyIndex: record.history.index),
         ),
       );
 
