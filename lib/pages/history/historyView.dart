@@ -172,7 +172,6 @@ class _HistoryViewState extends State<HistoryView> {
                           .index
                           .toString(),
                     ),
-                    // child: Text('order'),
                     child: _row(
                       item: _selectedHistories[_selectedHistoryIndex],
                       index: _selectedHistoryIndex,
