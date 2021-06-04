@@ -27,7 +27,6 @@ class _MenuState extends State<Menu> {
   Map<String, ItemModel> itemMap;
 
   load() async {
-    print('load');
     final indices = HistoryStore.instance.historyDetails
         .map((e) => e.history.index)
         .toList();

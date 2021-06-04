@@ -71,13 +71,6 @@ abstract class HistoryStoreBase with Store {
       } else {
         load();
       }
-      // if (map['type'] != null) {
-      //   final type = map['type'] as int;
-      //   final targetObjectId = map['targetObjectId'] as String;
-
-      //   print(type.toString());
-      //   print(targetObjectId);
-      // }
     });
 
     await hubConnection.start();
