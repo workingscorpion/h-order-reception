@@ -27,9 +27,18 @@ class _MenuState extends State<Menu> {
   Map<String, ItemModel> itemMap;
 
   load() async {
-    record = HistoryStore.instance.historyDetailMap[widget.historyIndex];
-    snapShotData =
-        HistoryStore.instance.snapShotDataMap[record.snapShot.objectId];
+    print('load');
+    final indices = HistoryStore.instance.historyDetails
+        .map((e) => e.history.index)
+        .toList();
+
+    if (indices.contains(widget.historyIndex)) {
+      record =
+          HistoryStore.instance.historyDetailMap[widget.historyIndex] ?? null;
+      snapShotData =
+          HistoryStore.instance.snapShotDataMap[record.snapShot.objectId] ??
+              null;
+    }
 
     if (record == null || snapShotData == null) {
       record =
@@ -41,19 +50,20 @@ class _MenuState extends State<Menu> {
         ? jsonDecode(record.history.data)
         : Map();
     itemMap = snapShotData?.itemMap() ?? Map();
+    setState(() {});
   }
 
   @override
   void initState() {
-    load();
     super.initState();
+    load();
   }
 
   @override
   Widget build(BuildContext context) {
     final children = <Widget>[];
 
-    switch (snapShotData.type) {
+    switch (snapShotData?.type) {
       case ServiceType.Call:
         {
           final widgets = data.entries
@@ -114,6 +124,9 @@ class _MenuState extends State<Menu> {
           children..addAll(widgets);
         }
         break;
+
+      default:
+        children..add(Text('123'));
     }
 
     return DefaultTextStyle(
@@ -122,8 +135,8 @@ class _MenuState extends State<Menu> {
         color: CustomColors.aBlack,
       ),
       child: Container(
-        child: Stack(
-          // direction: Axis.vertical,
+        child: Flex(
+          direction: Axis.vertical,
           children: [
             ...children,
           ],

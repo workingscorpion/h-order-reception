@@ -161,7 +161,9 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Menu(historyIndex: record.history.index),
+              IntrinsicHeight(
+                child: Menu(historyIndex: record.history.index),
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: _amount(),

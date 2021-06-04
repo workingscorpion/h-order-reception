@@ -25,11 +25,10 @@ class _OrderViewState extends State<OrderView> {
 
   @override
   void initState() {
-    super.initState();
-
     _selectedFilter = List();
 
     load();
+    super.initState();
   }
 
   load() async {
