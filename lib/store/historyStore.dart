@@ -117,7 +117,7 @@ abstract class HistoryStoreBase with Store {
         status: status,
         data: (message?.isNotEmpty ?? false)
             ? jsonEncode({
-                message: message,
+                "message": message,
               })
             : '',
       ),
