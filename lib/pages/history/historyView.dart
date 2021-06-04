@@ -49,7 +49,7 @@ class _HistoryViewState extends State<HistoryView> {
 
     _selectToday();
 
-    _selectedFilter.addAll([0, 1, 2, 3, 4]);
+    _selectedFilter.addAll([1, 2, 3, 4, 9, -1, 9]);
 
     // _filterHistories();
 

@@ -276,7 +276,7 @@ class _OrderItemState extends State<OrderItem> {
               child: Column(
                 children: [
                   _summary(),
-                  Clock(dateTime: history.updatedTime),
+                  Clock(dateTime: history.createdTime),
                 ],
               ),
             ),
