@@ -3,14 +3,11 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
-import 'package:h_order_reception/model/recordModel.dart';
-import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +19,7 @@ class HistoryView extends StatefulWidget {
 }
 
 class _HistoryViewState extends State<HistoryView> {
-  List<MenuModel> menus;
+  List<MenuModel> menus = List();
   List<HistoryModel> _histories = List();
   List<HistoryModel> _selectedHistories = List();
 
@@ -49,7 +46,7 @@ class _HistoryViewState extends State<HistoryView> {
 
     _selectToday();
 
-    _selectedFilter.addAll([1, 2, 3, 4, 9, -1, 9]);
+    _selectedFilter.addAll([1, 2, 3, 4, 9, -1, -9]);
 
     // _filterHistories();
 
@@ -59,14 +56,15 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _load() async {
+    print('load');
     final endOfToday = _selectedValue
         .add(Duration(days: 1))
         .subtract(Duration(microseconds: 1));
     final activeStatus =
         _selectedFilter.map((item) => 'filter.status=$item').join('&');
     final res = await Client.create().histories(
-      activeStatus,
       'CreatedTime',
+      activeStatus,
       _selectedValue.toString(),
       endOfToday.toString(),
     );
@@ -94,6 +92,8 @@ class _HistoryViewState extends State<HistoryView> {
       );
     }).toList();
 
+    print(_histories);
+
     setState(() {});
   }
 
@@ -110,13 +110,15 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _moveDatePicker() async {
+    print('move');
+    _histories.clear();
     _controller.animateToDate(
       _selectedValue.subtract(Duration(days: 10)),
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
     await _load();
-    _filterHistories();
+    await _filterHistories();
 
     setState(() {});
   }
@@ -242,41 +244,45 @@ class _HistoryViewState extends State<HistoryView> {
     switch (index) {
       case 0:
         return Text(
-          DateFormat("yyyy/MM/dd HH:mm:ss").format(item.createdTime).toString(),
-        );
+            // DateFormat("yyyy/MM/dd HH:mm:ss").format(item.createdTime).toString(),
+            '0');
 
       case 1:
-        return Text('건물이름/${item.deviceName}');
+        return Text('1');
+      // return Text('건물이름/${item.deviceName}');
 
       case 2:
-        // return Text('메뉴메뉴');
-        return Text(item.menuName);
+        return Text('메뉴메뉴');
+      // return Text(item.menuName);
 
       case 3:
-        return Text('${item.quantity}개');
+        return Text('33');
+      // return Text('${item.quantity}개');
 
       case 4:
-        return Text('${NumberFormat().format(item.amount)}원');
+        return Text('4');
+      // return Text('${NumberFormat().format(item.amount)}원');
 
       case 5:
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: orderStatus[item.status].color,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Container(
-            width: 90,
-            padding: EdgeInsets.symmetric(vertical: 3),
-            alignment: Alignment.center,
-            child: Text(
-              orderStatus[item.status].name,
-              style: TextStyle(
-                color: item.status == 4 ? Colors.black : Colors.white,
-              ),
-            ),
-          ),
-        );
+        // return Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 10),
+        //   decoration: BoxDecoration(
+        //     color: orderStatus[item.status].color,
+        //     borderRadius: BorderRadius.circular(8),
+        //   ),
+        //   child: Container(
+        //     width: 90,
+        //     padding: EdgeInsets.symmetric(vertical: 3),
+        //     alignment: Alignment.center,
+        //     child: Text(
+        //       orderStatus[item.status].name,
+        //       style: TextStyle(
+        //         color: item.status == 4 ? Colors.black : Colors.white,
+        //       ),
+        //     ),
+        //   ),
+        // );
+        return Text('555');
       default:
         return Container();
     }
