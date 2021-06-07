@@ -31,7 +31,7 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (BuildContext context) =>
-              HistoryPage(orderObjectId: settings.arguments as String),
+              HistoryPage(historyIndex: settings.arguments as String),
         );
 
       default:
@@ -58,8 +58,8 @@ class AppRouter {
         .pushNamedAndRemoveUntil(RouteNames.Login, (Route route) => false);
   }
 
-  static toHistoryPage(String orderObjectId) {
+  static toHistoryPage(String historyIndex) {
     Navigator.of(context)
-        .pushNamed(RouteNames.History, arguments: orderObjectId);
+        .pushNamed(RouteNames.History, arguments: historyIndex);
   }
 }

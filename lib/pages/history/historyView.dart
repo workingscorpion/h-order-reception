@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
-import 'package:h_order_reception/model/orderModel.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -17,10 +19,9 @@ class HistoryView extends StatefulWidget {
 }
 
 class _HistoryViewState extends State<HistoryView> {
-  List<MenuModel> menus;
-  List<HistoryModel> histories;
-  List<OrderModel> _histories;
-  List<OrderModel> _selectedHistories;
+  List<MenuModel> menus = List();
+  List<HistoryModel> _histories = List();
+  List<HistoryModel> _selectedHistories = List();
 
   DateTime _selectedValue;
   DateTime _selectedYear;
@@ -30,7 +31,14 @@ class _HistoryViewState extends State<HistoryView> {
 
   bool open = false;
 
+  int current = 1;
+  int pageSize = 20;
+
   List<int> _selectedFilter = List<int>();
+
+  // List<RecordModel> get histories {
+  //   return HistoryStore.instance.historyDetails;
+  // }
 
   @override
   void initState() {
@@ -38,154 +46,62 @@ class _HistoryViewState extends State<HistoryView> {
 
     _selectToday();
 
-    menus = [
-      MenuModel(
-        boundaryId: '11',
-        count: 1,
-        name: '아메리카노',
-        objectId: '111',
-        price: 1000,
-      ),
-      MenuModel(
-        boundaryId: '11',
-        count: 2,
-        name: '에스프레소',
-        objectId: '222',
-        price: 3500,
-      ),
-    ];
+    _selectedFilter.addAll([1, 2, 3, 4, 9, -1, -9]);
 
-    histories = [];
-
-    _histories = [
-      OrderModel(
-        objectId: '1',
-        status: 0,
-        applyTime: DateTime.now().subtract(Duration(days: 2)),
-        roomNumber: '1208',
-        shopName: '던킨 도넛',
-        address: '마곡럭스나인오피스텔 L동',
-        menus: [
-          MenuModel(
-            boundaryId: '11',
-            count: 1,
-            name: '도넛',
-            objectId: '111',
-            price: 1000,
-          ),
-        ],
-        histories: [...histories],
-      ),
-      OrderModel(
-        objectId: '2',
-        status: 1,
-        applyTime: DateTime.now()
-            .subtract(Duration(days: 1))
-            .subtract(Duration(hours: 6)),
-        roomNumber: '1208',
-        shopName: '고샵',
-        address: '마곡럭스나인오피스텔 L동',
-        menus: [
-          MenuModel(
-            boundaryId: '11',
-            count: 1,
-            name: '샴푸',
-            objectId: '111',
-            price: 1000,
-          ),
-        ],
-        histories: [...histories],
-      ),
-      OrderModel(
-        objectId: '3',
-        status: 2,
-        applyTime: DateTime.now()
-            .subtract(Duration(days: 1))
-            .subtract(Duration(hours: 3)),
-        roomNumber: '1208',
-        shopName: '웨스트도어',
-        address: '마곡럭스나인오피스텔 L동',
-        menus: [
-          MenuModel(
-            boundaryId: '11',
-            count: 1,
-            name: '아메리카노',
-            objectId: '111',
-            price: 1000,
-          ),
-        ],
-        histories: [...histories],
-      ),
-      OrderModel(
-        objectId: '4',
-        status: 3,
-        applyTime: DateTime.now()
-            .subtract(Duration(days: 1))
-            .subtract(Duration(hours: 1)),
-        roomNumber: '1208',
-        shopName: '봉보야쥬',
-        address: '마곡럭스나인오피스텔 L동',
-        menus: [
-          MenuModel(
-            boundaryId: '11',
-            count: 1,
-            name: '파스타',
-            objectId: '111',
-            price: 1000,
-          ),
-        ],
-        histories: [...histories],
-      ),
-      OrderModel(
-        objectId: '5',
-        status: 4,
-        applyTime: DateTime.now().subtract(Duration(hours: 3)),
-        roomNumber: '1208',
-        shopName: '비베러디시',
-        address: '마곡럭스나인오피스텔 L동',
-        menus: [
-          MenuModel(
-            boundaryId: '11',
-            count: 1,
-            name: '자몽주스',
-            objectId: '111',
-            price: 1000,
-          ),
-        ],
-        histories: [...histories],
-      ),
-      OrderModel(
-        objectId: '6',
-        status: 4,
-        applyTime: DateTime.now().subtract(Duration(minutes: 10)),
-        roomNumber: '1208',
-        shopName: '맛집',
-        address: '마곡럭스나인오피스텔 L동',
-        menus: [
-          MenuModel(
-            boundaryId: '11',
-            count: 1,
-            name: '맛있는 음식',
-            objectId: '111',
-            price: 1000,
-          ),
-        ],
-        histories: [...histories],
-      ),
-    ];
-
-    _selectedFilter.addAll([0, 1, 2, 3, 4]);
-
-    _filterHistories();
+    // _filterHistories();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _moveDatePicker();
     });
   }
 
+  _load() async {
+    print('load');
+    final endOfToday = _selectedValue
+        .add(Duration(days: 1))
+        .subtract(Duration(microseconds: 1));
+    final activeStatus =
+        _selectedFilter.map((item) => 'filter.status=$item').join('&');
+    final res = await Client.create().histories(
+      'CreatedTime',
+      activeStatus,
+      _selectedValue.toString(),
+      endOfToday.toString(),
+    );
+    _histories = res.list.map((e) {
+      var menuName = '';
+      if (e.data != null) {
+        final data = jsonDecode(e.data);
+        menuName = jsonDecode(data['cart']).first['name'];
+      }
+
+      return HistoryModel(
+        index: e.index,
+        status: e.status,
+        serviceObjectId: e.serviceObjectId,
+        userObjectId: e.userObjectId,
+        userName: e.userName,
+        deviceObjectId: e.deviceObjectId,
+        deviceName: e.deviceName,
+        data: e.data,
+        amount: e.amount,
+        quantity: e.quantity,
+        createdTime: e.createdTime,
+        updatedTime: e.updatedTime,
+        menuName: menuName,
+      );
+    }).toList();
+
+    print(_histories);
+
+    setState(() {});
+  }
+
   _historySort() {
-    _selectedHistories
-        .sort((a, b) => a.applyTime.isAfter(b.applyTime) ? -1 : 1);
+    if (_selectedHistories.length > 0) {
+      _selectedHistories
+          .sort((a, b) => a.createdTime.isAfter(b.createdTime) ? -1 : 1);
+    }
   }
 
   _compare(DateTime applyTime) {
@@ -193,30 +109,37 @@ class _HistoryViewState extends State<HistoryView> {
     return diff.inHours < 24 && diff.inHours >= 0 ? true : false;
   }
 
-  _moveDatePicker() {
+  _moveDatePicker() async {
+    print('move');
+    _histories.clear();
     _controller.animateToDate(
       _selectedValue.subtract(Duration(days: 10)),
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
-    _filterHistories();
+    await _load();
+    await _filterHistories();
 
     setState(() {});
   }
 
   _filterHistories() {
     _selectedHistories = _histories
-        .where((element) => _compare(element.applyTime))
+        // .map((e) => e.history)
+        .where((element) => _compare(element.createdTime))
         .where((element) => _selectedFilter.contains(element.status))
         .toList();
     _historySort();
   }
 
   _selectToday() {
-    _selectedYear =
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-    _selectedValue =
-        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    final today = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
+    _selectedYear = today;
+    _selectedValue = today;
   }
 
   @override
@@ -241,23 +164,33 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _rows() => Expanded(
-        child: ListView(
-          children: List.generate(
-            _selectedHistories.length,
-            (index) => InkWell(
-              onTap: () =>
-                  AppRouter.toHistoryPage(_selectedHistories[index].objectId),
-              child: _row(
-                item: _selectedHistories.toList()[index],
-                index: index,
-              ),
-            ),
-          ),
-        ),
+        child: _selectedHistories.length > 0
+            ? ListView(
+                children: List.generate(
+                  _selectedHistories.length,
+                  (_selectedHistoryIndex) => InkWell(
+                    onTap: () => AppRouter.toHistoryPage(
+                      _selectedHistories[_selectedHistoryIndex]
+                          .index
+                          .toString(),
+                    ),
+                    child: _row(
+                      item: _selectedHistories[_selectedHistoryIndex],
+                      index: _selectedHistoryIndex,
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+        // child: Observer(
+        //   builder: (BuildContext context) {
+        //     return ;
+        //   },
+        // ),
       );
 
   _row({
-    OrderModel item,
+    HistoryModel item,
     int index,
   }) =>
       Container(
@@ -307,44 +240,49 @@ class _HistoryViewState extends State<HistoryView> {
         ),
       );
 
-  Widget _rowItem(OrderModel item, int index) {
+  Widget _rowItem(HistoryModel item, int index) {
     switch (index) {
       case 0:
         return Text(
-          DateFormat("yyyy/MM/dd HH:mm:ss").format(item.applyTime).toString(),
-        );
+            // DateFormat("yyyy/MM/dd HH:mm:ss").format(item.createdTime).toString(),
+            '0');
 
       case 1:
-        return Text('${item.address}/${item.roomNumber}');
+        return Text('1');
+      // return Text('건물이름/${item.deviceName}');
 
       case 2:
-        return Text(item.menus.first.name);
+        return Text('메뉴메뉴');
+      // return Text(item.menuName);
 
       case 3:
-        return Text('${item.menus.length}개');
+        return Text('33');
+      // return Text('${item.quantity}개');
 
       case 4:
-        return Text('${NumberFormat().format(item.menus.first.price)}원');
+        return Text('4');
+      // return Text('${NumberFormat().format(item.amount)}원');
 
       case 5:
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: orderStatus[item.status].color,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Container(
-            width: 90,
-            padding: EdgeInsets.symmetric(vertical: 3),
-            alignment: Alignment.center,
-            child: Text(
-              orderStatus[item.status].name,
-              style: TextStyle(
-                color: item.status == 4 ? Colors.black : Colors.white,
-              ),
-            ),
-          ),
-        );
+        // return Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 10),
+        //   decoration: BoxDecoration(
+        //     color: orderStatus[item.status].color,
+        //     borderRadius: BorderRadius.circular(8),
+        //   ),
+        //   child: Container(
+        //     width: 90,
+        //     padding: EdgeInsets.symmetric(vertical: 3),
+        //     alignment: Alignment.center,
+        //     child: Text(
+        //       orderStatus[item.status].name,
+        //       style: TextStyle(
+        //         color: item.status == 4 ? Colors.black : Colors.white,
+        //       ),
+        //     ),
+        //   ),
+        // );
+        return Text('555');
       default:
         return Container();
     }
@@ -562,7 +500,7 @@ class _HistoryViewState extends State<HistoryView> {
                 ),
               ]),
           child: Icon(
-            Icons.add,
+            CupertinoIcons.color_filter,
             color: Colors.white,
           ),
         ),

@@ -1,69 +1,58 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
+import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/menuModel.dart';
-import 'package:h_order_reception/model/orderModel.dart';
+import 'package:h_order_reception/http/client.dart';
+import 'package:h_order_reception/model/recordModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
 class HistoryPage extends StatefulWidget {
-  HistoryPage({this.orderObjectId});
+  HistoryPage({this.historyIndex});
 
-  final String orderObjectId;
+  final String historyIndex;
 
   @override
   _HistoryPageState createState() => _HistoryPageState();
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  OrderModel order;
+  RecordModel record;
 
   final List<String> _infoTitles = ['건물정보', '방번호', '발생시간', '서비스명'];
 
   List<String> _infoData;
 
-  get amount {
-    return [...order.menus]
-        .map((e) => e.price * e.count)
-        .reduce((value, element) => value + element);
+  int status;
+  OrderStatusModel statusData;
+
+  List<RecordModel> get histories {
+    return HistoryStore.instance.historyDetails;
   }
 
   @override
   void initState() {
-    order = OrderModel(
-      objectId: '1',
-      status: 0,
-      applyTime: DateTime.now().subtract(Duration(days: 2)),
-      roomNumber: '1208',
-      shopName: '던킨 도넛',
-      address: '마곡럭스나인오피스텔 L동',
-      menus: [
-        MenuModel(
-          boundaryId: '11',
-          count: 1,
-          name: '아메리카노',
-          objectId: '111',
-          price: 1000,
-        ),
-        MenuModel(
-          boundaryId: '11',
-          count: 2,
-          name: '에스프레소',
-          objectId: '222',
-          price: 3500,
-        ),
-      ],
-      histories: [],
-    );
-
-    _infoData = [
-      order.address,
-      order.roomNumber,
-      DateFormat().format(order.applyTime),
-      order.shopName,
-    ];
+    _load();
 
     super.initState();
+  }
+
+  _load() async {
+    await HistoryStore.instance.load();
+
+    record = await Client.create().historyDetail(widget.historyIndex);
+    _infoData = [
+      '건물명',
+      record.history.deviceName,
+      DateFormat().format(record.history.createdTime),
+      '가게이름'
+    ];
+    status = record.history.status;
+    statusData = orderStatus[status];
+    setState(() {});
   }
 
   @override
@@ -76,20 +65,24 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               _header(),
               _statuses(),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _history(),
-                      Container(width: 15),
-                      _menu(),
-                      Container(width: 15),
-                      _info(),
-                    ],
-                  ),
-                ),
+              Builder(
+                builder: (BuildContext context) => record != null
+                    ? Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _history(),
+                              Container(width: 15),
+                              _menu(),
+                              Container(width: 15),
+                              _info(),
+                            ],
+                          ),
+                        ),
+                      )
+                    : Container(),
               ),
             ],
           ),
@@ -127,7 +120,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               alignment: Alignment.center,
               child: Text(
-                order.status == 0 ? '거절' : '취소',
+                record.history.status == 0 ? '거절' : '취소',
                 style: TextStyle(fontSize: 17, color: Colors.white),
               ),
             ),
@@ -166,11 +159,11 @@ class _HistoryPageState extends State<HistoryPage> {
             border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Menu(
-              //   menu: order.menus,
-              //   existPrice: true,
-              // ),
+              IntrinsicHeight(
+                child: Menu(historyIndex: record.history.index),
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: _amount(),
@@ -198,9 +191,9 @@ class _HistoryPageState extends State<HistoryPage> {
               Spacer(),
               Container(
                 margin: EdgeInsets.only(right: 10),
-                child: Text('${order.menus.length}개'),
+                child: Text('${record.history.quantity}개'),
               ),
-              Text('${NumberFormat().format(amount)}원'),
+              Text('${NumberFormat().format(record.history.amount)}원'),
             ],
           ),
         ),
@@ -214,7 +207,7 @@ class _HistoryPageState extends State<HistoryPage> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: CustomColors.doneColor, width: 1),
           ),
-          // child: Timeline(histories: order.histories),
+          child: Timeline(historyIndex: record.history.index),
         ),
       );
 
@@ -261,29 +254,29 @@ class _HistoryPageState extends State<HistoryPage> {
   _status(int index) => Expanded(
         child: InkWell(
           onTap: () {
-            order.status = index;
+            // TODO: status 변경
+            status = index;
             setState(() {});
           },
           child: Container(
             height: 50,
             margin: index != 4 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
-              // color: index == order.status
-              //     ? OrderStatusHelper.statusColor[index]
-              //     : CustomColors.evenColor,
+              color:
+                  index == status ? statusData.color : CustomColors.evenColor,
               borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
-            // child: Text(
-            //   OrderStatusHelper.statusText[index],
-            //   style: TextStyle(
-            //     color: index == order.status && order.status != 4
-            //         ? Colors.white
-            //         : Colors.black,
-            //     fontSize: 17,
-            //     fontWeight: FontWeight.w500,
-            //   ),
-            // ),
+            child: Text(
+              statusData?.name ?? '',
+              style: TextStyle(
+                color: index == status && status != 4
+                    ? Colors.white
+                    : Colors.black,
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
         ),
       );

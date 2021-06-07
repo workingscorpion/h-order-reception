@@ -18,6 +18,7 @@ HistoryModel _$HistoryModelFromJson(Map<String, dynamic> json) {
     data: json['data'] as String,
     amount: json['amount'] as int,
     quantity: json['quantity'] as int,
+    menuName: json['menuName'] as String,
     createdTime: json['createdTime'] == null
         ? null
         : DateTime.parse(json['createdTime'] as String),
@@ -39,6 +40,7 @@ Map<String, dynamic> _$HistoryModelToJson(HistoryModel instance) =>
       'data': instance.data,
       'amount': instance.amount,
       'quantity': instance.quantity,
+      'menuName': instance.menuName,
       'createdTime': instance.createdTime?.toIso8601String(),
       'updatedTime': instance.updatedTime?.toIso8601String(),
     };

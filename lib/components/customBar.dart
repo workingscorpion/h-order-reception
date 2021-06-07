@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 
 class CustomBar extends StatefulWidget {

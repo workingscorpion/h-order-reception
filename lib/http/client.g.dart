@@ -52,7 +52,7 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListModel<HistoryDetailModel>> historyDetails(status, order) async {
+  Future<ListModel<RecordModel>> historyDetails(status, order) async {
     ArgumentError.checkNotNull(status, 'status');
     ArgumentError.checkNotNull(order, 'order');
     const _extra = <String, dynamic>{};
@@ -67,12 +67,12 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ListModel<HistoryDetailModel>.fromJson(_result.data);
+    final value = ListModel<RecordModel>.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<ListModel<HistoryDetailModel>> historyDetail(index) async {
+  Future<RecordModel> historyDetail(index) async {
     ArgumentError.checkNotNull(index, 'index');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -86,12 +86,12 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ListModel<HistoryDetailModel>.fromJson(_result.data);
+    final value = RecordModel.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<HistoryDetailModel> updateHistoryStatus(index, model) async {
+  Future<RecordModel> updateHistoryStatus(index, model) async {
     ArgumentError.checkNotNull(index, 'index');
     ArgumentError.checkNotNull(model, 'model');
     const _extra = <String, dynamic>{};
@@ -107,7 +107,7 @@ class _Client implements Client {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = HistoryDetailModel.fromJson(_result.data);
+    final value = RecordModel.fromJson(_result.data);
     return value;
   }
 
@@ -125,6 +125,29 @@ class _Client implements Client {
             baseUrl: baseUrl),
         data: _data);
     final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<PageModel<HistoryModel>> histories(
+      order, status, startTime, endTime) async {
+    ArgumentError.checkNotNull(order, 'order');
+    ArgumentError.checkNotNull(status, 'status');
+    ArgumentError.checkNotNull(startTime, 'startTime');
+    ArgumentError.checkNotNull(endTime, 'endTime');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<Map<String, dynamic>>(
+        '/v1/admin/history/summary?filter.order=$order&$status&filter.startTime=$startTime&filter.endTime=$endTime',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    final value = PageModel<HistoryModel>.fromJson(_result.data);
     return value;
   }
 }

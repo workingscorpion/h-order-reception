@@ -14,6 +14,7 @@ class HistoryModel {
   final String data;
   final int amount;
   final int quantity;
+  final String menuName;
   final DateTime createdTime;
   final DateTime updatedTime;
 
@@ -28,6 +29,7 @@ class HistoryModel {
     this.data,
     this.amount,
     this.quantity,
+    this.menuName,
     this.createdTime,
     this.updatedTime,
   });

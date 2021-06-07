@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:h_order_reception/store/historyStore.dart';
 
 class RefuseDialog extends StatefulWidget {
   RefuseDialog();

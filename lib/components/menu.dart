@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
-import 'package:h_order_reception/model/historyDetailModel.dart';
+import 'package:h_order_reception/http/client.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/itemModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
@@ -20,33 +21,48 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  HistoryDetailModel get historyDetail {
-    return HistoryStore.instance.historyDetailMap[widget.historyIndex];
-  }
-
-  ServiceModel get snapShotData {
-    return HistoryStore
-        .instance.snapShotDataMap[historyDetail.snapShot.objectId];
-  }
-
+  RecordModel record;
+  ServiceModel snapShotData;
   Map data;
   Map<String, ItemModel> itemMap;
+
+  load() async {
+    final indices = HistoryStore.instance.historyDetails
+        .map((e) => e.history.index)
+        .toList();
+
+    if (indices.contains(widget.historyIndex)) {
+      record =
+          HistoryStore.instance.historyDetailMap[widget.historyIndex] ?? null;
+      snapShotData =
+          HistoryStore.instance.snapShotDataMap[record.snapShot.objectId] ??
+              null;
+    }
+
+    if (record == null || snapShotData == null) {
+      record =
+          await Client.create().historyDetail(widget.historyIndex.toString());
+      snapShotData = ServiceModel.fromJson(jsonDecode(record.snapShot.data));
+    }
+
+    data = (record?.history?.data?.isNotEmpty ?? false)
+        ? jsonDecode(record.history.data)
+        : Map();
+    itemMap = snapShotData?.itemMap() ?? Map();
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-
-    data = (historyDetail?.history?.data?.isNotEmpty ?? false)
-        ? jsonDecode(historyDetail.history.data)
-        : Map();
-    itemMap = snapShotData?.itemMap() ?? Map();
+    load();
   }
 
   @override
   Widget build(BuildContext context) {
     final children = <Widget>[];
 
-    switch (snapShotData.type) {
+    switch (snapShotData?.type) {
       case ServiceType.Call:
         {
           final widgets = data.entries
@@ -107,6 +123,9 @@ class _MenuState extends State<Menu> {
           children..addAll(widgets);
         }
         break;
+
+      default:
+        children..add(Text('123'));
     }
 
     return DefaultTextStyle(
@@ -115,13 +134,15 @@ class _MenuState extends State<Menu> {
         color: CustomColors.aBlack,
       ),
       child: Container(
-        child: ListView(
+        child: Flex(
+          direction: Axis.vertical,
           children: [
             ...children,
           ],
         ),
       ),
     );
+
     // return DefaultTextStyle(
     //   style: TextStyle(
     //     fontSize: 17,
