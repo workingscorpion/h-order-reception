@@ -56,7 +56,6 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _load() async {
-    print('load');
     final endOfToday = _selectedValue
         .add(Duration(days: 1))
         .subtract(Duration(microseconds: 1));
@@ -68,11 +67,14 @@ class _HistoryViewState extends State<HistoryView> {
       _selectedValue.toString(),
       endOfToday.toString(),
     );
+
     _histories = res.list.map((e) {
-      var menuName = '';
+      var menuName = '-';
       if (e.data != null) {
         final data = jsonDecode(e.data);
-        menuName = jsonDecode(data['cart']).first['name'];
+        if (data['cart'] != null) {
+          menuName = jsonDecode(data['cart'])?.first['name'] ?? '-';
+        }
       }
 
       return HistoryModel(
@@ -84,15 +86,13 @@ class _HistoryViewState extends State<HistoryView> {
         deviceObjectId: e.deviceObjectId,
         deviceName: e.deviceName,
         data: e.data,
-        amount: e.amount,
-        quantity: e.quantity,
+        amount: e.amount ?? 0,
+        quantity: e.quantity ?? 0,
         createdTime: e.createdTime,
         updatedTime: e.updatedTime,
-        menuName: menuName,
+        menuName: menuName ?? '-',
       );
     }).toList();
-
-    print(_histories);
 
     setState(() {});
   }
@@ -110,7 +110,6 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _moveDatePicker() async {
-    print('move');
     _histories.clear();
     _controller.animateToDate(
       _selectedValue.subtract(Duration(days: 10)),
@@ -244,45 +243,40 @@ class _HistoryViewState extends State<HistoryView> {
     switch (index) {
       case 0:
         return Text(
-            // DateFormat("yyyy/MM/dd HH:mm:ss").format(item.createdTime).toString(),
-            '0');
+          DateFormat("yyyy/MM/dd HH:mm:ss").format(item.createdTime).toString(),
+        );
 
       case 1:
-        return Text('1');
-      // return Text('건물이름/${item.deviceName}');
+        return Text('건물이름/${item.deviceName}');
 
       case 2:
-        return Text('메뉴메뉴');
-      // return Text(item.menuName);
+        return Text(item.menuName);
 
       case 3:
-        return Text('33');
-      // return Text('${item.quantity}개');
+        return Text('${item.quantity}개');
 
       case 4:
-        return Text('4');
-      // return Text('${NumberFormat().format(item.amount)}원');
+        return Text('${NumberFormat().format(item.amount)}원');
 
       case 5:
-        // return Container(
-        //   padding: EdgeInsets.symmetric(horizontal: 10),
-        //   decoration: BoxDecoration(
-        //     color: orderStatus[item.status].color,
-        //     borderRadius: BorderRadius.circular(8),
-        //   ),
-        //   child: Container(
-        //     width: 90,
-        //     padding: EdgeInsets.symmetric(vertical: 3),
-        //     alignment: Alignment.center,
-        //     child: Text(
-        //       orderStatus[item.status].name,
-        //       style: TextStyle(
-        //         color: item.status == 4 ? Colors.black : Colors.white,
-        //       ),
-        //     ),
-        //   ),
-        // );
-        return Text('555');
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            color: orderStatus[item.status].color,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Container(
+            width: 90,
+            padding: EdgeInsets.symmetric(vertical: 3),
+            alignment: Alignment.center,
+            child: Text(
+              orderStatus[item.status].name,
+              style: TextStyle(
+                color: item.status == 4 ? Colors.black : Colors.white,
+              ),
+            ),
+          ),
+        );
       default:
         return Container();
     }
