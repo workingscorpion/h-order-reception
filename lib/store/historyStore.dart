@@ -127,8 +127,8 @@ abstract class HistoryStoreBase with Store {
       ),
     );
 
-    final listIndex = historyDetails
-        .indexWhere((item) => item.history.index == item.history.index);
+    final listIndex =
+        historyDetails.indexWhere((item) => item.history.index == index);
 
     if (activeStatus.contains(item.history.status)) {
       if (listIndex != -1) {
