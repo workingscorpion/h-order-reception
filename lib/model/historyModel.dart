@@ -38,4 +38,22 @@ class HistoryModel {
       _$HistoryModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryModelToJson(this);
+
+  HistoryModel toLocal() {
+    return HistoryModel(
+      index: index,
+      status: status,
+      serviceObjectId: serviceObjectId,
+      userObjectId: userObjectId,
+      userName: userName,
+      deviceObjectId: deviceObjectId,
+      deviceName: deviceName,
+      data: data,
+      amount: amount,
+      quantity: quantity,
+      menuName: menuName,
+      createdTime: createdTime?.toLocal(),
+      updatedTime: updatedTime?.toLocal(),
+    );
+  }
 }
