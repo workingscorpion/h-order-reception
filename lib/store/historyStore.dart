@@ -61,16 +61,19 @@ abstract class HistoryStoreBase with Store {
         .withAutomaticReconnect()
         .build();
 
-    hubConnection.on('notified', (json) {
+    hubConnection.on('notified', (json) async {
       final map = json.first as Map;
       final data = HistoryModel.fromJson(map);
-      var target = historyDetails
-          .singleWhere((element) => element.history.index == data.index);
-      if (target != null) {
-        target.history = data;
-      } else {
-        load();
-      }
+      await load();
+      // var target = historyDetails
+      //     .singleWhere((element) => element.history.index == data.index);
+      // if (target != null) {
+      //   target.history = data;
+      // } else {
+      //   print('load start');
+      //   await load();
+      //   print('load end');
+      // }
     });
 
     await hubConnection.start();
@@ -78,6 +81,7 @@ abstract class HistoryStoreBase with Store {
 
   @action
   load({DateTime startTime, DateTime endTime}) async {
+    print('load');
     final response = await Client.create().historyDetails(
       activeStatus.map((item) => 'filter.status=$item').join('&'),
       'UpdatedTime',
