@@ -44,6 +44,7 @@ class _HistoryPageState extends State<HistoryPage> {
     await HistoryStore.instance.load();
 
     record = await Client.create().historyDetail(widget.historyIndex);
+    // TODO
     _infoData = [
       '건물명',
       record.history.deviceName,
