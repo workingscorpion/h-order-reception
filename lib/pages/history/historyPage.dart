@@ -127,7 +127,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
                 HistoryStore.instance.setStatus(
                   index: int.parse(widget.historyIndex),
-                  status: record.history.status == 0 ? -9 : -1,
+                  status: record.history.status == 1 ? -9 : -1,
                   message: message,
                 );
               },
@@ -140,7 +140,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  record.history.status == 0 ? '거절' : '취소',
+                  record.history.status == 1 ? '거절' : '취소',
                   style: TextStyle(fontSize: 17, color: Colors.white),
                 ),
               ),
@@ -281,6 +281,7 @@ class _HistoryPageState extends State<HistoryPage> {
               index: int.parse(widget.historyIndex),
               status: statusValue,
             );
+            _load();
             setState(() {});
           },
           child: Container(

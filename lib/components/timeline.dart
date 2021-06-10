@@ -24,15 +24,14 @@ class _TimelineState extends State<Timeline> {
 
   @override
   void initState() {
-    _load();
     super.initState();
   }
 
   _load() async {
-    final target = HistoryStore.instance.historyDetailMap[widget.historyIndex];
-    if (target != null) {
-      historyDetail = target;
-    }
+    // final target = HistoryStore.instance.historyDetailMap[widget.historyIndex];
+    // if (target != null) {
+    //   historyDetail = target;
+    // }
 
     historyDetail =
         await Client.create().historyDetail(widget.historyIndex.toString());
@@ -41,6 +40,7 @@ class _TimelineState extends State<Timeline> {
 
   @override
   Widget build(BuildContext context) {
+    _load();
     return ListView(
       padding: EdgeInsets.all(10),
       children: [
