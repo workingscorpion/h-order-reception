@@ -67,6 +67,7 @@ flutter:
   assets:
     - assets/
     - assets/icons/
+    - assets/icons/common/
     - assets/icons/auth/
     - assets/icons/statusbar/
     - assets/splash/

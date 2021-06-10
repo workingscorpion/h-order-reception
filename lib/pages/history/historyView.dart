@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
@@ -180,12 +181,12 @@ class _HistoryViewState extends State<HistoryView> {
                   ),
                 ),
               )
-            : Container(),
-        // child: Observer(
-        //   builder: (BuildContext context) {
-        //     return ;
-        //   },
-        // ),
+            : Container(
+                child: SvgPicture.asset(
+                  'assets/icons/common/empty.svg',
+                  height: 200,
+                ),
+              ),
       );
 
   _row({
