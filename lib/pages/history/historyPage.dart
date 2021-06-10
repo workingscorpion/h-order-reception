@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/menu.dart';
+import 'package:h_order_reception/components/refuseDialog.dart';
 import 'package:h_order_reception/components/timeline.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
@@ -112,17 +113,36 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
             ),
             Container(height: 10),
-            Container(
-              height: 50,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: CustomColors.denyColor,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                record.history.status == 0 ? '거절' : '취소',
-                style: TextStyle(fontSize: 17, color: Colors.white),
+            InkWell(
+              onTap: () async {
+                final result = await showDialog(
+                  context: context,
+                  child: RefuseDialog(),
+                );
+                if (result == null) {
+                  return;
+                }
+
+                final message = result as String;
+
+                HistoryStore.instance.setStatus(
+                  index: int.parse(widget.historyIndex),
+                  status: record.history.status == 0 ? -9 : -1,
+                  message: message,
+                );
+              },
+              child: Container(
+                height: 50,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: CustomColors.denyColor,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  record.history.status == 0 ? '거절' : '취소',
+                  style: TextStyle(fontSize: 17, color: Colors.white),
+                ),
               ),
             ),
           ],
@@ -253,26 +273,31 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       );
 
-  _status(int index) => Expanded(
+  _status(int statusValue) => Expanded(
         child: InkWell(
-          onTap: () {
-            // TODO: status 변경
-            status = index;
+          onTap: () async {
+            status = statusValue;
+            await HistoryStore.instance.setStatus(
+              index: int.parse(widget.historyIndex),
+              status: statusValue,
+            );
             setState(() {});
           },
           child: Container(
             height: 50,
-            margin: index != 5 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
+            margin:
+                statusValue != 5 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
-              color:
-                  index == status ? statusData.color : CustomColors.evenColor,
+              color: statusValue == status
+                  ? orderStatus[statusValue].color
+                  : CustomColors.evenColor,
               borderRadius: BorderRadius.circular(8),
             ),
             alignment: Alignment.center,
             child: Text(
-              orderStatus[index]?.name ?? '',
+              orderStatus[statusValue]?.name ?? '',
               style: TextStyle(
-                color: index == status && status != 4
+                color: statusValue == status && status != 4
                     ? Colors.white
                     : Colors.black,
                 fontSize: 17,
