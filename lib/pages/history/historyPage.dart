@@ -248,7 +248,8 @@ class _HistoryPageState extends State<HistoryPage> {
   _statuses() => Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
-          children: List.generate(5, (index) => _status(index)),
+          children: List.generate(
+              5, (index) => index == 4 ? _status(9) : _status(index + 1)),
         ),
       );
 
@@ -261,7 +262,7 @@ class _HistoryPageState extends State<HistoryPage> {
           },
           child: Container(
             height: 50,
-            margin: index != 4 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
+            margin: index != 5 ? EdgeInsets.only(right: 15) : EdgeInsets.zero,
             decoration: BoxDecoration(
               color:
                   index == status ? statusData.color : CustomColors.evenColor,
@@ -269,7 +270,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
             alignment: Alignment.center,
             child: Text(
-              statusData?.name ?? '',
+              orderStatus[index]?.name ?? '',
               style: TextStyle(
                 color: index == status && status != 4
                     ? Colors.white
