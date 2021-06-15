@@ -39,6 +39,21 @@ mixin _$UserInfoStore on UserInfoStoreBase, Store {
     });
   }
 
+  final _$nameAtom = Atom(name: 'UserInfoStoreBase.name');
+
+  @override
+  String get name {
+    _$nameAtom.reportRead();
+    return super.name;
+  }
+
+  @override
+  set name(String value) {
+    _$nameAtom.reportWrite(value, super.name, () {
+      super.name = value;
+    });
+  }
+
   final _$loadingAtom = Atom(name: 'UserInfoStoreBase.loading');
 
   @override
@@ -150,6 +165,7 @@ mixin _$UserInfoStore on UserInfoStoreBase, Store {
     return '''
 fcmToken: ${fcmToken},
 id: ${id},
+name: ${name},
 loading: ${loading},
 isLogin: ${isLogin},
 isInitialized: ${isInitialized},

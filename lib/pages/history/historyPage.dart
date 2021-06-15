@@ -8,6 +8,7 @@ import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
+import 'package:h_order_reception/store/userInfoStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -50,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
       '건물명',
       record.history.deviceName,
       DateFormat().format(record.history.createdTime),
-      '가게이름'
+      '${UserInfoStore.instance.name}',
     ];
     status = record.history.status;
     statusData = orderStatus[status];

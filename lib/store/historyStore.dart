@@ -6,7 +6,6 @@ import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
-import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:http/io_client.dart';
@@ -63,16 +62,14 @@ abstract class HistoryStoreBase with Store {
 
     hubConnection.on('notified', (json) async {
       final map = json.first as Map;
-      final data = HistoryModel.fromJson(map);
+      HistoryModel.fromJson(map);
       await load();
       // var target = historyDetails
       //     .singleWhere((element) => element.history.index == data.index);
       // if (target != null) {
       //   target.history = data;
       // } else {
-      //   print('load start');
       //   await load();
-      //   print('load end');
       // }
     });
 
