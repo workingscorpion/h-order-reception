@@ -32,7 +32,7 @@ class _HistoryPageState extends State<HistoryPage> {
   OrderStatusModel statusData;
 
   List<RecordModel> get histories {
-    return HistoryStore.instance.historyDetails;
+    return HistoryStore.instance.historyDetails ?? List();
   }
 
   @override
@@ -213,9 +213,13 @@ class _HistoryPageState extends State<HistoryPage> {
               Spacer(),
               Container(
                 margin: EdgeInsets.only(right: 10),
-                child: Text('${record.history.quantity}개'),
+                child: Text(record.history.quantity != null
+                    ? '${record.history.quantity}개'
+                    : ''),
               ),
-              Text('${NumberFormat().format(record.history.amount)}원'),
+              Text(record.history.amount != null
+                  ? '${NumberFormat().format(record.history.amount)}원'
+                  : '-'),
             ],
           ),
         ),
