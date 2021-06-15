@@ -78,7 +78,6 @@ abstract class HistoryStoreBase with Store {
 
   @action
   load({DateTime startTime, DateTime endTime}) async {
-    print('load');
     final response = await Client.create().historyDetails(
       activeStatus.map((item) => 'filter.status=$item').join('&'),
       'UpdatedTime',

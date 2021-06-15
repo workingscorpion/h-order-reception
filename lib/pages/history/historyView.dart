@@ -41,13 +41,15 @@ class _HistoryViewState extends State<HistoryView> {
   //   return HistoryStore.instance.historyDetails;
   // }
 
+  List<int> _status = [1, 2, 3, 4, 9, -1, -9];
+
   @override
   void initState() {
     super.initState();
 
     _selectToday();
 
-    _selectedFilter.addAll([1, 2, 3, 4, 9, -1, -9]);
+    _selectedFilter.addAll(_status);
 
     // _filterHistories();
 
@@ -444,7 +446,10 @@ class _HistoryViewState extends State<HistoryView> {
 
   _floatingMenus() => Column(
       crossAxisAlignment: CrossAxisAlignment.end,
-      children: List.generate(5, (index) => _floatingMenu(index)));
+      children: List.generate(
+        _status.length,
+        (index) => _floatingMenu(_status[index]),
+      ));
 
   _floatingMenu(int value) => InkWell(
         onTap: () {
@@ -469,7 +474,7 @@ class _HistoryViewState extends State<HistoryView> {
             orderStatus[value].name,
             style: TextStyle(
               fontSize: 15,
-              color: value != 4 ? Colors.white : Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
