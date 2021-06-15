@@ -321,7 +321,7 @@ class _OrderItemState extends State<OrderItem> {
             ),
             _button(
               onTap: () async {
-                await HistoryStore.instance.setStatus(
+                HistoryStore.instance.setStatus(
                   index: history.index,
                   status: nextStatus,
                 );
