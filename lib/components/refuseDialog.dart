@@ -18,6 +18,24 @@ class _RefuseDialogState extends State<RefuseDialog> {
     'etc': '',
   };
 
+  int selectedIndex;
+
+  final List<String> statusKey = [
+    "outOfStock",
+    "outOfBusinessTime",
+    "deliveryDelayed",
+    "requestedByClient",
+    "etc",
+  ];
+
+  final List<String> statusValue = [
+    "재고소진",
+    "영업종료",
+    "배달지연",
+    "고객요청",
+    "직접입력",
+  ];
+
   TextEditingController textEditingController;
   String selectedKey;
 
@@ -74,7 +92,7 @@ class _RefuseDialogState extends State<RefuseDialog> {
       builder: (_context, _setState) {
         return Builder(
           builder: (context) {
-            final selectKey = (String key) {
+            final selectKey = (String key, int index) {
               selectedKey = key;
               textEditingController.text = reasons[key];
               _setState(() {});
@@ -85,37 +103,14 @@ class _RefuseDialogState extends State<RefuseDialog> {
                 children: [
                   Container(height: 12),
                   Row(
-                    children: [
-                      _item(
-                        selectKey: selectKey,
-                        key: 'outOfStock',
-                        text: '재고소진',
-                      ),
-                      Container(width: 6),
-                      _item(
-                        selectKey: selectKey,
-                        key: 'outOfBusinessTime',
-                        text: '영업종료',
-                      ),
-                      Container(width: 6),
-                      _item(
-                        selectKey: selectKey,
-                        key: 'deliveryDelayed',
-                        text: '배달지연',
-                      ),
-                      Container(width: 6),
-                      _item(
-                        selectKey: selectKey,
-                        key: 'requestedByClient',
-                        text: '고객요청',
-                      ),
-                      Container(width: 6),
-                      _item(
-                        selectKey: selectKey,
-                        key: 'etc',
-                        text: '직접입력',
-                      ),
-                    ],
+                    children: List.generate(
+                      statusKey.length,
+                      (index) => _item(
+                          selectKey: selectKey,
+                          text: statusValue[index],
+                          key: statusKey[index],
+                          index: index),
+                    ),
                   ),
                   Container(height: 12),
                   Container(
@@ -213,31 +208,53 @@ class _RefuseDialogState extends State<RefuseDialog> {
       );
 
   _item({
-    Function(String key) selectKey,
+    Function(String key, int index) selectKey,
     String key,
     String text,
+    int index,
   }) =>
       Expanded(
-        child: Material(
-          color: CustomColors.doneColor,
-          borderRadius: BorderRadius.circular(5),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () {
-              selectKey(key);
-            },
-            child: Container(
-              height: 40,
-              padding: EdgeInsets.symmetric(
-                horizontal: 12,
-              ),
-              decoration: BoxDecoration(
+        child: Row(
+          children: [
+            Expanded(
+              child: Material(
+                color: selectedIndex == index
+                    ? CustomColors.waitAcceptColor
+                    : CustomColors.doneColor,
                 borderRadius: BorderRadius.circular(5),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () {
+                    selectedIndex = index;
+                    selectKey(key, index);
+                  },
+                  child: Container(
+                    height: 40,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      text,
+                      style: TextStyle(
+                        color: selectedIndex == index
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              alignment: Alignment.center,
-              child: Text(text),
             ),
-          ),
+            index < statusKey.length - 1
+                ? Container(
+                    width: 6,
+                  )
+                : Container()
+          ],
         ),
       );
 }
