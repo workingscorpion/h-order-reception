@@ -92,7 +92,7 @@ class _RefuseDialogState extends State<RefuseDialog> {
       builder: (_context, _setState) {
         return Builder(
           builder: (context) {
-            final selectKey = (String key, int index) {
+            final selectKey = (String key) {
               selectedKey = key;
               textEditingController.text = reasons[key];
               _setState(() {});
@@ -208,53 +208,40 @@ class _RefuseDialogState extends State<RefuseDialog> {
       );
 
   _item({
-    Function(String key, int index) selectKey,
+    Function(String key) selectKey,
     String key,
     String text,
     int index,
   }) =>
       Expanded(
-        child: Row(
-          children: [
-            Expanded(
-              child: Material(
-                color: selectedIndex == index
-                    ? CustomColors.waitAcceptColor
-                    : CustomColors.doneColor,
+        child: Material(
+          color: selectedIndex == index
+              ? CustomColors.waitAcceptColor
+              : CustomColors.doneColor,
+          borderRadius: BorderRadius.circular(5),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: () {
+              selectedIndex = index;
+              selectKey(key);
+            },
+            child: Container(
+              height: 40,
+              padding: EdgeInsets.symmetric(
+                horizontal: 12,
+              ),
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: () {
-                    selectedIndex = index;
-                    selectKey(key, index);
-                  },
-                  child: Container(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      text,
-                      style: TextStyle(
-                        color: selectedIndex == index
-                            ? Colors.white
-                            : Colors.black,
-                      ),
-                    ),
-                  ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: selectedIndex == index ? Colors.white : Colors.black,
                 ),
               ),
             ),
-            index < statusKey.length - 1
-                ? Container(
-                    width: 6,
-                  )
-                : Container()
-          ],
+          ),
         ),
       );
 }
