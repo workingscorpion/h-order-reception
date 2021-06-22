@@ -308,7 +308,10 @@ class _OrderItemState extends State<OrderItem> {
               onTap: () async {
                 final result = await showDialog(
                   context: context,
-                  child: RefuseDialog(),
+                  child: RefuseDialog(
+                    historyIndex: widget.historyIndex,
+                    status: history.status,
+                  ),
                 );
 
                 if (result == null) {
