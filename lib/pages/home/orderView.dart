@@ -53,8 +53,7 @@ class _OrderViewState extends State<OrderView> {
                 ...histories
                     .where((item) =>
                         (_selectedFilter?.isEmpty ?? true) ||
-                        HistoryStoreBase.activeStatus
-                            .contains(item.history.status))
+                        _selectedFilter.contains(item.history.status))
                     .map((item) => OrderItem(historyIndex: item.history.index)),
               ],
             ),
@@ -82,7 +81,10 @@ class _OrderViewState extends State<OrderView> {
   _floatingButtonMenus() => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          ...orderStatus.keys.map((value) => _floatingButtonMenu(value)),
+          ...orderStatus.keys
+              .where(
+                  (element) => HistoryStoreBase.activeStatus.contains(element))
+              .map((value) => _floatingButtonMenu(value)),
         ],
       );
 

@@ -28,7 +28,7 @@ class _CustomBarState extends State<CustomBar> {
         child: Row(
           children: [
             Text(
-              '봉보야쥬',
+              '${userInfoStore.name}',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,

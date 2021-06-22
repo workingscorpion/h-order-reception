@@ -166,16 +166,18 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       AppRouter.toHomePage();
-    } catch (ex) {
+    } on DioError catch (ex) {
       if (ex.type == DioErrorType.RESPONSE) {
-        final response = ex.response as Response;
+        final response = ex.response;
 
-        if (response.statusCode == 404) {
+        if (response.statusCode == 500 || response.statusCode == 404) {
           showToast('잘못된 아이디 또는 비밀번호 입니다.');
         }
       } else {
         showToast('로그인에 실패하였습니다. 네트워크 상태를 확인해주세요.');
       }
+    } catch (ex) {
+      print(ex);
     } finally {
       _loading = false;
       setState(() {});

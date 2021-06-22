@@ -234,7 +234,7 @@ class _OrderItemState extends State<OrderItem> {
           children: [
             Container(
               child: Text(
-                '${DateFormat("yyyy/MM/dd HH:mm").format(history.updatedTime)}',
+                '${DateFormat("yyyy/MM/dd HH:mm").format(history.createdTime.toLocal())}',
                 style: TextStyle(
                   fontSize: 15,
                 ),
@@ -321,7 +321,7 @@ class _OrderItemState extends State<OrderItem> {
             ),
             _button(
               onTap: () async {
-                await HistoryStore.instance.setStatus(
+                HistoryStore.instance.setStatus(
                   index: history.index,
                   status: nextStatus,
                 );

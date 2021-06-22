@@ -3,7 +3,6 @@ import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/historyDetailItemModel.dart';
 import 'package:h_order_reception/model/recordModel.dart';
-import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -24,15 +23,14 @@ class _TimelineState extends State<Timeline> {
 
   @override
   void initState() {
-    _load();
     super.initState();
   }
 
   _load() async {
-    final target = HistoryStore.instance.historyDetailMap[widget.historyIndex];
-    if (target != null) {
-      historyDetail = target;
-    }
+    // final target = HistoryStore.instance.historyDetailMap[widget.historyIndex];
+    // if (target != null) {
+    //   historyDetail = target;
+    // }
 
     historyDetail =
         await Client.create().historyDetail(widget.historyIndex.toString());
@@ -41,6 +39,7 @@ class _TimelineState extends State<Timeline> {
 
   @override
   Widget build(BuildContext context) {
+    _load();
     return ListView(
       padding: EdgeInsets.all(10),
       children: [

@@ -89,6 +89,16 @@ class _RefuseDialogState extends State<RefuseDialog> {
                     Container(height: 12),
                     TextField(
                       controller: textEditingController,
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black38, width: 1.0),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black38, width: 1.0),
+                        ),
+                      ),
                     ),
                     Container(height: 12),
                     Row(
