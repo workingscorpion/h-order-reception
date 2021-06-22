@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
+import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 
 class LoginPage extends StatefulWidget {
@@ -38,22 +39,41 @@ class _LoginPageState extends State<LoginPage> {
                   _loginButton(),
                 ],
               ),
+              // ),
             ),
           ),
         ));
   }
 
-  _logo() => Container(
-      height: 200,
-      width: 200,
-      margin: EdgeInsets.only(bottom: 100),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: SvgPicture.asset(
-          'assets/logo.svg',
-          fit: BoxFit.fill,
-        ),
-      ));
+  _logo() => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+              height: 85,
+              width: 70,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SvgPicture.asset(
+                  'assets/logo.svg',
+                  fit: BoxFit.fill,
+                ),
+              )),
+          Container(
+            width: 15,
+          ),
+          Container(
+            child: Text(
+              'H-ORDER',
+              style: TextStyle(
+                fontSize: 65,
+                color: CustomColors.logoColor,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+        ],
+      );
 
   _idField() => Container(
         height: 48,
@@ -68,7 +88,8 @@ class _LoginPageState extends State<LoginPage> {
           textInputAction: TextInputAction.next,
         ),
         margin: EdgeInsets.only(
-          bottom: 20,
+          top: 50,
+          bottom: 30,
         ),
       );
 
@@ -88,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
           },
         ),
         margin: EdgeInsets.only(
-          bottom: 20,
+          bottom: 70,
         ),
       );
 
@@ -97,16 +118,14 @@ class _LoginPageState extends State<LoginPage> {
         prefixIcon: _prefixIcon(assetName),
         contentPadding: EdgeInsets.symmetric(horizontal: 12),
         filled: true,
-        fillColor: _primaryColor(),
+        fillColor: CustomColors.evenColor,
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: _accentColor(),
-          ),
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: _accentColor(),
-          ),
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
         ),
         hintText: hint,
         hintStyle: TextStyle(
@@ -124,24 +143,30 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   _loginButton() => Container(
-        child: FlatButton(
-          height: 48,
-          color: _accentColor(),
-          child: _loading
-              ? Spin()
-              : Text(
-                  '로그인',
-                  style: TextStyle(
-                    color: _primaryColor(),
-                    fontSize: 18,
-                  ),
-                ),
-          onPressed: () {
+        child: InkWell(
+          onTap: () {
             _login();
           },
-        ),
-        margin: EdgeInsets.only(
-          bottom: 10,
+          child: Container(
+            height: 48,
+            width: 150,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(bottom: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: _accentColor(),
+            ),
+            child: _loading
+                ? Spin()
+                : Text(
+                    '로그인',
+                    style: TextStyle(
+                      color: _primaryColor(),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+          ),
         ),
       );
 
