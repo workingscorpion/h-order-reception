@@ -287,8 +287,16 @@ class _OrderItemState extends State<OrderItem> {
 
   _buttons() {
     final keys = orderStatus.keys.toList();
-    final nextIndex = (keys.indexOf(history.status) + 1) % keys.length;
-    final nextStatus = keys[nextIndex];
+    var nextIndex;
+    var nextStatus;
+    if (history.amount != null) {
+      nextIndex = (keys.indexOf(history.status) + 1) % keys.length;
+      nextStatus = keys[nextIndex];
+    } else {
+      final callKeys = [-1, -9, 1, 2, 9];
+      nextIndex = (callKeys.indexOf(history.status) + 1) % callKeys.length;
+      nextStatus = callKeys[nextIndex];
+    }
 
     return IntrinsicHeight(
       child: Container(
