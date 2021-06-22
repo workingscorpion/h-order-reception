@@ -84,6 +84,10 @@ abstract class HistoryStoreBase with Store {
       // startTime != null ? DateFormat('yyyy-MM-dd').format(startTime) : null,
       // endTime != null ? DateFormat('yyyy-MM-dd').format(endTime) : null,
     );
+    final details = response.list;
+
+    details.sort((a, b) =>
+        a.history.createdTime.isAfter(b.history.createdTime) ? 1 : -1);
 
     historyDetails
       ..clear()
