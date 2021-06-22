@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:h_order_reception/constants/customColors.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 
 class SplashPage extends StatefulWidget {
   SplashPage({Key key}) : super(key: key);
@@ -15,13 +17,21 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  String versionNumber = '';
   bool initialized = false;
 
   @override
   void initState() {
     initialize();
+    _getVersion();
 
     super.initState();
+  }
+
+  _getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    versionNumber = packageInfo.version;
+    setState(() {});
   }
 
   initialize() async {
@@ -58,7 +68,9 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   autoLogin() async {
-    AppRouter.toLoginPage();
+    // TODO
+    // AppRouter.toLoginPage();
+
     // try {
     //   final String id = await SharedPreferencesHelper.getUserId();
 
@@ -87,9 +99,20 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.white,
-        body: _Logo(),
-      );
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          _Logo(),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Text(
+              'Version: $versionNumber',
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      ));
 }
 
 class _Logo extends StatelessWidget {
@@ -99,10 +122,26 @@ class _Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        gradient: _gradient(),
       ),
       alignment: Alignment.center,
-      child: SvgPicture.asset('assets/logo.svg'),
+      child: SvgPicture.asset(
+        'assets/logo.svg',
+        height: 100,
+      ),
     );
   }
+
+  _gradient() => LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        stops: [
+          0.1,
+          1,
+        ],
+        colors: [
+          CustomColors.gradientTopColor,
+          CustomColors.gradientBottomColor,
+        ],
+      );
 }
