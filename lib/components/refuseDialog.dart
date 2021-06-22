@@ -17,7 +17,6 @@ class RefuseDialog extends StatefulWidget {
 }
 
 class _RefuseDialogState extends State<RefuseDialog> {
-  bool get isCancel => widget.status == 1;
   // static final Map<String, String> reasons = {
   //   'outOfStock': '재고가 모두 소진되었습니다.',
   //   'outOfBusinessTime': '영업시간이 종료되었습니다.',
@@ -78,7 +77,9 @@ class _RefuseDialogState extends State<RefuseDialog> {
               Container(
                 padding: EdgeInsets.all(40),
                 child: Text(
-                  isCancel ? '해당 주문을 거절\n 하시겠습니까?' : '해당 주문을 취소\n 하시겠습니까?',
+                  widget.status == 1
+                      ? '해당 주문을 거절\n 하시겠습니까?'
+                      : '해당 주문을 취소\n 하시겠습니까?',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -89,8 +90,8 @@ class _RefuseDialogState extends State<RefuseDialog> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _button('취소'),
-                  _button('확인'),
+                  _button(false),
+                  _button(true),
                 ],
               ),
             ],
@@ -100,35 +101,35 @@ class _RefuseDialogState extends State<RefuseDialog> {
     );
   }
 
-  Widget _button(String title) {
+  Widget _button(bool isOk) {
     return Expanded(
       child: InkWell(
-        onTap: () => _cancelOrder(title),
+        onTap: () => _cancelOrder(isOk),
         child: Container(
           height: 50,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only(
-              bottomLeft: title == '취소' ? Radius.circular(8) : Radius.zero,
-              bottomRight: title == '취소' ? Radius.zero : Radius.circular(8),
+              bottomLeft: isOk ? Radius.zero : Radius.circular(8),
+              bottomRight: isOk ? Radius.circular(8) : Radius.zero,
             ),
-            color: title == '취소'
-                ? CustomColors.denyColor
-                : CustomColors.tableInnerBorder,
+            color:
+                isOk ? CustomColors.tableInnerBorder : CustomColors.denyColor,
           ),
           child: Text(
-            title,
+            isOk ? '확인' : '취소',
             style: TextStyle(
-                color: title == '취소' ? Colors.white : Colors.black,
-                fontSize: 20),
+              color: isOk ? Colors.black : Colors.white,
+              fontSize: 20,
+            ),
           ),
         ),
       ),
     );
   }
 
-  _cancelOrder(title) async {
-    if (title == '취소') {
+  _cancelOrder(bool isOk) async {
+    if (!isOk) {
       Navigator.of(context).pop();
     } else {
       HistoryStore.instance.setStatus(
