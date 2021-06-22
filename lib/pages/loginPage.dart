@@ -39,63 +39,39 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Expanded(
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.3,
+                vertical: MediaQuery.of(context).size.height * 0.27,
+              ),
               child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.3,
-                    vertical: MediaQuery.of(context).size.height * 0.2,
-                  ),
-                  child: Column(
-                    children: [
-                      _logo(),
-                      _idField(),
-                      _passwordField(),
-                      _loginButton(),
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _logo(),
+                    _idField(),
+                    _passwordField(),
+                    _loginButton(),
+                  ],
                 ),
               ),
-              // ),
             ),
-            Text('Version: $versionNumber'),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Text('Version: $versionNumber'),
+            ),
           ],
         ),
       ),
     );
   }
 
-  _logo() => Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-              height: 85,
-              width: 70,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: SvgPicture.asset(
-                  'assets/logo.svg',
-                  fit: BoxFit.fill,
-                ),
-              )),
-          Container(
-            width: 15,
-          ),
-          Container(
-            child: Text(
-              'H-ORDER',
-              style: TextStyle(
-                fontSize: 65,
-                color: CustomColors.logoColor,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ),
-        ],
+  _logo() => SvgPicture.asset(
+        'assets/icons/auth/logo_green.svg',
+        height: 100,
       );
 
   _idField() => Container(
