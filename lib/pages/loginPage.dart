@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
+import 'package:package_info/package_info.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -14,33 +15,55 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String versionNumber = '';
   bool _loading = false;
 
   TextEditingController _idController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
   @override
+  void initState() {
+    _getVersion();
+    super.initState();
+  }
+
+  _getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    versionNumber = packageInfo.version;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.3,
-                vertical: MediaQuery.of(context).size.height * 0.2,
-              ),
-              child: Column(
-                children: [
-                  _logo(),
-                  _idField(),
-                  _passwordField(),
-                  _loginButton(),
-                ],
+      backgroundColor: Theme.of(context).primaryColor,
+      body: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.3,
+                    vertical: MediaQuery.of(context).size.height * 0.2,
+                  ),
+                  child: Column(
+                    children: [
+                      _logo(),
+                      _idField(),
+                      _passwordField(),
+                      _loginButton(),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ));
+            Text('Version: $versionNumber'),
+          ],
+        ),
+      ),
+    );
   }
 
   _logo() => Container(
