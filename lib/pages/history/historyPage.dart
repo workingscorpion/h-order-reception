@@ -118,7 +118,10 @@ class _HistoryPageState extends State<HistoryPage> {
               onTap: () async {
                 final result = await showDialog(
                   context: context,
-                  child: RefuseDialog(),
+                  child: RefuseDialog(
+                    historyIndex: int.parse(widget.historyIndex),
+                    status: record.history.status,
+                  ),
                 );
                 if (result == null) {
                   return;

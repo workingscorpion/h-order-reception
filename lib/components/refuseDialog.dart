@@ -1,15 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/constants/customColors.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 
 class RefuseDialog extends StatefulWidget {
-  RefuseDialog();
+  RefuseDialog({
+    this.historyIndex,
+    this.status,
+  });
+
+  final int historyIndex;
+  final int status;
 
   @override
   _RefuseDialogState createState() => _RefuseDialogState();
 }
 
 class _RefuseDialogState extends State<RefuseDialog> {
+  bool get isCancel => widget.status == 1;
   // static final Map<String, String> reasons = {
   //   'outOfStock': '재고가 모두 소진되었습니다.',
   //   'outOfBusinessTime': '영업시간이 종료되었습니다.',
@@ -46,12 +54,12 @@ class _RefuseDialogState extends State<RefuseDialog> {
     // textEditingController = TextEditingController();
   }
 
-  @override
-  void dispose() {
-    // textEditingController.dispose();
+  // @override
+  // void dispose() {
+  //   // textEditingController.dispose();
 
-    super.dispose();
-  }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,23 +71,27 @@ class _RefuseDialogState extends State<RefuseDialog> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
         ),
-        constraints: BoxConstraints(maxWidth: 500),
+        constraints: BoxConstraints(maxWidth: 400),
         child: IntrinsicHeight(
           child: Column(
             children: [
               Container(
                 padding: EdgeInsets.all(40),
                 child: Text(
-                  '해당 주문을 거절(취소)\n 하시겠습니까?',
+                  isCancel ? '해당 주문을 거절\n 하시겠습니까?' : '해당 주문을 취소\n 하시겠습니까?',
                   style: TextStyle(
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: ['취소', '확인'].map((e) => _button(e)).toList(),
+                children: [
+                  _button('취소'),
+                  _button('확인'),
+                ],
               ),
             ],
           ),
@@ -91,9 +103,7 @@ class _RefuseDialogState extends State<RefuseDialog> {
   Widget _button(String title) {
     return Expanded(
       child: InkWell(
-        onTap: () {
-          _cancelOrder(title);
-        },
+        onTap: () => _cancelOrder(title),
         child: Container(
           height: 50,
           alignment: Alignment.center,
@@ -117,10 +127,18 @@ class _RefuseDialogState extends State<RefuseDialog> {
     );
   }
 
-  _cancelOrder(title) {
+  _cancelOrder(title) async {
     if (title == '취소') {
       Navigator.of(context).pop();
-    } else {}
+    } else {
+      HistoryStore.instance.setStatus(
+        index: widget.historyIndex,
+        status: widget.status == 1 ? -9 : -1,
+        message: "주문이 거절되었습니다.",
+      );
+
+      Navigator.of(context).pop();
+    }
   }
 
   // @override
