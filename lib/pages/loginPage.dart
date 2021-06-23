@@ -42,13 +42,13 @@ class _LoginPageState extends State<LoginPage> {
         child: Stack(
           children: [
             Container(
+              alignment: Alignment.center,
               padding: EdgeInsets.symmetric(
                 horizontal: MediaQuery.of(context).size.width * 0.3,
                 vertical: MediaQuery.of(context).size.height * 0.27,
               ),
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _logo(),
                     _idField(),
@@ -76,6 +76,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _idField() => Container(
         height: 48,
+        width: 350,
         child: TextField(
           keyboardType: TextInputType.emailAddress,
           style: TextStyle(fontSize: 18, color: _accentColor()),
@@ -94,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _passwordField() => Container(
         height: 48,
+        width: 350,
         child: TextField(
           obscureText: true,
           keyboardType: TextInputType.text,
