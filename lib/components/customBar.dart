@@ -28,7 +28,7 @@ class _CustomBarState extends State<CustomBar> {
         child: Row(
           children: [
             Text(
-              '봉보야쥬',
+              '${userInfoStore.name}',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -41,6 +41,18 @@ class _CustomBarState extends State<CustomBar> {
                 (index) => _tabButton(index),
               ),
             ),
+            // Container(
+            //   padding: EdgeInsets.all(10),
+            //   child: OutlineButton(
+            //     onPressed: () async =>
+            //         await Client.create().updateUserBoundary(),
+            //     child: Text(
+            //       '바운더리',
+            //       style: TextStyle(color: Colors.white),
+            //     ),
+            //     borderSide: BorderSide(color: CustomColors.aWhite, width: 1),
+            //   ),
+            // ),
             Container(
               padding: EdgeInsets.all(10),
               child: OutlineButton(

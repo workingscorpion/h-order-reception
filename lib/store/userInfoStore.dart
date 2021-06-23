@@ -26,6 +26,9 @@ abstract class UserInfoStoreBase with Store {
   String id;
 
   @observable
+  String name;
+
+  @observable
   bool loading = false;
 
   @observable
@@ -78,6 +81,8 @@ abstract class UserInfoStoreBase with Store {
         password: password ?? '',
         token: token ?? '',
       ));
+      name = response['name'];
+      Client.token = response['token'];
 
       // final user = ResponseLogin.fromJson(response.data);
       // setLoginInfo(user.identity, user.token);

@@ -5,17 +5,13 @@ part 'listModel.g.dart';
 
 @JsonSerializable()
 class ListModel<T> {
-  final int status;
-  final bool result;
-  final String message;
+  final int total;
 
   @JsonGenericConverter()
   final List<T> list;
 
   ListModel({
-    this.status,
-    this.result,
-    this.message,
+    this.total,
     this.list,
   });
 
@@ -26,27 +22,41 @@ class ListModel<T> {
 }
 
 @JsonSerializable()
-class ListDataModel<T, T2> {
-  final int status;
-  final bool result;
-  final String message;
-
-  @JsonGenericConverter()
-  final List<T> list;
-
+class ListDataModel<T, T2> extends ListModel<T> {
   @JsonGenericConverter()
   final T2 data;
 
   ListDataModel({
-    this.status,
-    this.result,
-    this.message,
-    this.list,
+    int total,
+    List<T> list,
     this.data,
-  });
+  }) : super(
+          total: total,
+          list: list,
+        );
 
   factory ListDataModel.fromJson(Map<String, dynamic> json) =>
       _$ListDataModelFromJson<T, T2>(json);
 
   Map<String, dynamic> toJson() => _$ListDataModelToJson(this);
+}
+
+@JsonSerializable()
+class ListDataListModel<T, T2> extends ListModel<T> {
+  @JsonGenericConverter()
+  final List<T2> data;
+
+  ListDataListModel({
+    int total,
+    List<T> list,
+    this.data,
+  }) : super(
+          total: total,
+          list: list,
+        );
+
+  factory ListDataListModel.fromJson(Map<String, dynamic> json) =>
+      _$ListDataListModelFromJson<T, T2>(json);
+
+  Map<String, dynamic> toJson() => _$ListDataListModelToJson(this);
 }

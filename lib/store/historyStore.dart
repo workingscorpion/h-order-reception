@@ -1,8 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:h_order_reception/http/client.dart';
+import 'package:h_order_reception/http/types/updateHistoryStatusModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
+import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:signalr_core/signalr_core.dart';
+import 'package:http/io_client.dart';
+import 'package:http/http.dart' hide Client;
 
 part 'historyStore.g.dart';
 
@@ -14,20 +21,156 @@ class HistoryStore extends HistoryStoreBase with _$HistoryStore {
 }
 
 abstract class HistoryStoreBase with Store {
-  ObservableList<HistoryModel> histories = ObservableList();
-  ObservableMap<String, HistoryModel> historyMap = ObservableMap();
+  ObservableList<RecordModel> historyDetails = ObservableList();
+  ObservableMap<int, RecordModel> historyDetailMap = ObservableMap();
+  ObservableMap<String, ServiceModel> snapShotDataMap = ObservableMap();
+
+  @observable
+  HubConnection hubConnection;
+
+  @observable
+  bool isConnected = false;
+
+  static final activeStatus = [1, 2, 3, 4];
+
+  @observable
+  Stream<PushNotificationModel> stream =
+      Stream<PushNotificationModel>.empty().asBroadcastStream();
 
   @action
-  load() async {
-    final response = await Client.create().histories();
-    final list = response.list;
+  connectHub() async {
+    if (Client.token?.isEmpty ?? true) {
+      return;
+    }
 
-    histories
-      ..clear()
-      ..addAll(list);
+    if (hubConnection != null) {
+      hubConnection.stop();
+    }
 
-    historyMap
+    hubConnection = HubConnectionBuilder()
+        .withUrl(
+          Client.signalRUrl,
+          HttpConnectionOptions(
+            client: SignalRClient(),
+            logging: (level, message) {
+              print('### $level $message');
+            },
+          ),
+        )
+        .withAutomaticReconnect()
+        .build();
+
+    hubConnection.on('notified', (json) async {
+      final map = json.first as Map;
+      HistoryModel.fromJson(map);
+      await load();
+      // var target = historyDetails
+      //     .singleWhere((element) => element.history.index == data.index);
+      // if (target != null) {
+      //   target.history = data;
+      // } else {
+      //   await load();
+      // }
+    });
+
+    await hubConnection.start();
+  }
+
+  @action
+  load({DateTime startTime, DateTime endTime}) async {
+    final response = await Client.create().historyDetails(
+      activeStatus.map((item) => 'filter.status=$item').join('&'),
+      'UpdatedTime',
+      // startTime != null ? DateFormat('yyyy-MM-dd').format(startTime) : null,
+      // endTime != null ? DateFormat('yyyy-MM-dd').format(endTime) : null,
+    );
+    final details = response.list;
+
+    details.sort((a, b) =>
+        a.history.createdTime.isAfter(b.history.createdTime) ? 1 : -1);
+
+    historyDetails
       ..clear()
-      ..addEntries(list.map((item) => MapEntry(item.objectId, item)));
+      ..addAll(response.list);
+
+    historyDetailMap
+      ..clear()
+      ..addEntries(
+          response.list.map((item) => MapEntry(item.history.index, item)));
+
+    snapShotDataMap
+      ..clear()
+      ..addEntries(
+        response.list.map(
+          (item) => MapEntry(
+            item.snapShot != null ? item.snapShot.objectId : '123',
+            ServiceModel.fromJson(jsonDecode(item.snapShot.data)),
+          ),
+        ),
+      );
+  }
+
+  setStatus({
+    int index,
+    int status,
+    String message,
+  }) async {
+    final item = await Client.create().updateHistoryStatus(
+      index,
+      UpdateHistoryStatusModel(
+        status: status,
+        data: (message?.isNotEmpty ?? false)
+            ? jsonEncode({
+                "message": message,
+              })
+            : '',
+      ),
+    );
+
+    final listIndex =
+        historyDetails.indexWhere((item) => item.history.index == index);
+
+    if (activeStatus.contains(item.history.status)) {
+      if (listIndex != -1) {
+        historyDetails
+          ..removeAt(listIndex)
+          ..insert(0, item);
+      } else {
+        historyDetails..add(item);
+      }
+    } else {
+      if (listIndex != -1) {
+        historyDetails..removeAt(listIndex);
+      }
+    }
+
+    historyDetailMap[item.history.index] = item;
+    snapShotDataMap[item.snapShot.objectId] =
+        ServiceModel.fromJson(jsonDecode(item.snapShot.data));
+  }
+}
+
+class PushNotificationModel {
+  final int type;
+  final String hotelUrl;
+  final String hotelObjectId;
+  final String targetObjectId;
+  final dynamic data;
+
+  PushNotificationModel({
+    this.type,
+    this.hotelUrl,
+    this.hotelObjectId,
+    this.targetObjectId,
+    this.data,
+  });
+}
+
+class SignalRClient extends IOClient {
+  @override
+  Future<IOStreamedResponse> send(BaseRequest request) async {
+    request.headers['Authorization'] = 'Bearer ${Client.token}';
+
+    return super.send(request);
   }
 }

@@ -1,4 +1,4 @@
-package com.example.h_order_reception
+package com.globalorder.horder.reception
 
 import io.flutter.embedding.android.FlutterActivity
 
