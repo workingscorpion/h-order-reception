@@ -19,4 +19,9 @@ class CustomColors {
   static const Color doneColor = Color(0xffd9d9d9);
 
   static const Color evenColor = Color(0xfff5f5f5);
+
+  static const Color logoColor = Color(0xFF85cdb1);
+
+  static const Color gradientTopColor = Color(0xFF47b89b);
+  static const Color gradientBottomColor = Color(0xFFc6e3c9);
 }
