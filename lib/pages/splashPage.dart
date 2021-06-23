@@ -68,8 +68,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   autoLogin() async {
-    // TODO
-    // AppRouter.toLoginPage();
+    AppRouter.toLoginPage();
 
     // try {
     //   final String id = await SharedPreferencesHelper.getUserId();
