@@ -91,8 +91,8 @@ class _HistoryViewState extends State<HistoryView> {
         data: e.data,
         amount: e.amount ?? 0,
         quantity: e.quantity ?? 0,
-        createdTime: e.createdTime,
-        updatedTime: e.updatedTime,
+        createdTime: e.createdTime.toLocal(),
+        updatedTime: e.updatedTime.toLocal(),
         menuName: menuName ?? '-',
       );
     }).toList();
