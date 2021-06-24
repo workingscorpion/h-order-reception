@@ -43,10 +43,6 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width * 0.3,
-                vertical: MediaQuery.of(context).size.height * 0.27,
-              ),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
