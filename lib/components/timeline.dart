@@ -102,7 +102,8 @@ class _TimelineState extends State<Timeline> {
                 ),
               ),
               Text(
-                "'${item.userName}'님이 '${orderStatus[item.status].name}' 상태로 수정",
+                "'${orderStatus[item.status].name}' 상태로 수정",
+                // "'${item.userName}'님이 '${orderStatus[item.status].name}' 상태로 수정",
                 style: TextStyle(
                   color: Colors.black,
                 ),
