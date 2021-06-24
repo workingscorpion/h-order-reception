@@ -273,11 +273,15 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       );
 
+  isShop() => false;
+
   _statuses() => Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: List.generate(
-              5, (index) => index == 4 ? _status(9) : _status(index + 1)),
+            3,
+            (index) => index == 2 ? _status(9) : _status(index + 1),
+          ),
         ),
       );
 
