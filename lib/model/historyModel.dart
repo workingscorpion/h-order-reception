@@ -7,6 +7,7 @@ class HistoryModel {
   final int index;
   final int status;
   final String serviceObjectId;
+  final String serviceName;
   final String userObjectId;
   final String userName;
   final String deviceObjectId;
@@ -17,11 +18,13 @@ class HistoryModel {
   final String menuName;
   final DateTime createdTime;
   final DateTime updatedTime;
+  final String boundaryName;
 
   HistoryModel({
     this.index,
     this.status,
     this.serviceObjectId,
+    this.serviceName,
     this.userObjectId,
     this.userName,
     this.deviceObjectId,
@@ -32,6 +35,7 @@ class HistoryModel {
     this.menuName,
     this.createdTime,
     this.updatedTime,
+    this.boundaryName,
   });
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) =>
@@ -44,6 +48,7 @@ class HistoryModel {
       index: index,
       status: status,
       serviceObjectId: serviceObjectId,
+      serviceName: serviceName,
       userObjectId: userObjectId,
       userName: userName,
       deviceObjectId: deviceObjectId,
@@ -54,6 +59,7 @@ class HistoryModel {
       menuName: menuName,
       createdTime: createdTime?.toLocal(),
       updatedTime: updatedTime?.toLocal(),
+      boundaryName: boundaryName,
     );
   }
 }

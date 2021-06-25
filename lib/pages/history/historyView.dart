@@ -29,7 +29,7 @@ class _HistoryViewState extends State<HistoryView> {
   DateTime _selectedYear;
   DatePickerController _controller = DatePickerController();
 
-  List<int> _flex = [2, 2, 2, 1, 2, 1];
+  List<int> _flex = [1, 2, 2, 2, 1, 1];
 
   bool open = false;
 
@@ -87,6 +87,7 @@ class _HistoryViewState extends State<HistoryView> {
         index: e.index,
         status: e.status,
         serviceObjectId: e.serviceObjectId,
+        serviceName: e.serviceName,
         userObjectId: e.userObjectId,
         userName: e.userName,
         deviceObjectId: e.deviceObjectId,
@@ -96,6 +97,7 @@ class _HistoryViewState extends State<HistoryView> {
         quantity: e.quantity ?? 0,
         createdTime: e.createdTime.toLocal(),
         updatedTime: e.updatedTime.toLocal(),
+        boundaryName: e.boundaryName,
         menuName: menuName ?? '-',
       );
     }).toList();
@@ -124,6 +126,7 @@ class _HistoryViewState extends State<HistoryView> {
       duration: Duration(milliseconds: 300),
       curve: Curves.easeIn,
     );
+
     await _load();
     await _filterHistories();
 
@@ -273,20 +276,22 @@ class _HistoryViewState extends State<HistoryView> {
     switch (index) {
       case 0:
         return Text(
-          DateFormat("yyyy/MM/dd HH:mm:ss").format(item.createdTime).toString(),
+          DateFormat("HH:mm:ss").format(item.createdTime).toString(),
         );
 
       case 1:
-        return Text('건물이름/${item.deviceName}');
+        return Text(
+            '${item.boundaryName ?? "-"}/${item.deviceName.split("/")?.first}');
 
       case 2:
-        return Text(item.menuName);
+        return Text(item.serviceName ?? '-');
 
       case 3:
-        return Text('${item.quantity}개');
+        return Text(item.menuName);
 
       case 4:
-        return Text('${NumberFormat().format(item.amount)}원');
+        return Text(
+            item.amount != 0 ? '${NumberFormat().format(item.amount)}원' : '-');
 
       case 5:
         return Container(
@@ -315,16 +320,16 @@ class _HistoryViewState extends State<HistoryView> {
   Widget _rowTitle(int index) {
     switch (index) {
       case 0:
-        return Text('발생일');
+        return Text('발생시간');
 
       case 1:
         return Text('건물명/방번호');
 
       case 2:
-        return Text('메뉴명');
+        return Text('서비스');
 
       case 3:
-        return Text('총 개수');
+        return Text('메뉴명');
 
       case 4:
         return Text('가격');
