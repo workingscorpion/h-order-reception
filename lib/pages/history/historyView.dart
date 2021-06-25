@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:h_order_reception/appRouter.dart';
+import 'package:h_order_reception/components/spin.dart';
 import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/historyModel.dart';
@@ -36,6 +37,8 @@ class _HistoryViewState extends State<HistoryView> {
   int pageSize = 20;
 
   List<int> _selectedFilter = List<int>();
+
+  bool loading = true;
 
   // List<RecordModel> get histories {
   //   return HistoryStore.instance.historyDetails;
@@ -113,6 +116,8 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _moveDatePicker() async {
+    loading = true;
+    setState(() {});
     _histories.clear();
     _controller.animateToDate(
       _selectedValue.subtract(Duration(days: 10)),
@@ -122,6 +127,7 @@ class _HistoryViewState extends State<HistoryView> {
     await _load();
     await _filterHistories();
 
+    loading = false;
     setState(() {});
   }
 
@@ -144,6 +150,32 @@ class _HistoryViewState extends State<HistoryView> {
     _selectedValue = today;
   }
 
+  List<Widget> viewBuild() {
+    final children = List<Widget>();
+    if (loading) {
+      children.addAll([
+        _monthPicker(),
+        _datePicker(),
+        Expanded(
+          child: Center(
+            child: Spin(
+              color: Colors.black,
+              size: 30,
+            ),
+          ),
+        ),
+      ]);
+    } else {
+      children.addAll([
+        _monthPicker(),
+        _datePicker(),
+        _row(),
+        _rows(),
+      ]);
+    }
+    return children;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,12 +184,7 @@ class _HistoryViewState extends State<HistoryView> {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              _monthPicker(),
-              _datePicker(),
-              _row(),
-              _rows(),
-            ],
+            children: viewBuild(),
           ),
           _floats(),
         ],
