@@ -72,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
 
   _idField() => Container(
         height: 48,
-        width: 350,
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * .35,
+        ),
         child: TextField(
           keyboardType: TextInputType.emailAddress,
           style: TextStyle(fontSize: 18, color: _accentColor()),
@@ -91,7 +93,9 @@ class _LoginPageState extends State<LoginPage> {
 
   _passwordField() => Container(
         height: 48,
-        width: 350,
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width * .35,
+        ),
         child: TextField(
           obscureText: true,
           keyboardType: TextInputType.text,
