@@ -1,7 +1,7 @@
 name: h_order_reception
 description: H Order application.
 
-version: 1.0.4+4
+version: 1.0.5+5
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
