@@ -51,7 +51,7 @@ class _HistoryPageState extends State<HistoryPage> {
       '건물명',
       record.history.deviceName,
       DateFormat().format(record.history.createdTime),
-      '${UserInfoStore.instance.name}',
+      record.history.serviceName ?? '-',
     ];
     status = record.history.status;
     statusData = orderStatus[status];

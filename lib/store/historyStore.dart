@@ -134,7 +134,7 @@ abstract class HistoryStoreBase with Store {
       if (listIndex != -1) {
         historyDetails
           ..removeAt(listIndex)
-          ..insert(0, item);
+          ..insert(listIndex, item);
       } else {
         historyDetails..add(item);
       }
