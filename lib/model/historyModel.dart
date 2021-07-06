@@ -8,6 +8,7 @@ class HistoryModel {
   final int status;
   final String serviceObjectId;
   final String serviceName;
+  final int serviceType;
   final String userObjectId;
   final String userName;
   final String deviceObjectId;
@@ -25,6 +26,7 @@ class HistoryModel {
     this.status,
     this.serviceObjectId,
     this.serviceName,
+    this.serviceType,
     this.userObjectId,
     this.userName,
     this.deviceObjectId,
@@ -49,6 +51,7 @@ class HistoryModel {
       status: status,
       serviceObjectId: serviceObjectId,
       serviceName: serviceName,
+      serviceType: serviceType,
       userObjectId: userObjectId,
       userName: userName,
       deviceObjectId: deviceObjectId,
