@@ -23,6 +23,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   RecordModel record;
+  int serviceType;
 
   final List<String> _infoTitles = ['건물정보', '방번호', '발생시간', '서비스명'];
 
@@ -46,7 +47,8 @@ class _HistoryPageState extends State<HistoryPage> {
     await HistoryStore.instance.load();
 
     record = await Client.create().historyDetail(widget.historyIndex);
-    // TODO
+    serviceType = record.history.serviceType;
+
     _infoData = [
       '건물명',
       record.history.deviceName,
@@ -278,10 +280,15 @@ class _HistoryPageState extends State<HistoryPage> {
   _statuses() => Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
-          children: List.generate(
-            3,
-            (index) => index == 2 ? _status(9) : _status(index + 1),
-          ),
+          children: serviceType == 3
+              ? List.generate(
+                  5,
+                  (index) => index == 4 ? _status(9) : _status(index + 1),
+                )
+              : List.generate(
+                  3,
+                  (index) => index == 2 ? _status(9) : _status(index + 1),
+                ),
         ),
       );
 
