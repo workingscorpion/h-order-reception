@@ -1,3 +1,4 @@
+import 'package:h_order_reception/utils/localConverter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'historyModel.g.dart';
@@ -17,7 +18,11 @@ class HistoryModel {
   final int amount;
   final int quantity;
   final String menuName;
+
+  @LocalConverter()
   final DateTime createdTime;
+
+  @LocalConverter()
   final DateTime updatedTime;
   final String boundaryName;
 
@@ -44,25 +49,4 @@ class HistoryModel {
       _$HistoryModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$HistoryModelToJson(this);
-
-  HistoryModel toLocal() {
-    return HistoryModel(
-      index: index,
-      status: status,
-      serviceObjectId: serviceObjectId,
-      serviceName: serviceName,
-      serviceType: serviceType,
-      userObjectId: userObjectId,
-      userName: userName,
-      deviceObjectId: deviceObjectId,
-      deviceName: deviceName,
-      data: data,
-      amount: amount,
-      quantity: quantity,
-      menuName: menuName,
-      createdTime: createdTime?.toLocal(),
-      updatedTime: updatedTime?.toLocal(),
-      boundaryName: boundaryName,
-    );
-  }
 }

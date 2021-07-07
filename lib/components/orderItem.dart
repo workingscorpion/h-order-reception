@@ -234,7 +234,7 @@ class _OrderItemState extends State<OrderItem> {
           children: [
             Container(
               child: Text(
-                '${DateFormat("yyyy/MM/dd HH:mm").format(history.createdTime.toLocal())}',
+                '${DateFormat("yyyy/MM/dd HH:mm").format(history.createdTime)}',
                 style: TextStyle(
                   fontSize: 15,
                 ),

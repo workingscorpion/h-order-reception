@@ -1,3 +1,4 @@
+import 'package:h_order_reception/utils/localConverter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'deviceModel.g.dart';
@@ -9,6 +10,8 @@ class DeviceModel {
   final int state;
   final int battery;
   final bool isCharging;
+
+  @LocalConverter()
   final DateTime lastLiveTime;
 
   DeviceModel({
