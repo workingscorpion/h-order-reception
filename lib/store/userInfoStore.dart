@@ -74,6 +74,12 @@ abstract class UserInfoStoreBase with Store {
 
       loading = true;
 
+      final String fcmToken =
+          await FCMManger.instance.getFirebaseMessageToken();
+
+      print('fcmToken : $fcmToken');
+
+      SharedPreferencesHelper.setFCMToken(fcmToken);
       final String token = await SharedPreferencesHelper.getJWTToken();
 
       final response = await Client.create().login(RequestLoginModel(
@@ -83,6 +89,8 @@ abstract class UserInfoStoreBase with Store {
       ));
       name = response['name'];
       Client.token = response['token'];
+      await SharedPreferencesHelper.setJWTToken(Client.token);
+      await SharedPreferencesHelper.setUserId(id);
 
       // final user = ResponseLogin.fromJson(response.data);
       // setLoginInfo(user.identity, user.token);
