@@ -36,20 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0-nullsafety.1"
-  battery:
-    dependency: "direct main"
-    description:
-      name: battery
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.11"
-  battery_platform_interface:
-    dependency: transitive
-    description:
-      name: battery_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -218,20 +204,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.1"
-  device_info:
-    dependency: "direct main"
-    description:
-      name: device_info
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
-  device_info_platform_interface:
-    dependency: transitive
-    description:
-      name: device_info_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   dio:
     dependency: "direct main"
     description:
@@ -549,7 +521,7 @@ packages:
     source: hosted
     version: "1.9.3"
   package_info:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: package_info
       url: "https://pub.dartlang.org"
@@ -889,13 +861,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.7"
-  wifi:
-    dependency: "direct main"
-    description:
-      name: wifi
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.5"
   win32:
     dependency: transitive
     description:

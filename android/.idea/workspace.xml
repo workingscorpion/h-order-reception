@@ -1,17 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="0611027b-7ebf-4f31-b848-c6cfb687a575" name="Default Changelist" comment="" />
+    <list default="true" id="0611027b-7ebf-4f31-b848-c6cfb687a575" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/example/h_order_reception/MainActivity.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/http/types/common/filterModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/http/types/common/filterModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/http/types/subTypes/notificationData.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/http/types/subTypes/notificationData.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/http/types/updateHistoryStatusModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/http/types/updateHistoryStatusModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/model/historyDetailItemModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/model/historyDetailItemModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/model/itemModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/model/itemModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/model/serviceModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/model/serviceModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/model/snapShotModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/model/snapShotModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/model/tagModel.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/model/tagModel.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/store/navigationStore.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/store/navigationStore.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[emulator-5554]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -25,6 +76,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -52,6 +104,7 @@
       <option name="ARTIFACT_NAME" value="" />
       <option name="PM_INSTALL_OPTIONS" value="" />
       <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
@@ -102,6 +155,7 @@
       </method>
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -114,6 +168,17 @@
       <updated>1619407215477</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="WindowStateProjectService">
     <state x="3620" y="454" key="FileChooserDialogImpl" timestamp="1619419667573">
