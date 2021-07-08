@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:h_order_reception/appRouter.dart';
+import 'package:h_order_reception/http/types/subTypes/notificationData.dart';
 import 'package:h_order_reception/store/navigationStore.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 import 'package:h_order_reception/utils/lazy.dart';
@@ -13,36 +16,6 @@ class FCMManger {
   static final Lazy<FCMManger> _lazy = Lazy<FCMManger>(() => FCMManger());
   static FCMManger get instance => _lazy.value;
   static FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  // static final issueNotificationTypeKeys = [
-  //   NotificationTypeKey.newIssue,
-  //   NotificationTypeKey.issueStatus,
-  //   NotificationTypeKey.issueChange,
-  //   NotificationTypeKey.issueImportant,
-  //   NotificationTypeKey.issueComplain,
-  //   NotificationTypeKey.newReply,
-  //   NotificationTypeKey.changeReply,
-  // ];
-
-  // static final noticeNotificationTypeKeys = [
-  //   NotificationTypeKey.newNotice,
-  //   NotificationTypeKey.updateNotice,
-  // ];
-
-  // static final issueNotificationTypeValues = [
-  //   NotificationTypeValue.newIssue,
-  //   NotificationTypeValue.issueStatus,
-  //   NotificationTypeValue.issueChange,
-  //   NotificationTypeValue.issueImportant,
-  //   NotificationTypeValue.issueComplain,
-  //   NotificationTypeValue.newReply,
-  //   NotificationTypeValue.changeReply,
-  // ];
-
-  // static final noticeNotificationTypeValues = [
-  //   NotificationTypeValue.newNotice,
-  //   NotificationTypeValue.updateNotice,
-  // ];
 
   get isLogin => UserInfoStore.instance.isLogin;
 
@@ -89,18 +62,16 @@ class FCMManger {
 
     _firebaseMessaging.configure(
       onLaunch: (Map<String, dynamic> message) async {
-        // final data =
-        //     (Platform.isAndroid ? message['data'] : message) ?? message;
+        final data =
+            (Platform.isAndroid ? message['data'] : message) ?? message;
 
-        // final notificationData = NotificationData(
-        //   type: data['type'],
-        //   url: data['hotelUrl'],
-        //   objectId: data['objectId'],
-        //   data: data['data'],
-        // );
-        // final notificationData = NotificationData();
+        final notificationData = NotificationData(
+          type: data['type'],
+          objectId: data['objectId'],
+          data: data['data'],
+        );
 
-        // NavigationStore.instance.launchNotification = notificationData;
+        NavigationStore.instance.launchNotification = notificationData;
       },
       onMessage: (Map<String, dynamic> message) async {
         _showNotification(message);
@@ -164,36 +135,22 @@ class FCMManger {
   }
 
   _onSelectNotification(String payload) async {
-    // final data = NotificationData.fromJson(json.decode(payload));
+    final data = NotificationData.fromJson(json.decode(payload));
 
-    // if (UserInfoStore.instance.isInitialized) {
-    //   if (isLogin == false && await tryLogin()) {
-    //     return;
-    //   }
+    if (UserInfoStore.instance.isInitialized) {
+      if (isLogin == false && await tryLogin()) {
+        return;
+      }
 
-    //   openNotification(data);
-    // } else {
-    //   NavigationStore.instance.launchNotification = data;
-    // }
+      openNotification(data);
+    } else {
+      NavigationStore.instance.launchNotification = data;
+    }
   }
 
-  // openNotification(NotificationData data) async {
-  //   if (issueNotificationTypeKeys.contains(data.type)) {
-  //     await IssueListStore.instance.loadIssue(data.objectId);
-
-  //     AppRouter.toIssueDetailPage(
-  //       data.objectId,
-  //       reset: true,
-  //     );
-  //   } else if (noticeNotificationTypeKeys.contains(data.type)) {
-  //     await NoticeListStore.instance.loadNotice(data.objectId);
-
-  //     AppRouter.toNoticeDetailPage(
-  //       data.objectId,
-  //       reset: true,
-  //     );
-  //   }
-  // }
+  openNotification(NotificationData data) async {
+    AppRouter.toHomePage();
+  }
 
   _showNotification(Map<String, dynamic> message) async {
     final android = AndroidNotificationDetails(

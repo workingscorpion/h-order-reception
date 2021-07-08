@@ -56,6 +56,22 @@ mixin _$NavigationStore on NavigationStoreBase, Store {
     });
   }
 
+  final _$launchNotificationAtom =
+      Atom(name: 'NavigationStoreBase.launchNotification');
+
+  @override
+  NotificationData get launchNotification {
+    _$launchNotificationAtom.reportRead();
+    return super.launchNotification;
+  }
+
+  @override
+  set launchNotification(NotificationData value) {
+    _$launchNotificationAtom.reportWrite(value, super.launchNotification, () {
+      super.launchNotification = value;
+    });
+  }
+
   final _$applyNotificationAsyncAction =
       AsyncAction('NavigationStoreBase.applyNotification');
 
@@ -69,7 +85,8 @@ mixin _$NavigationStore on NavigationStoreBase, Store {
     return '''
 tabController: ${tabController},
 collectionTabController: ${collectionTabController},
-tabIndex: ${tabIndex}
+tabIndex: ${tabIndex},
+launchNotification: ${launchNotification}
     ''';
   }
 }

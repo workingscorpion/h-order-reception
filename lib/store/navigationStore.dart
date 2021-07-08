@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:h_order_reception/app.dart';
+import 'package:h_order_reception/http/types/subTypes/notificationData.dart';
+import 'package:h_order_reception/utils/fcmManager.dart';
 import 'package:h_order_reception/utils/lazy.dart';
 import 'package:mobx/mobx.dart';
 
@@ -25,19 +27,19 @@ abstract class NavigationStoreBase with Store {
   @observable
   int tabIndex = 0;
 
-  // @observable
-  // NotificationData launchNotification;
+  @observable
+  NotificationData launchNotification;
 
   @action
   applyNotification() async {
-    // if (launchNotification == null) {
-    //   return;
-    // }
+    if (launchNotification == null) {
+      return;
+    }
 
     try {
-      // await FCMManger.instance.openNotification(launchNotification);
+      await FCMManger.instance.openNotification(launchNotification);
     } finally {
-      // launchNotification = null;
+      launchNotification = null;
     }
   }
 }

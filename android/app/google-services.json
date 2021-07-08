@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "921590874439",
+    "project_id": "horder-a1016",
+    "storage_bucket": "horder-a1016.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921590874439:android:7aa51f20b4e4646dd90c62",
+        "android_client_info": {
+          "package_name": "com.globalorder.horder.reception"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "921590874439-g7tt4lc5drijpfnotk7dd6a2btcrnqpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvRfg_zZbGNCvRdIZf5QSW03egLs0rmHU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "921590874439-g7tt4lc5drijpfnotk7dd6a2btcrnqpn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
