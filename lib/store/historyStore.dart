@@ -6,6 +6,7 @@ import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/serviceModel.dart';
 import 'package:h_order_reception/utils/lazy.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:http/io_client.dart';
@@ -24,12 +25,20 @@ abstract class HistoryStoreBase with Store {
   ObservableList<RecordModel> historyDetails = ObservableList();
   ObservableMap<int, RecordModel> historyDetailMap = ObservableMap();
   ObservableMap<String, ServiceModel> snapShotDataMap = ObservableMap();
+  ObservableMap<String, List<RecordModel>> historyDetailsFromDateMap =
+      ObservableMap();
 
   @observable
   HubConnection hubConnection;
 
   @observable
   bool isConnected = false;
+
+  @observable
+  int loadingCount = 0;
+
+  @computed
+  bool get loading => loadingCount > 0;
 
   static final activeStatus = [1, 2, 3, 4];
 
@@ -77,37 +86,71 @@ abstract class HistoryStoreBase with Store {
   }
 
   @action
-  load({DateTime startTime, DateTime endTime}) async {
-    final response = await Client.create().historyDetails(
-      activeStatus.map((item) => 'filter.status=$item').join('&'),
-      'UpdatedTime',
-      // startTime != null ? DateFormat('yyyy-MM-dd').format(startTime) : null,
-      // endTime != null ? DateFormat('yyyy-MM-dd').format(endTime) : null,
-    );
-    final details = response.list;
+  load() async {
+    try {
+      loadingCount += 1;
 
-    details.sort((a, b) =>
-        a.history.createdTime.isAfter(b.history.createdTime) ? 1 : -1);
-
-    historyDetails
-      ..clear()
-      ..addAll(response.list);
-
-    historyDetailMap
-      ..clear()
-      ..addEntries(
-          response.list.map((item) => MapEntry(item.history.index, item)));
-
-    snapShotDataMap
-      ..clear()
-      ..addEntries(
-        response.list.map(
-          (item) => MapEntry(
-            item.snapShot != null ? item.snapShot.objectId : '123',
-            ServiceModel.fromJson(jsonDecode(item.snapShot.data)),
-          ),
-        ),
+      final response = await Client.create().historyDetails(
+        activeStatus.map((item) => 'filter.status=$item').join('&'),
+        'UpdatedTime',
       );
+      final details = response.list;
+
+      details.sort((a, b) =>
+          a.history.createdTime.isAfter(b.history.createdTime) ? 1 : -1);
+
+      historyDetails
+        ..clear()
+        ..addAll(response.list);
+
+      historyDetailMap
+        ..clear()
+        ..addEntries(
+            response.list.map((item) => MapEntry(item.history.index, item)));
+
+      snapShotDataMap
+        ..clear()
+        ..addEntries(
+          response.list.map(
+            (item) => MapEntry(
+              item.snapShot != null ? item.snapShot.objectId : '123',
+              ServiceModel.fromJson(jsonDecode(item.snapShot.data)),
+            ),
+          ),
+        );
+    } finally {
+      loadingCount -= 1;
+    }
+  }
+
+  @action
+  loadFromDate({List<int> status, DateTime date}) async {
+    try {
+      loadingCount += 1;
+
+      final response = await Client.create().historyDetails(
+        status.map((item) => 'filter.status=$item').join('&'),
+        'CreatedTime',
+        startTime: DateFormat('yyyy-MM-dd').format(date),
+        endTime: DateFormat('yyyy-MM-dd').format(date.add(Duration(days: 1))),
+      );
+      final details = response.list;
+
+      final key = DateFormat('yyyy-MM-dd').format(date);
+      if (!historyDetailsFromDateMap.containsKey(key)) {
+        historyDetailsFromDateMap[key] = List();
+      }
+
+      historyDetailsFromDateMap[key]
+        ..clear()
+        ..addAll(details);
+
+      details.forEach((item) {
+        upsert(item);
+      });
+    } finally {
+      loadingCount -= 1;
+    }
   }
 
   setStatus({
@@ -115,26 +158,45 @@ abstract class HistoryStoreBase with Store {
     int status,
     String message,
   }) async {
-    final item = await Client.create().updateHistoryStatus(
-      index,
-      UpdateHistoryStatusModel(
-        status: status,
-        data: (message?.isNotEmpty ?? false)
-            ? jsonEncode({
-                "message": message,
-              })
-            : '',
-      ),
-    );
+    try {
+      loadingCount += 1;
+      final item = await Client.create().updateHistoryStatus(
+        index,
+        UpdateHistoryStatusModel(
+          status: status,
+          data: (message?.isNotEmpty ?? false)
+              ? jsonEncode({
+                  "message": message,
+                })
+              : '',
+        ),
+      );
+      upsert(item);
+    } finally {
+      loadingCount -= 1;
+    }
+  }
 
-    final listIndex =
-        historyDetails.indexWhere((item) => item.history.index == index);
+  @action
+  Future<RecordModel> single({String index}) async {
+    try {
+      loadingCount += 1;
+
+      final item = await Client.create().historyDetail(index);
+      upsert(item);
+      return item;
+    } finally {
+      loadingCount -= 1;
+    }
+  }
+
+  upsert(RecordModel item) {
+    final listIndex = historyDetails
+        .indexWhere((_item) => _item.history.index == item.history.index);
 
     if (activeStatus.contains(item.history.status)) {
       if (listIndex != -1) {
-        historyDetails
-          ..removeAt(listIndex)
-          ..insert(listIndex, item);
+        historyDetails[listIndex] = item;
       } else {
         historyDetails..add(item);
       }
@@ -147,6 +209,19 @@ abstract class HistoryStoreBase with Store {
     historyDetailMap[item.history.index] = item;
     snapShotDataMap[item.snapShot.objectId] =
         ServiceModel.fromJson(jsonDecode(item.snapShot.data));
+
+    final key = DateFormat('yyyy-MM-dd').format(item.history.createdTime);
+    if (!historyDetailsFromDateMap.containsKey(key)) {
+      historyDetailsFromDateMap[key] = List();
+    }
+
+    final listIndexFromDate = historyDetailsFromDateMap[key]
+        .indexWhere((_item) => _item.history.index == item.history.index);
+    if (listIndexFromDate != -1) {
+      historyDetailsFromDateMap[key][listIndexFromDate] = item;
+    } else {
+      historyDetailsFromDateMap[key]..add(item);
+    }
   }
 }
 

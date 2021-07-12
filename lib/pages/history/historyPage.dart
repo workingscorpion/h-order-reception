@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/menu.dart';
 import 'package:h_order_reception/components/refuseDialog.dart';
@@ -10,6 +14,7 @@ import 'package:h_order_reception/model/recordModel.dart';
 import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/store/userInfoStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
+import 'package:h_order_reception/components/spin.dart';
 import 'package:intl/intl.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -23,6 +28,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   RecordModel record;
+  int serviceType;
 
   final List<String> _infoTitles = ['건물정보', '방번호', '발생시간', '서비스명'];
 
@@ -31,9 +37,13 @@ class _HistoryPageState extends State<HistoryPage> {
   int status;
   OrderStatusModel statusData;
 
+  bool loading = false;
+
   List<RecordModel> get histories {
     return HistoryStore.instance.historyDetails ?? List();
   }
+
+  int get statusLength => serviceType == 3 ? 5 : 3;
 
   @override
   void initState() {
@@ -43,18 +53,18 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   _load() async {
-    await HistoryStore.instance.load();
+    record = await HistoryStore.instance.single(index: widget.historyIndex);
+    serviceType = record.history.serviceType;
 
-    record = await Client.create().historyDetail(widget.historyIndex);
-    // TODO
     _infoData = [
-      '건물명',
+      record.history.boundaryName,
       record.history.deviceName,
-      DateFormat().format(record.history.createdTime),
+      DateFormat('yyyy-MM-dd H:mm:ss').format(record.history.createdTime),
       record.history.serviceName ?? '-',
     ];
     status = record.history.status;
     statusData = orderStatus[status];
+
     setState(() {});
   }
 
@@ -67,25 +77,45 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Column(
             children: [
               _header(),
-              _statuses(),
-              Builder(
-                builder: (BuildContext context) => record != null
-                    ? Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+              Expanded(
+                child: Observer(
+                  builder: (context) => AnimatedSwitcher(
+                    duration: Duration(milliseconds: 200),
+                    child: HistoryStore.instance.loading
+                        ? Center(
+                            child: Spin(
+                              size: 30,
+                              color: CustomColors.logoColor,
+                            ),
+                          )
+                        : Column(
                             children: [
-                              _history(),
-                              Container(width: 15),
-                              _menu(),
-                              Container(width: 15),
-                              _info(),
+                              _statuses(),
+                              Builder(
+                                builder: (BuildContext context) =>
+                                    record != null
+                                        ? Expanded(
+                                            child: Container(
+                                              padding: EdgeInsets.all(20),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.stretch,
+                                                children: [
+                                                  _history(),
+                                                  Container(width: 15),
+                                                  _menu(),
+                                                  Container(width: 15),
+                                                  _info(),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                              )
                             ],
                           ),
-                        ),
-                      )
-                    : Container(),
+                  ),
+                ),
               ),
             ],
           ),
@@ -279,8 +309,9 @@ class _HistoryPageState extends State<HistoryPage> {
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: List.generate(
-            3,
-            (index) => index == 2 ? _status(9) : _status(index + 1),
+            statusLength,
+            (index) =>
+                index == statusLength - 1 ? _status(9) : _status(index + 1),
           ),
         ),
       );

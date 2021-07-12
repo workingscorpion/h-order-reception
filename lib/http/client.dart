@@ -49,15 +49,14 @@ abstract class Client {
   @POST("/v1/auth/logout")
   Future logout();
 
-  // @GET(
-  //     "/v1/admin/history?filter.order={order}&{status}&filter.startTime={startTime}&filter.endTime={endTime}")
-  @GET("/v1/admin/history?filter.order={order}&{status}")
+  @GET(
+      "/v1/admin/history?filter.order={order}&{status}&filter.startTime={startTime}&filter.endTime={endTime}")
   Future<ListModel<RecordModel>> historyDetails(
     @Path('status') String status,
-    @Path('order') String order,
-    // @Path('startTime') String startTime,
-    // @Path('endTime') String endTime,
-  );
+    @Path('order') String order, {
+    @Path('startTime') String startTime = "",
+    @Path('endTime') String endTime = "",
+  });
 
   @GET("/v1/admin/history/{index}")
   Future<RecordModel> historyDetail(

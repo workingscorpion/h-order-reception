@@ -13,9 +13,8 @@ DeviceModel _$DeviceModelFromJson(Map<String, dynamic> json) {
     state: json['state'] as int,
     battery: json['battery'] as int,
     isCharging: json['isCharging'] as bool,
-    lastLiveTime: json['lastLiveTime'] == null
-        ? null
-        : DateTime.parse(json['lastLiveTime'] as String),
+    lastLiveTime:
+        const LocalConverter().fromJson(json['lastLiveTime'] as String),
   );
 }
 
@@ -26,5 +25,5 @@ Map<String, dynamic> _$DeviceModelToJson(DeviceModel instance) =>
       'state': instance.state,
       'battery': instance.battery,
       'isCharging': instance.isCharging,
-      'lastLiveTime': instance.lastLiveTime?.toIso8601String(),
+      'lastLiveTime': const LocalConverter().toJson(instance.lastLiveTime),
     };

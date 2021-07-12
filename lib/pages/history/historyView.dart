@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:h_order_reception/appRouter.dart';
 import 'package:h_order_reception/components/spin.dart';
@@ -10,6 +13,8 @@ import 'package:h_order_reception/constants/customColors.dart';
 import 'package:h_order_reception/http/client.dart';
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
+import 'package:h_order_reception/model/recordModel.dart';
+import 'package:h_order_reception/store/historyStore.dart';
 import 'package:h_order_reception/utils/constants.dart';
 import 'package:intl/intl.dart';
 
@@ -22,12 +27,14 @@ class HistoryView extends StatefulWidget {
 
 class _HistoryViewState extends State<HistoryView> {
   List<MenuModel> menus = List();
-  List<HistoryModel> _histories = List();
-  List<HistoryModel> _selectedHistories = List();
 
+  ScrollController _scrollController;
+  DateTime _selectedYearMonth;
   DateTime _selectedValue;
-  DateTime _selectedYear;
-  DatePickerController _controller = DatePickerController();
+
+  double _datePickerHeight = 80;
+  double _datePickerAspectRatio = 0.75;
+  EdgeInsets _datePickerPadding = EdgeInsets.symmetric(vertical: 3);
 
   List<int> _flex = [1, 2, 2, 2, 1, 1];
 
@@ -38,13 +45,12 @@ class _HistoryViewState extends State<HistoryView> {
 
   List<int> _selectedFilter = List<int>();
 
-  bool loading = true;
-
-  // List<RecordModel> get histories {
-  //   return HistoryStore.instance.historyDetails;
-  // }
-
   List<int> _status = [1, 2, 3, 4, 9, -1, -9];
+
+  List<RecordModel> get historyDetailsFromDate =>
+      HistoryStore.instance.historyDetailsFromDateMap[
+          DateFormat('yyyy-MM-dd').format(_selectedValue)] ??
+      List();
 
   @override
   void initState() {
@@ -54,108 +60,58 @@ class _HistoryViewState extends State<HistoryView> {
 
     _selectedFilter.addAll(_status);
 
-    // _filterHistories();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _moveDatePicker();
     });
+
+    _scrollController = ScrollController();
   }
 
   _load() async {
-    final endOfToday = _selectedValue
-        .add(Duration(days: 1))
-        .subtract(Duration(microseconds: 1));
-    final activeStatus =
-        _selectedFilter.map((item) => 'filter.status=$item').join('&');
-    final res = await Client.create().histories(
-      'CreatedTime',
-      activeStatus,
-      _selectedValue.toString(),
-      endOfToday.toString(),
-    );
-
-    _histories = res.list.map((e) {
-      var menuName = '-';
-      if (e.data != null) {
-        final data = jsonDecode(e.data);
-        if (data['cart'] != null) {
-          menuName = jsonDecode(data['cart'])?.first['name'] ?? '-';
-        }
-      }
-
-      return HistoryModel(
-        index: e.index,
-        status: e.status,
-        serviceObjectId: e.serviceObjectId,
-        serviceName: e.serviceName,
-        userObjectId: e.userObjectId,
-        userName: e.userName,
-        deviceObjectId: e.deviceObjectId,
-        deviceName: e.deviceName,
-        data: e.data,
-        amount: e.amount ?? 0,
-        quantity: e.quantity ?? 0,
-        createdTime: e.createdTime.toLocal(),
-        updatedTime: e.updatedTime.toLocal(),
-        boundaryName: e.boundaryName,
-        menuName: menuName ?? '-',
-      );
-    }).toList();
-
+    await HistoryStore.instance
+        .loadFromDate(status: _selectedFilter, date: _selectedValue);
     setState(() {});
-  }
-
-  _historySort() {
-    if (_selectedHistories.length > 0) {
-      _selectedHistories
-          .sort((a, b) => a.createdTime.isAfter(b.createdTime) ? -1 : 1);
-    }
-  }
-
-  _compare(DateTime applyTime) {
-    final Duration diff = applyTime.difference(_selectedValue);
-    return diff.inHours < 24 && diff.inHours >= 0 ? true : false;
   }
 
   _moveDatePicker() async {
-    loading = true;
-    setState(() {});
-    _histories.clear();
-    _controller.animateToDate(
-      _selectedValue.subtract(Duration(days: 10)),
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeIn,
-    );
+    // _controller.animateToDate(
+    //   _selectedValue.subtract(Duration(days: 10)),
+    //   duration: Duration(milliseconds: 300),
+    //   curve: Curves.easeIn,
+    // );
 
     await _load();
-    await _filterHistories();
-
-    loading = false;
-    setState(() {});
-  }
-
-  _filterHistories() {
-    _selectedHistories = _histories
-        // .map((e) => e.history)
-        .where((element) => _compare(element.createdTime))
-        .where((element) => _selectedFilter.contains(element.status))
-        .toList();
-    _historySort();
   }
 
   _selectToday() {
+    final now = DateTime.now();
     final today = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
+      now.year,
+      now.month,
+      now.day,
     );
-    _selectedYear = today;
+    _selectedYearMonth = today;
     _selectedValue = today;
+
+    _scrollTo(_selectedValue.day - 1);
+  }
+
+  _scrollTo(int index) {
+    final actualHeight = (_datePickerHeight -
+        _datePickerPadding.top -
+        _datePickerPadding.bottom -
+        2);
+    final width = actualHeight * _datePickerAspectRatio;
+    final offset =
+        width * (index + 0.5) - MediaQuery.of(context).size.width / 2;
+
+    _scrollController.animateTo(offset,
+        duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
   List<Widget> viewBuild() {
     final children = List<Widget>();
-    if (loading) {
+    if (HistoryStore.instance.loading) {
       children.addAll([
         _monthPicker(),
         _datePicker(),
@@ -195,30 +151,30 @@ class _HistoryViewState extends State<HistoryView> {
     );
   }
 
-  _rows() => Expanded(
-        child: _selectedHistories.length > 0
-            ? ListView(
-                children: List.generate(
-                  _selectedHistories.length,
-                  (_selectedHistoryIndex) => InkWell(
-                    onTap: () => AppRouter.toHistoryPage(
-                      _selectedHistories[_selectedHistoryIndex]
-                          .index
-                          .toString(),
-                    ),
-                    child: _row(
-                      item: _selectedHistories[_selectedHistoryIndex],
-                      index: _selectedHistoryIndex,
+  _rows() => Observer(
+        builder: (context) => Expanded(
+          child: historyDetailsFromDate.length > 0
+              ? ListView(
+                  children: List.generate(
+                    historyDetailsFromDate.length,
+                    (index) => InkWell(
+                      onTap: () => AppRouter.toHistoryPage(
+                        historyDetailsFromDate[index].history.index.toString(),
+                      ),
+                      child: _row(
+                        item: historyDetailsFromDate[index].history,
+                        index: index,
+                      ),
                     ),
                   ),
+                )
+              : Container(
+                  child: SvgPicture.asset(
+                    'assets/icons/common/empty.svg',
+                    height: 200,
+                  ),
                 ),
-              )
-            : Container(
-                child: SvgPicture.asset(
-                  'assets/icons/common/empty.svg',
-                  height: 200,
-                ),
-              ),
+        ),
       );
 
   _row({
@@ -287,11 +243,12 @@ class _HistoryViewState extends State<HistoryView> {
         return Text(item.serviceName ?? '-');
 
       case 3:
-        return Text(item.menuName);
+        return Text(item.menuName ?? '-');
 
       case 4:
-        return Text(
-            item.amount != 0 ? '${NumberFormat().format(item.amount)}원' : '-');
+        return Text((item.amount ?? 0) != 0
+            ? '${NumberFormat().format(item.amount)}원'
+            : '-');
 
       case 5:
         return Container(
@@ -343,6 +300,8 @@ class _HistoryViewState extends State<HistoryView> {
   }
 
   _datePicker() => Container(
+        padding: _datePickerPadding,
+        height: _datePickerHeight,
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
@@ -355,23 +314,72 @@ class _HistoryViewState extends State<HistoryView> {
             ),
           ),
         ),
-        child: DatePicker(
-          DateTime(_selectedYear.year, _selectedYear.month, 1),
-          daysCount:
-              DateTime(_selectedYear.year, _selectedYear.month + 1, 0).day,
-          initialSelectedDate: _selectedValue,
-          selectionColor: CustomColors.doneColor.withOpacity(.5),
-          selectedTextColor: CustomColors.aBlack,
-          monthTextStyle: TextStyle(fontSize: 0, color: Colors.transparent),
-          controller: _controller,
-          locale: 'ko',
-          height: 95,
-          dayTextStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-          onDateChange: (DateTime date) {
-            _selectedValue = DateTime(_selectedYear.year, date.month, date.day);
-            setState(() {});
-            _moveDatePicker();
-          },
+        child: ListView(
+          controller: _scrollController,
+          scrollDirection: Axis.horizontal,
+          children: [
+            ...List.generate(
+              DateTime(_selectedYearMonth.year, _selectedYearMonth.month + 1, 0)
+                  .day,
+              (index) {
+                final current = DateTime(_selectedYearMonth.year,
+                    _selectedYearMonth.month, index + 1);
+                final selected = current == _selectedValue;
+                final now = DateTime.now();
+                final today = DateTime(now.year, now.month, now.day);
+                final isToday = current == today;
+
+                return Material(
+                  borderRadius: BorderRadius.circular(8),
+                  color: selected
+                      ? CustomColors.doneColor.withOpacity(0.4)
+                      : Colors.white,
+                  child: InkWell(
+                    onTap: () {
+                      _selectedValue = current;
+                      setState(() {});
+                      _scrollTo(index);
+                      _load();
+                    },
+                    child: AspectRatio(
+                      aspectRatio: _datePickerAspectRatio,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: DefaultTextStyle(
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: isToday
+                                ? Colors.blue
+                                : current.weekday == DateTime.sunday
+                                    ? Colors.red
+                                    : Colors.black,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${current.day}',
+                                style: TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Container(
+                                height: 7,
+                              ),
+                              Text(
+                                '${DateFormat('E').format(current)}',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       );
 
@@ -384,10 +392,11 @@ class _HistoryViewState extends State<HistoryView> {
             children: [
               GestureDetector(
                 onTap: () {
-                  final lastMonthDate =
-                      DateTime(_selectedYear.year, _selectedYear.month, 0).day;
-                  _selectedYear =
-                      _selectedYear.subtract(Duration(days: lastMonthDate));
+                  final lastMonthDate = DateTime(
+                          _selectedYearMonth.year, _selectedYearMonth.month, 0)
+                      .day;
+                  _selectedYearMonth = _selectedYearMonth
+                      .subtract(Duration(days: lastMonthDate));
                   setState(() {});
                 },
                 child: Container(
@@ -411,7 +420,7 @@ class _HistoryViewState extends State<HistoryView> {
                     Container(
                       margin: EdgeInsets.only(right: 5),
                       child: Text(
-                        '${DateFormat('yyyy년').format(_selectedYear)}',
+                        '${DateFormat('yyyy년').format(_selectedYearMonth)}',
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
@@ -420,7 +429,7 @@ class _HistoryViewState extends State<HistoryView> {
                       ),
                     ),
                     Text(
-                      '${DateFormat('MM월').format(_selectedYear)}',
+                      '${DateFormat('MM월').format(_selectedYearMonth)}',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w500,
@@ -432,11 +441,11 @@ class _HistoryViewState extends State<HistoryView> {
               ),
               GestureDetector(
                 onTap: () {
-                  final thisMonthDate =
-                      DateTime(_selectedYear.year, _selectedYear.month + 1, 0)
-                          .day;
-                  _selectedYear =
-                      _selectedYear.add(Duration(days: thisMonthDate));
+                  final thisMonthDate = DateTime(_selectedYearMonth.year,
+                          _selectedYearMonth.month + 1, 0)
+                      .day;
+                  _selectedYearMonth =
+                      _selectedYearMonth.add(Duration(days: thisMonthDate));
                   setState(() {});
                 },
                 child: Container(
@@ -488,8 +497,8 @@ class _HistoryViewState extends State<HistoryView> {
           _selectedFilter.contains(value)
               ? _selectedFilter.remove(value)
               : _selectedFilter.add(value);
-          _filterHistories();
           setState(() {});
+          _load();
         },
         child: Container(
           width: 120,

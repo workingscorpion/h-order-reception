@@ -1,5 +1,6 @@
 import 'package:h_order_reception/model/historyModel.dart';
 import 'package:h_order_reception/model/menuModel.dart';
+import 'package:h_order_reception/utils/localConverter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'orderModel.g.dart';
@@ -10,6 +11,8 @@ class OrderModel {
   final String roomNumber;
   final String address;
   final String shopName;
+
+  @LocalConverter()
   final DateTime applyTime;
   int status;
   final int amount;
