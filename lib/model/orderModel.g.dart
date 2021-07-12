@@ -12,9 +12,7 @@ OrderModel _$OrderModelFromJson(Map<String, dynamic> json) {
     roomNumber: json['roomNumber'] as String,
     address: json['address'] as String,
     shopName: json['shopName'] as String,
-    applyTime: json['applyTime'] == null
-        ? null
-        : DateTime.parse(json['applyTime'] as String),
+    applyTime: const LocalConverter().fromJson(json['applyTime'] as String),
     status: json['status'] as int,
     amount: json['amount'] as int,
     menus: (json['menus'] as List)
@@ -34,7 +32,7 @@ Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
       'roomNumber': instance.roomNumber,
       'address': instance.address,
       'shopName': instance.shopName,
-      'applyTime': instance.applyTime?.toIso8601String(),
+      'applyTime': const LocalConverter().toJson(instance.applyTime),
       'status': instance.status,
       'amount': instance.amount,
       'menus': instance.menus,

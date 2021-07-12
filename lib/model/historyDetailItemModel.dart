@@ -1,3 +1,4 @@
+import 'package:h_order_reception/utils/localConverter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'historyDetailItemModel.g.dart';
@@ -8,7 +9,11 @@ class HistoryDetailItemModel {
   final int historyIndex;
   final int status;
   final String data;
+
+  @LocalConverter()
   final DateTime createdTime;
+
+  @LocalConverter()
   final DateTime updatedTime;
 
   final String userObjectId;

@@ -234,7 +234,7 @@ class _OrderItemState extends State<OrderItem> {
           children: [
             Container(
               child: Text(
-                '${DateFormat("yyyy/MM/dd HH:mm").format(history.createdTime.toLocal())}',
+                '${DateFormat("yyyy/MM/dd HH:mm").format(history.createdTime)}',
                 style: TextStyle(
                   fontSize: 15,
                 ),
@@ -289,7 +289,7 @@ class _OrderItemState extends State<OrderItem> {
     final keys = orderStatus.keys.toList();
     var nextIndex;
     var nextStatus;
-    if (history.amount != null) {
+    if (history.serviceType == 3) {
       nextIndex = (keys.indexOf(history.status) + 1) % keys.length;
       nextStatus = keys[nextIndex];
     } else {

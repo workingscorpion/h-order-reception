@@ -52,14 +52,16 @@ class _Client implements Client {
   }
 
   @override
-  Future<ListModel<RecordModel>> historyDetails(status, order) async {
+  Future<ListModel<RecordModel>> historyDetails(status, order,
+      {startTime = "", endTime = ""}) async {
     ArgumentError.checkNotNull(status, 'status');
     ArgumentError.checkNotNull(order, 'order');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.request<Map<String, dynamic>>(
-        '/v1/admin/history?filter.order=$order&$status',
+        '/v1/admin/history?filter.order=$order&$status&filter.startTime=$startTime&filter.endTime=$endTime',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'GET',

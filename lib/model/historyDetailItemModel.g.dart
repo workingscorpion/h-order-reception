@@ -13,12 +13,8 @@ HistoryDetailItemModel _$HistoryDetailItemModelFromJson(
     historyIndex: json['historyIndex'] as int,
     status: json['status'] as int,
     data: json['data'] as String,
-    createdTime: json['createdTime'] == null
-        ? null
-        : DateTime.parse(json['createdTime'] as String),
-    updatedTime: json['updatedTime'] == null
-        ? null
-        : DateTime.parse(json['updatedTime'] as String),
+    createdTime: const LocalConverter().fromJson(json['createdTime'] as String),
+    updatedTime: const LocalConverter().fromJson(json['updatedTime'] as String),
     userObjectId: json['userObjectId'] as String,
     userName: json['userName'] as String,
     deviceObjectId: json['deviceObjectId'] as String,
@@ -33,8 +29,8 @@ Map<String, dynamic> _$HistoryDetailItemModelToJson(
       'historyIndex': instance.historyIndex,
       'status': instance.status,
       'data': instance.data,
-      'createdTime': instance.createdTime?.toIso8601String(),
-      'updatedTime': instance.updatedTime?.toIso8601String(),
+      'createdTime': const LocalConverter().toJson(instance.createdTime),
+      'updatedTime': const LocalConverter().toJson(instance.updatedTime),
       'userObjectId': instance.userObjectId,
       'userName': instance.userName,
       'deviceObjectId': instance.deviceObjectId,
