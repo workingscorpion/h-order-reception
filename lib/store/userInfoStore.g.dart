@@ -141,9 +141,9 @@ mixin _$UserInfoStore on UserInfoStoreBase, Store {
   final _$loginAsyncAction = AsyncAction('UserInfoStoreBase.login');
 
   @override
-  Future login({String id, String password}) {
+  Future login({String id, String password, String fcmToken}) {
     return _$loginAsyncAction
-        .run(() => super.login(id: id, password: password));
+        .run(() => super.login(id: id, password: password, fcmToken: fcmToken));
   }
 
   final _$logoutAsyncAction = AsyncAction('UserInfoStoreBase.logout');

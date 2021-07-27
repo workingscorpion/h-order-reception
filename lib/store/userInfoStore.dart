@@ -66,6 +66,7 @@ abstract class UserInfoStoreBase with Store {
   login({
     String id,
     String password,
+    String fcmToken,
   }) async {
     try {
       if (loading) {
@@ -77,15 +78,13 @@ abstract class UserInfoStoreBase with Store {
       final String fcmToken =
           await FCMManger.instance.getFirebaseMessageToken();
 
-      print('fcmToken : $fcmToken');
-
-      SharedPreferencesHelper.setFCMToken(fcmToken);
       final String token = await SharedPreferencesHelper.getJWTToken();
 
       final response = await Client.create().login(RequestLoginModel(
         id: id,
         password: password ?? '',
         token: token ?? '',
+        fcmToken: fcmToken ?? '',
       ));
       name = response['name'];
       Client.token = response['token'];
