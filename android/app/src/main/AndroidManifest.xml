@@ -10,7 +10,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="h_order_reception"
+        android:label="H오더(리셉션)"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -50,9 +50,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <!-- <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+        <!-- <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" /> -->
         <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/app_icon" />
         <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/fcm_icon_background" />
-        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="rumyId" /> -->
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:resource="@string/horder_channel_Id" />
     </application>
 </manifest>
