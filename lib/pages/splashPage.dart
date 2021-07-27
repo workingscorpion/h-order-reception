@@ -80,19 +80,8 @@ class _SplashPageState extends State<SplashPage> {
       await UserInfoStore.instance.login(id: id);
 
       AppRouter.toHomePage();
-      // await loadInfo();
     } catch (ex) {
       AppRouter.toLoginPage();
-    }
-  }
-
-  loadInfo() async {
-    try {
-      // await _hotelInfoStore.loadHotels();
-      // await _hotelInfoStore.selectHotel(_hotelInfoStore.hotelList.first);
-      // AppRouter.toHomePage();
-    } catch (ex) {
-      // AppRouter.toHotelSelectPage();
     }
   }
 

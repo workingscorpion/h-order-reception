@@ -90,9 +90,6 @@ abstract class UserInfoStoreBase with Store {
       Client.token = response['token'];
       await SharedPreferencesHelper.setJWTToken(Client.token);
       await SharedPreferencesHelper.setUserId(id);
-
-      // final user = ResponseLogin.fromJson(response.data);
-      // setLoginInfo(user.identity, user.token);
     } catch (ex) {
       return Future.error(ex);
     } finally {
