@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
+// import 'package:firebase_analytics/firebase_analytics.dart';
+// import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,8 +25,8 @@ class AppState extends State<App> with WidgetsBindingObserver {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  FirebaseAnalytics analytics = FirebaseAnalytics();
-  FirebaseAnalyticsObserver observer;
+  // FirebaseAnalytics analytics = FirebaseAnalytics();
+  // FirebaseAnalyticsObserver observer;
 
   ThemeMode _themeMode = ThemeMode.light;
   Brightness _brightness = Brightness.light;
@@ -36,12 +36,12 @@ class AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     initTheme();
-    initFirebaseAnalytics();
+    // initFirebaseAnalytics();
   }
 
-  initFirebaseAnalytics() {
-    observer = FirebaseAnalyticsObserver(analytics: analytics);
-  }
+  // initFirebaseAnalytics() {
+  //   observer = FirebaseAnalyticsObserver(analytics: analytics);
+  // }
 
   @override
   void dispose() {
