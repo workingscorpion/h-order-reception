@@ -12,7 +12,7 @@ import 'package:retrofit/retrofit.dart';
 part 'client.g.dart';
 
 const protocol = kDebugMode ? 'http' : 'https';
-const host = kDebugMode ? '192.168.0.11:5000' : 'jinjoosoft.io:49233';
+const host = kDebugMode ? '192.168.0.19:5000' : 'jinjoosoft.io:49233';
 
 @RestApi()
 abstract class Client {
